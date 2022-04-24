@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+
+  reservationsdb:
+    container_name: reservationsdb
+    restart: always
+    ports:
+      - "6379:6379"
+
+  reservations.api:
+    container_name: reservations.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=reservationsdb:6379"
+    depends_on:
+      - reservationsdb
+    ports:
+      - "8001:80"
+   

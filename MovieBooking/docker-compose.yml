@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+
+  reservationsdb:
+    image: redis:alpine
+
+  reservations.api:
+    image: ${DOCKER_REGISTRY-}reservations
+    build:
+      context: .
+      dockerfile: Services/Reservations/Reservations.API/Dockerfile
