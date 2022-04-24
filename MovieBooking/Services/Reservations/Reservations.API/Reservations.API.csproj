@@ -4,11 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Reservations.API' " />
   <ItemGroup>
     <None Remove="Swashbuckle.AspNetCore" />
     <None Remove="Controllers\" />
     <None Remove="Microsoft.Extensions.Caching.StackExchangeRedis" />
     <None Remove="Newtonsoft.Json" />
+    <None Remove="Repositories\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
@@ -17,5 +19,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 </Project>
