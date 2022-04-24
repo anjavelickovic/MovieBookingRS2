@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Movie.API.DTOs
+namespace Movies.API.DTOs
 {
     public class CreateMovieDTO : BaseMovieDTO
     {

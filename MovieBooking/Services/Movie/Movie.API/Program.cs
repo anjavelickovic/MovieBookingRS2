@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Movie.API
+namespace Movies.API
 {
     public class Program
     {
