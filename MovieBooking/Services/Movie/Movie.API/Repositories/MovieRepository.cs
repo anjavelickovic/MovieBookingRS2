@@ -15,6 +15,7 @@ namespace Movies.API.Repositories
     {
         private readonly IMovieContext _movieContext;
         private readonly IMapper _mapper;
+        private readonly decimal PRECISION = 0.00000001M;
 
         public MovieRepository(IMovieContext movieContext, IMapper mapper)
         {
@@ -24,7 +25,8 @@ namespace Movies.API.Repositories
 
         public async Task<MovieDTO> GetMovieById(string id)
         {
-            throw new NotImplementedException();
+            var movie = await _movieContext.Movies.Find(movie => (movie.Id == id)).FirstOrDefaultAsync();
+            return _mapper.Map<MovieDTO>(movie);
         }
 
         public async Task<IEnumerable<MovieDTO>> GetRandomMovies(int numberOfMovies = 10)
@@ -44,43 +46,76 @@ namespace Movies.API.Repositories
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByTitle(string name)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => 
+                                    movie.Title.ToLower().Contains(name.ToLower())).ToListAsync();
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
         public async Task<IEnumerable<MovieDTO>> GetMoviesByYear(int year)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => (movie.Year == year)).ToListAsync();
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
         public async Task<IEnumerable<MovieDTO>> GetMoviesByRuntime(int lowerBound = 60, int upperBound = 240)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
+
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies
+                .Select(movie => new { RuntimeInt = Int32.Parse(movie.Runtime.Substring(0, movie.Runtime.Length - 4)), Item = movie })
+                .Where(obj => lowerBound <= obj.RuntimeInt && obj.RuntimeInt <= upperBound)
+                .Select(obj => obj.Item));
+
         }
         public async Task<IEnumerable<MovieDTO>> GetMoviesByGenre(string genre)
         {
-            throw new NotImplementedException();
+            return await GetMoviesByGenres(new string[] { genre });
         }
         public async Task<IEnumerable<MovieDTO>> GetMoviesByGenres(string[] genres, bool containAllGenres = true)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
+
+            if (containAllGenres) {
+                var genresLowerCase = new List<string>(genres);
+                genresLowerCase = genresLowerCase.ConvertAll(genre => genre.ToLower());
+                return _mapper.Map<IEnumerable<MovieDTO>> (movies.FindAll(movie =>
+                                        movie.Genres.Intersect(genresLowerCase).Count() == genresLowerCase.Count()));
+            }
+
+            var moviesSet = new HashSet<Movie>();
+
+            foreach (var genre in genres) {
+                moviesSet.UnionWith( movies.FindAll(movie => movie.Genres.Contains(genre.ToLower())) );
+            }
+
+            return _mapper.Map<IEnumerable<MovieDTO>>(moviesSet);
         }
         public async Task<IEnumerable<MovieDTO>> GetMoviesByDirector(string director)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => movie.Director.Contains(director.ToLower())).ToListAsync();
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
         public async Task<IEnumerable<MovieDTO>> GetMoviesByMainActor(string mainActor)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => movie.MainActors.Contains(mainActor.ToLower())).ToListAsync();
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
         public async Task<IEnumerable<MovieDTO>> GetMoviesByLanguage(string language)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => movie.Languages.Contains(language.ToLower())).ToListAsync();
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
-        public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(float lowerBound = 6.0f, float upperBound = 10.0f)
+        public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(decimal lowerBound = 6.0M, decimal upperBound = 10.0M)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => 
+                    Math.Abs(lowerBound - movie.ImdbRating) < PRECISION ||
+                    Math.Abs(upperBound - movie.ImdbRating) < PRECISION ||
+                    (movie.ImdbRating - lowerBound > PRECISION && movie.ImdbRating - upperBound < -PRECISION))
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
         public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbVotes(int votes = 100_000)
         {
-            throw new NotImplementedException();
+            var movies = await _movieContext.Movies.Find(movie => (movie.ImdbVotes > votes)).ToListAsync();
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
         public async Task<bool> CreateMovie(CreateMovieDTO movie)
         {
