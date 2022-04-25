@@ -18,7 +18,7 @@ namespace Movies.API.Repositories
         Task<IEnumerable<MovieDTO>> GetMoviesByDirector(string director);
         Task<IEnumerable<MovieDTO>> GetMoviesByMainActor(string mainActor);
         Task<IEnumerable<MovieDTO>> GetMoviesByLanguage(string language);
-        Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(float lowerBound, float upperBound);
+        Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(decimal lowerBound, decimal upperBound);
         Task<IEnumerable<MovieDTO>> GetMoviesByImdbVotes(int votes);
         Task<bool> CreateMovie(CreateMovieDTO movie);
         Task<bool> CreateMovieById(string id);
