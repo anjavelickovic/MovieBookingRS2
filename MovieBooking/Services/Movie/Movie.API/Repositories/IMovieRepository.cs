@@ -10,7 +10,7 @@ namespace Movies.API.Repositories
     {
         Task<MovieDTO> GetMovieById(string id);
         Task<IEnumerable<MovieDTO>> GetRandomMovies(int numberOfMovies = 10);
-        Task<IEnumerable<MovieDTO>> GetMoviesByName(string name);
+        Task<IEnumerable<MovieDTO>> GetMoviesByTitle(string name);
         Task<IEnumerable<MovieDTO>> GetMoviesByYear(int year);
         Task<IEnumerable<MovieDTO>> GetMoviesByRuntime(int lowerBound = 60, int upperBound = 240);
         Task<IEnumerable<MovieDTO>> GetMoviesByGenre(string genre);
