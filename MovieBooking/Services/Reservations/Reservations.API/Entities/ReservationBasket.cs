@@ -6,7 +6,6 @@ namespace Reservations.API.Entities
 
     public class ReservationBasket
     {
-
         public string Username { get; set; }
         public List<Reservation> Reservations { get; set; } = new List<Reservation>();
 
