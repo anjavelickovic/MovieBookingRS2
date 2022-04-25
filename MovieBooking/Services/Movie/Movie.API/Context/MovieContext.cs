@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Movies.API.DTOs;
 using Movies.API.Entities;
@@ -12,13 +11,13 @@ namespace Movies.API.Context
 {
     public class MovieContext : IMovieContext
     {
-        public MovieContext(IConfiguration configuration, IMapper mapper)
+        public MovieContext(IConfiguration configuration)
         {
             var client = new MongoClient(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
             var database = client.GetDatabase("MoviesDB");
-            Movies = mapper.Map<IMongoCollection<MovieDTO>>(database.GetCollection<Movie>("Movies"));
+            Movies = database.GetCollection<Movie>("Movies");
         }
 
-        public IMongoCollection<MovieDTO> Movies { get; }
+        public IMongoCollection<Movie> Movies { get; }
     }
 }

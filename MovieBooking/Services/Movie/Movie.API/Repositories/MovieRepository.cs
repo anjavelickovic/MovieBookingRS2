@@ -1,6 +1,8 @@
-﻿using MongoDB.Driver;
+﻿using AutoMapper;
+using MongoDB.Driver;
 using Movies.API.Context;
 using Movies.API.DTOs;
+using Movies.API.Entities;
 using Movies.API.Extensions;
 using System;
 using System.Collections.Generic;
@@ -12,10 +14,12 @@ namespace Movies.API.Repositories
     public class MovieRepository : IMovieRepository
     {
         private readonly IMovieContext _movieContext;
+        private readonly IMapper _mapper;
 
-        public MovieRepository(IMovieContext movieContext)
+        public MovieRepository(IMovieContext movieContext, IMapper mapper)
         {
             _movieContext = movieContext ?? throw new ArgumentNullException(nameof(movieContext));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<MovieDTO> GetMovieById(string id)
@@ -28,12 +32,12 @@ namespace Movies.API.Repositories
             var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
             if (movies.Count <= numberOfMovies)
             {
-                return movies;
+                return _mapper.Map<IEnumerable<MovieDTO>>(movies);
             }
 
             var indexes = new Random().Sample(movies.Count, numberOfMovies).ToList();
             var sampledMovies = new List<MovieDTO>();
-            indexes.ForEach(index => sampledMovies.Add(movies[index]));
+            indexes.ForEach(index => sampledMovies.Add(_mapper.Map<MovieDTO>(movies[index])));
 
             return sampledMovies;
         }
