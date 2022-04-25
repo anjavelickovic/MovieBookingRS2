@@ -23,7 +23,7 @@ namespace Movies.API.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<MovieDTO>> GetRandomMovies(int numberOfMovies)
+        public async Task<IEnumerable<MovieDTO>> GetRandomMovies(int numberOfMovies = 10)
         {
             var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
             if (movies.Count <= numberOfMovies)
@@ -46,7 +46,7 @@ namespace Movies.API.Repositories
         {
             throw new NotImplementedException();
         }
-        public async Task<IEnumerable<MovieDTO>> GetMoviesByRuntime(int lowerBound, int upperBound)
+        public async Task<IEnumerable<MovieDTO>> GetMoviesByRuntime(int lowerBound = 60, int upperBound = 240)
         {
             throw new NotImplementedException();
         }
@@ -54,7 +54,7 @@ namespace Movies.API.Repositories
         {
             throw new NotImplementedException();
         }
-        public async Task<IEnumerable<MovieDTO>> GetMoviesByGenres(string[] genres, bool containAllGenres)
+        public async Task<IEnumerable<MovieDTO>> GetMoviesByGenres(string[] genres, bool containAllGenres = true)
         {
             throw new NotImplementedException();
         }
@@ -70,11 +70,11 @@ namespace Movies.API.Repositories
         {
             throw new NotImplementedException();
         }
-        public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(float lowerBound, float upperBound)
+        public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(float lowerBound = 6.0f, float upperBound = 10.0f)
         {
             throw new NotImplementedException();
         }
-        public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbVotes(int votes)
+        public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbVotes(int votes = 100_000)
         {
             throw new NotImplementedException();
         }
