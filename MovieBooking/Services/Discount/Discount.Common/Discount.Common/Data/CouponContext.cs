@@ -19,7 +19,7 @@ namespace Discount.Common.Data
 
         public NpgsqlConnection GetConnection()
         {
-            return new NpgsqlConnection(_configuration.GetValue("DatabaseSettings:ConnectionString"));
+            return new NpgsqlConnection(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
         }
     }
 }
