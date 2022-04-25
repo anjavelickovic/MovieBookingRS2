@@ -16,7 +16,7 @@ namespace Movies.API.Entities
         public string Director { get; set; }
         public string[] MainActors { get; set; }
         public string Plot { get; set; }
-        public string Language { get; set; }
+        public string[] Languages { get; set; }
         public string Poster { get; set; }
         public decimal ImdbRating { get; set; }
         public int ImdbVotes { get; set; }
