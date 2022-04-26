@@ -8,5 +8,6 @@ namespace Discount.Common.DTOs
 {
     public class CreateCouponDTO : BaseCouponDTO
     {
+        public DateTime CreationDate { get; set; }
     }
 }
