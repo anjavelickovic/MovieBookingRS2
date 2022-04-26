@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Movies.API.Repositories
 {
-    interface IMovieRepository
+    public interface IMovieRepository
     {
         Task<MovieDTO> GetMovieById(string id);
         Task<IEnumerable<MovieDTO>> GetRandomMovies(int numberOfMovies);
