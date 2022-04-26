@@ -65,7 +65,6 @@ namespace Movies.API.Repositories
                 .Select(movie => new { RuntimeInt = Int32.Parse(movie.Runtime.Substring(0, movie.Runtime.Length - 4)), Item = movie })
                 .Where(obj => lowerBound <= obj.RuntimeInt && obj.RuntimeInt <= upperBound)
                 .Select(obj => obj.Item));
-
         }
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByGenre(string genre)
@@ -78,8 +77,7 @@ namespace Movies.API.Repositories
             var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
 
             if (containAllGenres) {
-                var genresLowerCase = new List<string>(genres);
-                genresLowerCase = genresLowerCase.ConvertAll(genre => genre.ToLower());
+                var genresLowerCase = new List<string>(genres).ConvertAll(genre => genre.ToLower());
                 return _mapper.Map<IEnumerable<MovieDTO>> (movies.FindAll(movie =>
                                         movie.Genres.Intersect(genresLowerCase).Count() == genresLowerCase.Count()));
             }
