@@ -137,7 +137,8 @@ namespace Movies.API.Repositories
 
         public async Task<bool> DeleteMovie(string id)
         {
-            throw new NotImplementedException();
+            var deleteResult = await _movieContext.Movies.DeleteOneAsync(movie => (movie.Id == id));
+            return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
 
     }
