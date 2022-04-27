@@ -4,6 +4,7 @@ using Movies.API.Context;
 using Movies.API.DTOs;
 using Movies.API.Entities;
 using Movies.API.Extensions;
+using Movies.API.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,12 +128,32 @@ namespace Movies.API.Repositories
 
         public async Task<bool> CreateMovie(CreateMovieDTO movie)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _movieContext.Movies.InsertOneAsync(_mapper.Map<Movie>(movie));
+            }
+            catch (AggregateException)
+            {
+                return false;
+            }
+            return true;
+
         }
 
         public async Task<bool> CreateMovieById(string id)
         {
-            throw new NotImplementedException();
+            var movie = await _movieContext.Movies.Find(movie => (movie.Id == id)).FirstOrDefaultAsync();
+            if (movie != null)
+                return false;
+
+            var result = await ImdbClient.FetchJsonDataForMovie(id);
+
+            if (result == null)
+                return false;
+
+            await _movieContext.Movies.InsertOneAsync(result.ToObject<Movie>());
+            
+            return true;
         }
 
         public async Task<bool> DeleteMovie(string id)
