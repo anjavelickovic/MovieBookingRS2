@@ -18,7 +18,7 @@ namespace Movies.API.DTOs
         public string Plot { get; set; }
         public string[] Languages { get; set; }
         public string Poster { get; set; }
-        public decimal ImdbRating { get; set; }
+        public double ImdbRating { get; set; }
         public int ImdbVotes { get; set; }
         public string Trailer { get; set; }
     }

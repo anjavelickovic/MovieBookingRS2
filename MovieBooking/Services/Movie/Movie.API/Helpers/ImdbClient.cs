@@ -72,7 +72,7 @@ namespace Movies.API.Helpers
 			jo.Add(new JProperty("Languages", languages.Split(", ")));
 
 			jo.Add("Poster", data.Property("Poster").ToObject<string>());
-			jo.Add("ImdbRating", data.Property("imdbRating").ToObject<decimal>());
+			jo.Add("ImdbRating", data.Property("imdbRating").ToObject<double>());
 
 			var imdbVotesString = data.Property("imdbVotes").ToObject<string>();
 			var imdbVotesInt = Int32.Parse(string.Join("", imdbVotesString.Split(",")));

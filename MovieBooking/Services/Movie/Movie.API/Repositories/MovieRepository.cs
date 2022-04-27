@@ -16,7 +16,7 @@ namespace Movies.API.Repositories
     {
         private readonly IMovieContext _movieContext;
         private readonly IMapper _mapper;
-        private readonly decimal PRECISION = 0.00000001M;
+        private readonly double PRECISION = 0.0001;
 
         public MovieRepository(IMovieContext movieContext, IMapper mapper)
         {
@@ -110,12 +110,14 @@ namespace Movies.API.Repositories
             return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
 
-        public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(decimal lowerBound = 6.0M, decimal upperBound = 10.0M)
+        public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(double lowerBound = 6.0f, double upperBound = 10.0f)
         {
             var movies = await _movieContext.Movies.Find(movie => 
-                    Math.Abs(lowerBound - movie.ImdbRating) < PRECISION ||
-                    Math.Abs(upperBound - movie.ImdbRating) < PRECISION ||
-                    (movie.ImdbRating - lowerBound > PRECISION && movie.ImdbRating - upperBound < -PRECISION))
+                   ( (lowerBound - PRECISION < movie.ImdbRating) &&
+                    (movie.ImdbRating < lowerBound + PRECISION) ) ||
+                   ( (upperBound - PRECISION < movie.ImdbRating) &&
+                    (movie.ImdbRating < upperBound + PRECISION)) ||
+                    (movie.ImdbRating > lowerBound + PRECISION && movie.ImdbRating < upperBound - PRECISION))
                 .ToListAsync();
             return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
