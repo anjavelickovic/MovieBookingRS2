@@ -33,7 +33,7 @@ namespace Movies.API.Helpers
 				var responseImdbTask = _apiLib.TrailerAsync(id);
 
 				var responseOmdb = await responseOmdbTask;
-                if (!responseOmdb.IsSuccessStatusCode)
+				if (!responseOmdb.IsSuccessStatusCode)
 				{
 					return null;
 				}
@@ -46,7 +46,6 @@ namespace Movies.API.Helpers
 
 				return prepareJObject(jo);
 			}
-
 		}
 
 		private static JObject prepareJObject(JObject data)
