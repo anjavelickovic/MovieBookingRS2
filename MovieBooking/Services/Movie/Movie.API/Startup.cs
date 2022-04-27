@@ -6,10 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Movies.API.Context;
+using Movies.API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Movies.API.Entities;
+using Movies.API.DTOs;
 
 namespace Movies.API
 {
@@ -25,6 +29,14 @@ namespace Movies.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IMovieContext, MovieContext>();
+            services.AddScoped<IMovieRepository, MovieRepository>();
+
+            services.AddAutoMapper(configuration =>
+            {
+                configuration.CreateMap<Movie, MovieDTO>().ReverseMap();
+                configuration.CreateMap<Movie, CreateMovieDTO>().ReverseMap();
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
