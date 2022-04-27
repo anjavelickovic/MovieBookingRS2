@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Discount.Common.DTOs
 {
-    public class CreateCouponDTO : BaseCouponDTO
+    public class CreateCouponDTO : BaseIdentityCouponDTO
     {
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.Now;
     }
 }

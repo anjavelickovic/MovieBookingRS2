@@ -36,8 +36,8 @@ namespace Discount.Common.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "INSERT INTO Coupon (MovieName, Description, Amount, CreationDate) VALUES (@MovieName, @Description, @Amount, @CreationDate)",
-                new { couponDTO.MovieName, couponDTO.Amount, CreationDate = DateTime.Now });
+                "INSERT INTO Coupon (Id, MovieName, Amount, CreationDate) VALUES (@Id, @MovieName, @Amount, @CreationDate)",
+                new { couponDTO.Id, couponDTO.MovieName, couponDTO.Amount, CreationDate = DateTime.Now });
 
             return affected != 0;
         }
@@ -47,8 +47,8 @@ namespace Discount.Common.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "UPDATE Coupon SET MovieName=@MovieName, Description = @Description, Amount = @Amount, ModifiedDate = @ModifiedDate WHERE Id = @Id",
-                new { couponDTO.MovieName, couponDTO.Amount, ModifiedDate = DateTime.Now, couponDTO.Id });
+                "UPDATE Coupon SET MovieName=@MovieName, Amount = @Amount, ModifiedDate = @ModifiedDate WHERE Id = @Id",
+                new { couponDTO.MovieName, couponDTO.Amount, ModifiedDate = couponDTO.ModifiedDate, couponDTO.Id });
 
             if (affected == 0)
                 return false;
