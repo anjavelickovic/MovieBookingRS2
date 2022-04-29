@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movies.API", "Services\Movie\Movie.API\Movies.API.csproj", "{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F66E6F65-9EAD-499D-8247-2620CC8105C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0BC7E8D0-D3A6-49CC-BCEC-01417D9C850F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,10 @@ Global
 		{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F66E6F65-9EAD-499D-8247-2620CC8105C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F66E6F65-9EAD-499D-8247-2620CC8105C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F66E6F65-9EAD-499D-8247-2620CC8105C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F66E6F65-9EAD-499D-8247-2620CC8105C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

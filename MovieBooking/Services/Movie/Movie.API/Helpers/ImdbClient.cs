@@ -19,7 +19,7 @@ namespace Movies.API.Helpers
 		private static readonly ApiLib _apiLib;
 
 		static ImdbClient()
-        {
+		{
 			_apiLib = new ApiLib(_imdb_api_key);
 		}
 
