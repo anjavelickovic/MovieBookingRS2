@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option csharp_namespace = "Discount.GRPC.Protos";
+
+service CouponProtoService {
+	rpc GetDiscount (GetDiscountRequest) returns (GetDiscountResponse);
+	rpc GetRandomDiscounts (GetRandomDiscountsRequest) returns (GetRandomDiscountsResponse);
+}
+
+message GetDiscountRequest {
+	string movieName = 1;
+}
+
+message GetDiscountResponse {
+	string Id = 1;
+	string movieName = 2;
+	int32 amount = 3;
+}
+
+message GetRandomDiscountsRequest {
+	int32 numberOfDiscounts = 1;
+}
+
+message GetRandomDiscountsResponse {
+	message Coupon {
+		string Id = 1;
+		string movieName = 2;
+		int32 amount = 3;
+	}
+	repeated Coupon coupons = 1;
+	int32 totalDiscountAmount = 2;
+}
+

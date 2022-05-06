@@ -3,8 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movies.API", "Services\Movie\Movie.API\Movies.API.csproj", "{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movie.API", "Services\Movie\Movie.API\Movie.API.csproj", "{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Discount", "Discount", "{5A1ABAA5-883B-40A2-8D83-1D24DBFB4CC8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discount.GRPC", "Services\Discount\Discount.GRPC\Discount.GRPC.csproj", "{88BD4A2A-CFDA-454D-8A29-48732DA19BBA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discount.Common", "Services\Discount\Discount.Common\Discount.Common.csproj", "{B997E2D5-6770-4C23-97FE-CF773CB9A8F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discount.API", "Services\Discount\Discount.API\Discount.API.csproj", "{14001B97-AB7B-4C98-BE2F-2C4EE77C44E3}"
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F66E6F65-9EAD-499D-8247-2620CC8105C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0BC7E8D0-D3A6-49CC-BCEC-01417D9C850F}"
@@ -21,6 +28,22 @@ Global
 		{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E115CDB7-B6CE-4F1A-A38C-364DB29B912E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DC6DDED-9434-408E-A3EA-CF567B61C4EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC6DDED-9434-408E-A3EA-CF567B61C4EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC6DDED-9434-408E-A3EA-CF567B61C4EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC6DDED-9434-408E-A3EA-CF567B61C4EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88BD4A2A-CFDA-454D-8A29-48732DA19BBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88BD4A2A-CFDA-454D-8A29-48732DA19BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88BD4A2A-CFDA-454D-8A29-48732DA19BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88BD4A2A-CFDA-454D-8A29-48732DA19BBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B997E2D5-6770-4C23-97FE-CF773CB9A8F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B997E2D5-6770-4C23-97FE-CF773CB9A8F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B997E2D5-6770-4C23-97FE-CF773CB9A8F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B997E2D5-6770-4C23-97FE-CF773CB9A8F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14001B97-AB7B-4C98-BE2F-2C4EE77C44E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14001B97-AB7B-4C98-BE2F-2C4EE77C44E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14001B97-AB7B-4C98-BE2F-2C4EE77C44E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14001B97-AB7B-4C98-BE2F-2C4EE77C44E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F66E6F65-9EAD-499D-8247-2620CC8105C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F66E6F65-9EAD-499D-8247-2620CC8105C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F66E6F65-9EAD-499D-8247-2620CC8105C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -32,6 +55,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{88BD4A2A-CFDA-454D-8A29-48732DA19BBA} = {5A1ABAA5-883B-40A2-8D83-1D24DBFB4CC8}
+		{B997E2D5-6770-4C23-97FE-CF773CB9A8F6} = {5A1ABAA5-883B-40A2-8D83-1D24DBFB4CC8}
+		{14001B97-AB7B-4C98-BE2F-2C4EE77C44E3} = {5A1ABAA5-883B-40A2-8D83-1D24DBFB4CC8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7F7FB7C9-6C0C-41F7-9DB5-CF71A9F019CF}
