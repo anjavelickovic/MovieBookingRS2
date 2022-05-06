@@ -22,12 +22,14 @@ services:
       - moviesdb
     ports:
       - "8000:80"
-    reservationsdb:
+
+  reservationsdb:
     container_name: reservationsdb
     restart: always
     ports:
       - "6379:6379"
 
+  
   reservations.api:
     container_name: reservations.api
     environment:
