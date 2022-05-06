@@ -1,6 +1,24 @@
 version: '3.4'
 
 services:
+  moviesdb:
+    image: mongo
+
+  movies.api:
+    image: ${DOCKER_REGISTRY-}moviesapi
+    build:
+      context: .
+      dockerfile: Services/Movie/Movie.API/Dockerfile
+
+  reservationsdb:
+    image: redis:alpine
+
+  reservations.api:
+    image: ${DOCKER_REGISTRY-}reservations
+    build:
+      context: .
+      dockerfile: Services/Reservations/Reservations.API/Dockerfile
+
   discountdb:
     image: postgres
 
@@ -22,3 +40,4 @@ services:
 volumes:
   postgres_data:
   pgadmin_data:
+  movies_data:

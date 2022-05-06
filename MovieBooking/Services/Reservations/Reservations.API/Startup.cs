@@ -1,3 +1,7 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,16 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Movies.API.Context;
-using Movies.API.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Movies.API.Entities;
-using Movies.API.DTOs;
+using Reservations.API.Repositories;
 
-namespace Movies.API
+namespace Reservations.API
 {
     public class Startup
     {
@@ -29,19 +26,17 @@ namespace Movies.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IMovieContext, MovieContext>();
-            services.AddScoped<IMovieRepository, MovieRepository>();
-
-            services.AddAutoMapper(configuration =>
+            services.AddStackExchangeRedisCache(options =>
             {
-                configuration.CreateMap<Movie, MovieDTO>().ReverseMap();
-                configuration.CreateMap<Movie, CreateMovieDTO>().ReverseMap();
+                options.Configuration = Configuration.GetValue<string>("CacheSettings:ConnectionString");
             });
+
+            services.AddScoped<IReservationsRepository, ReservationsRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Movies.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Reservations.API", Version = "v1" });
             });
         }
 
@@ -52,7 +47,7 @@ namespace Movies.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movies.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Reservations.API v1"));
             }
 
             app.UseRouting();
