@@ -11,5 +11,14 @@ services:
       context: .
       dockerfile: Services/Movie/Movie.API/Dockerfile
 
+  reservationsdb:
+    image: redis:alpine
+
+  reservations.api:
+    image: ${DOCKER_REGISTRY-}reservations
+    build:
+      context: .
+      dockerfile: Services/Reservations/Reservations.API/Dockerfile
+
 volumes:
     movies_data:
