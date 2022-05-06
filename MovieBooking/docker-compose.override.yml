@@ -2,7 +2,27 @@ version: '3.4'
 
 services:
 
-  reservationsdb:
+  moviesdb:
+    container_name: moviesdb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - movies_data:/data/db
+
+  movies.api:
+    container_name: movies.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://moviesdb:27017"
+      - OMDB_API_KEY=${OMDB_API_KEY}
+      - IMDB_API_KEY=${IMDB_API_KEY}
+
+    depends_on:
+      - moviesdb
+    ports:
+      - "8000:80"
+    reservationsdb:
     container_name: reservationsdb
     restart: always
     ports:
@@ -17,4 +37,3 @@ services:
       - reservationsdb
     ports:
       - "8001:80"
-   

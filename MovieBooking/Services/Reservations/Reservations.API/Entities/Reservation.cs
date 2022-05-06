@@ -9,6 +9,7 @@ namespace Reservations.API.Entities
         public string TheaterHallId { get; set; }
         public string TheaterHallName { get; set; }
         public DateTime ReservatioinDate{ get; set; }
+
         public decimal Price { get; set; }
         public int NumberOfTickets { get; set; }
     }

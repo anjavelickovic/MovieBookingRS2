@@ -6,12 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Movies.API.Context;
+using Movies.API.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Movies.API.Entities;
+using Movies.API.DTOs;
 
-namespace Movie.API
+namespace Movies.API
 {
     public class Startup
     {
@@ -25,11 +29,19 @@ namespace Movie.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IMovieContext, MovieContext>();
+            services.AddScoped<IMovieRepository, MovieRepository>();
+
+            services.AddAutoMapper(configuration =>
+            {
+                configuration.CreateMap<Movie, MovieDTO>().ReverseMap();
+                configuration.CreateMap<Movie, CreateMovieDTO>().ReverseMap();
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Movie.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Movies.API", Version = "v1" });
             });
         }
 
@@ -40,7 +52,7 @@ namespace Movie.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movie.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movies.API v1"));
             }
 
             app.UseRouting();
