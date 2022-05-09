@@ -37,7 +37,11 @@ services:
       context: .
       dockerfile: Services/Discount/Discount.GRPC/Dockerfile
 
+  identitydb:
+    image: mysql
+
 volumes:
   postgres_data:
   pgadmin_data:
   movies_data:
+  identity_data:
