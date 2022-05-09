@@ -44,6 +44,7 @@ namespace Reservations.API.Repositories
 
         public async Task<ReservationBasket> UpdateReservations(string username, Reservation reservation)
         {
+            var reservationAlreadyExists = false;
             ReservationBasket reservationBasket = await GetAllReservations(username);
             if (reservationBasket == null)
             {
@@ -57,7 +58,19 @@ namespace Reservations.API.Repositories
             {
                 if (reservationBasket.Reservations.ContainsKey(reservation.MovieId))
                 {
-                    reservationBasket.Reservations[reservation.MovieId].Add(reservation);
+                    foreach (var reservationItem in reservationBasket.Reservations[reservation.MovieId])
+                    {
+                        if (reservation.TheaterHallId.Equals(reservationItem.TheaterHallId) &&
+                            reservation.ReservatioinDate.Equals(reservationItem.ReservatioinDate))
+                        {
+                            reservationAlreadyExists = true;
+                            reservationItem.NumberOfTickets += reservation.NumberOfTickets;
+                        }
+                    }
+                    if (!reservationAlreadyExists)
+                    {
+                        reservationBasket.Reservations[reservation.MovieId].Add(reservation);
+                    }
                 }
                 else
                 {
