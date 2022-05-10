@@ -7,11 +7,17 @@
   <ItemGroup>
     <None Remove="MongoDB.Driver" />
     <None Remove="Entities\" />
+    <None Remove="Microsoft.Extensions.Configuration" />
+    <None Remove="Data\" />
+    <None Remove="Microsoft.Extensions.Configuration.Binder" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
+    <Folder Include="Data\" />
   </ItemGroup>
 </Project>

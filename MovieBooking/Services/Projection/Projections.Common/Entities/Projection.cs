@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Projection.Common.Entities
+namespace Projections.Common.Entities
 {
-    public class Projections
+    public class Projection
     {
+        public string Id { get; set; }
         public string MovieId { get; set; }
         public string MovieTitle { get; set; }
         public string Runtime { get; set; }

@@ -1,25 +1,37 @@
 version: '3.4'
 
 services:
-  moviesdb:
-    container_name: moviesdb
+
+  mongodb:
+    container_name: mongodb
     restart: always
     ports:
       - "27017:27017"
     volumes:
-      - movies_data:/data/db
+      - mongo_data:/data/db
 
   movies.api:
     container_name: movies.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=mongodb://moviesdb:27017"
+      - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
       - OMDB_API_KEY=${OMDB_API_KEY}
       - IMDB_API_KEY=${IMDB_API_KEY}
     depends_on:
-      - moviesdb
+      - mongodb
     ports:
       - "8000:80"
+
+  theaterhalls.api:
+    container_name: theaterhalls.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    depends_on:
+      - mongodb
+    ports:
+      - "8004:80"
+
 
   reservationsdb:
     container_name: reservationsdb
@@ -27,7 +39,6 @@ services:
     ports:
       - "6379:6379"
 
-  
   reservations.api:
     container_name: reservations.api
     environment:
@@ -63,7 +74,6 @@ services:
     volumes:
       - pgadmin_data:/root/.pgadmin
 
-
   discount.api:
     container_name: discount.api
     environment:
@@ -82,4 +92,4 @@ services:
     depends_on:
         - discountdb
     ports:
-      - "80:8003"
+      - "8003:80"

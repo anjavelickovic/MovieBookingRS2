@@ -61,7 +61,7 @@ namespace Reservations.API.Repositories
                     foreach (var reservationItem in reservationBasket.Reservations[reservation.MovieId])
                     {
                         if (reservation.TheaterHallId.Equals(reservationItem.TheaterHallId) &&
-                            reservation.ReservatioinDate.Equals(reservationItem.ReservatioinDate))
+                            reservation.ReservationDate.Equals(reservationItem.ReservationDate))
                         {
                             reservationAlreadyExists = true;
                             reservationItem.NumberOfTickets += reservation.NumberOfTickets;
