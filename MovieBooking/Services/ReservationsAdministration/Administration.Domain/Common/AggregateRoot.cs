@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Administration.Domain.Common
 {
-    class AgregateRoot : EntityBase
+    public class AggregateRoot : EntityBase
     {
     }
 }
