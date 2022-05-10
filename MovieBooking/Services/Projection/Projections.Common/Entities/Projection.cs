@@ -12,16 +12,9 @@ namespace Projections.Common.Entities
         public string TheaterHallId { get; set; }
         public string TheaterHallName { get; set; }
         public int NumberOfSeats { get; set; }
-        public DateTime ProjectionStartTime { get; set; }
-        public DateTime ProjectionFinishTime
-        {
-            get
-            {
-                var RuntimeInt = Int32.Parse(Runtime.Substring(0, Runtime.Length - 4));
-                DateTime finishDateTime = ProjectionStartTime.AddMinutes(RuntimeInt);
-                return finishDateTime;
-            }
-        }
+        public string ProjectionDate { get; set; }
+        public string ProjectionTerm { get; set; }
         public int NumberOfReservedSeats { get; set; }
+        public decimal Price { get; set; }
     }
 }
