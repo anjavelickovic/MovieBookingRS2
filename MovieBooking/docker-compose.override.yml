@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 version: '3.4'
 
 services:
@@ -81,4 +80,4 @@ services:
     depends_on:
         - discountdb
     ports:
-      - "80:8003"
+      - "8003:80"
