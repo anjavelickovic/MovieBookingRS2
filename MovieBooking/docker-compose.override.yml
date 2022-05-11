@@ -32,6 +32,15 @@ services:
     ports:
       - "8004:80"
 
+  projections.api:
+    container_name: projections.api
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    depends_on:
+       - mongodb
+    ports:
+       - "8005:80"
 
   reservationsdb:
     container_name: reservationsdb
@@ -90,6 +99,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=admin1234;"
     depends_on:
-        - discountdb
+      - discountdb
     ports:
       - "8003:80"

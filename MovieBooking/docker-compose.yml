@@ -16,6 +16,12 @@ services:
       context: .
       dockerfile: Services/TheaterHall/TheaterHalls.API/Dockerfile
 
+  projections.api:
+    image: ${DOCKER_REGISTRY-}projections
+    build:
+      context: .
+      dockerfile: Services/Projection/Projections.API/Dockerfile
+
   reservationsdb:
     image: redis:alpine
 
