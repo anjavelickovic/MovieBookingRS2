@@ -16,13 +16,8 @@ namespace Identity.Extensions
     {
         public static IServiceCollection ConfigurePersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            var serverName = configuration.GetConnectionString("IdentityServerName");
+            var connectionString = configuration.GetConnectionString("IdentityConnectionString");
 
-            var mysqlDatabase = Environment.GetEnvironmentVariable("MYSQL_DATABASE");
-            var mysqlUser = Environment.GetEnvironmentVariable("MYSQL_USER");
-            var mysqlPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
-
-            var connectionString = $"server={serverName};user={mysqlUser};password={mysqlPassword};database={mysqlDatabase}";
             var serverVersion = ServerVersion.AutoDetect(connectionString);
 
             services.AddDbContext<IdentityContext>(dbContextOptions =>
