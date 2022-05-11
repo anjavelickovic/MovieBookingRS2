@@ -10,7 +10,7 @@ namespace Projections.Common.Data
         public ProjectionContext(IConfiguration configuration)
         {
             var client = new MongoClient(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
-            var database = client.GetDatabase("ProjectionsDB");
+            var database = client.GetDatabase("ProjectionDB");
             Projections = database.GetCollection<Projection>("Projection");
         }
 

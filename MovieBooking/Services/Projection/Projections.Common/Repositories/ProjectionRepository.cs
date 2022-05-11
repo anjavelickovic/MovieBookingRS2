@@ -16,6 +16,11 @@ namespace Projections.Common.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public async Task<IEnumerable<Projection>> GetProjections()
+        {
+            return await _context.Projections.Find(p => true).ToListAsync();
+        }
+
         public async Task<IEnumerable<Projection>> GetMovieProjections(string movieId)
         {
             return await _context.Projections.Find(p => p.MovieId == movieId).ToListAsync();
@@ -28,8 +33,8 @@ namespace Projections.Common.Repositories
 
         public async Task CreateProjection(Projection projection)
         {
-            IEnumerable<Projection> projections = _context.Projections.Find(p => p.MovieId == projection.MovieId).ToList();
-            foreach (Projection projectionItem in projections)
+            Task<IEnumerable<Projection>> projections = GetProjections();
+            foreach (Projection projectionItem in await projections)
             {
                 if (projectionItem.TheaterHallId.Equals(projection.TheaterHallId) &&
                     projectionItem.ProjectionDate.Equals(projection.ProjectionDate) &&

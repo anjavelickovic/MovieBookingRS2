@@ -7,6 +7,7 @@ namespace Projections.Common.Repositories
 {
     public interface IProjectionRepository
     {
+        Task<IEnumerable<Projection>> GetProjections();
         Task<IEnumerable<Projection>> GetMovieProjections(string movieId);
         Task<Projection> GetProjection(string id);
         Task CreateProjection(Projection projection);

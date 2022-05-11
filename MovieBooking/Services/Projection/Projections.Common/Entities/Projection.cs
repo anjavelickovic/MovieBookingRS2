@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Projections.Common.Entities
 {
     public class Projection
     {
+        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public string MovieId { get; set; }
         public string MovieTitle { get; set; }
