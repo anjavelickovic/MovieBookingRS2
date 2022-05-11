@@ -1,6 +1,8 @@
 using Identity.Context;
+using Identity.DTOs;
 using Identity.Entities;
 using Identity.Extensions;
+using Identity.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +36,14 @@ namespace Identity
 
             services.ConfigurePersistence(Configuration);
             services.ConfigureIdentity();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+
+            services.AddAutoMapper(configuration =>
+            {
+                configuration.CreateMap<User, CreateUserDTO>().ReverseMap();
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
