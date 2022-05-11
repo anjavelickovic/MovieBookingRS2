@@ -77,5 +77,10 @@ namespace Identity.Repositories
         {
             return await _userManager.CheckPasswordAsync(user, password);
         }
+
+        public async Task<IEnumerable<string>> GetUserRoles(User user) 
+        {
+            return await _userManager.GetRolesAsync(user);
+        }
     }
 }

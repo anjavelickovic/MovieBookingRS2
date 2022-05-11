@@ -18,5 +18,6 @@ namespace Identity.Repositories
         Task<bool> ConfirmEmailAsync(User user);
         Task<IEnumerable<User>> GetAllUsers();
         Task<bool> CheckPassword(User user, string password);
+        Task<IEnumerable<string>> GetUserRoles(User user);
     }
 }

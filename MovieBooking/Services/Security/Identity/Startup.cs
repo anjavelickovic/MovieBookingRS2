@@ -3,6 +3,7 @@ using Identity.DTOs;
 using Identity.Entities;
 using Identity.Extensions;
 using Identity.Repositories;
+using Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +40,7 @@ namespace Identity
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddAutoMapper(configuration =>
             {
