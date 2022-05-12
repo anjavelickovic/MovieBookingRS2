@@ -58,7 +58,7 @@ namespace Identity.Repositories
             return await _userManager.FindByNameAsync(username);
         }
 
-        public async Task<bool> ConfirmEmailAsync(User user)
+        public async Task<bool> ConfirmEmail(User user)
         {
             if (await _userManager.IsEmailConfirmedAsync(user))
                 return true;

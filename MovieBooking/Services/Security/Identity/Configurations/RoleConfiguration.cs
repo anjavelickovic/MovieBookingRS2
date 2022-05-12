@@ -15,8 +15,8 @@ namespace Identity.Configurations
             builder.ToTable("Role");
             builder.HasData
             (
-                new IdentityRole("Customer"),
-                new IdentityRole("Admin")
+                new IdentityRole { Name = "Customer", NormalizedName = "CUSTOMER" },
+                new IdentityRole { Name = "Admin", NormalizedName = "ADMIN"}
             );
         }
     }
