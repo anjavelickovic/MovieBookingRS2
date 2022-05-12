@@ -2,6 +2,7 @@
 using Identity.DTOs;
 using Identity.Entities;
 using Identity.Repositories;
+using Identity.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,12 +18,17 @@ namespace Identity.Controllers
         protected readonly IMapper _mapper;
         protected readonly IUserRepository _userRepository;
         protected readonly IRoleRepository _roleRepository;
+        protected readonly IAuthenticationService _authService;
 
-        public IdentityRegistrationControllerBase(IMapper mapper, IUserRepository userRepository, IRoleRepository roleRepository)
+        public IdentityRegistrationControllerBase(IMapper mapper,
+                                                  IUserRepository userRepository,
+                                                  IRoleRepository roleRepository,
+                                                  IAuthenticationService authService)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _roleRepository = roleRepository ?? throw new ArgumentNullException(nameof(roleRepository));
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
         }
 
         protected async Task<IActionResult> RegisterUser(CreateUserDTO newUser, IEnumerable<string> roles)
@@ -43,6 +49,23 @@ namespace Identity.Controllers
             }
 
             return StatusCode(StatusCodes.Status201Created);
+        }
+
+        protected async Task<IActionResult> LoginUser(UserCredentialsDTO userCredentials, string role)
+        {
+            var user = await _authService.ValidateUser(userCredentials);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var userRoles = (await _userRepository.GetUserRoles(user)).ToList();
+            if (!userRoles.Contains(role))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(await _authService.AuthenticateUser(user));
         }
     }
 }

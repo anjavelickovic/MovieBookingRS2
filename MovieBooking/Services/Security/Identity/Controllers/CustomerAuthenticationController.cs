@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Identity.DTOs;
+using Identity.Entities;
 using Identity.Repositories;
+using Identity.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +18,11 @@ namespace Identity.Controllers
     [Route("api/v1/[controller]")]
     public class CustomerAuthenticationController: IdentityRegistrationControllerBase
     {
-        public CustomerAuthenticationController(IMapper mapper, IUserRepository userRepository, IRoleRepository roleRepository)
-            : base(mapper, userRepository, roleRepository)
+        public CustomerAuthenticationController(IMapper mapper,
+                                                IUserRepository userRepository,
+                                                IRoleRepository roleRepository,
+                                                IAuthenticationService authService)
+            : base(mapper, userRepository, roleRepository, authService)
         { }
 
         [HttpPost("[action]")]
@@ -26,6 +31,14 @@ namespace Identity.Controllers
         public async Task<IActionResult> RegisterCustomer([FromBody] CreateUserDTO newUser)
         {
             return await RegisterUser(newUser, new string[] { "Customer" });
+        }
+
+        [HttpPost("[action]")]
+        [ProducesResponseType(typeof(AuthenticationModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> LoginCustomer([FromBody] UserCredentialsDTO userCredentials)
+        {
+            return await LoginUser(userCredentials, "Customer");
         }
 
     }
