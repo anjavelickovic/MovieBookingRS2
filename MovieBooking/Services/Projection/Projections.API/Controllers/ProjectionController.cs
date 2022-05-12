@@ -19,7 +19,7 @@ namespace Projections.API.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        [HttpGet("all")]
+        [HttpGet("[action]")]
         [ProducesResponseType(typeof(IEnumerable<Projection>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Projection>>> GetProjections()
         {
@@ -27,7 +27,7 @@ namespace Projections.API.Controllers
             return Ok(projection);
         }
 
-        [HttpGet("movie/{movieId}")]
+        [HttpGet("[action]/{movieId}")]
         [ProducesResponseType(typeof(IEnumerable<Projection>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Projection>>> GetMovieProjections(string movieId)
         {
