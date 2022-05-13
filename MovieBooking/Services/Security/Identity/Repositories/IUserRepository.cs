@@ -21,5 +21,9 @@ namespace Identity.Repositories
         Task<bool> CheckPassword(User user, string password);
         Task<IEnumerable<string>> GetUserRoles(User user);
         Task RemoveAllUsers();
+        Task<bool> AddRefreshTokenToUser(User user, RefreshToken refreshToken);
+        Task<bool> RemoveRefreshTokenFromUser(User user, string refreshToken);
+        Task<RefreshToken> GetLastRefreshToken(User user);
+        Task RemoveAllRefreshTokensFromUser(User user);
     }
 }

@@ -10,6 +10,8 @@ namespace Identity.Entities
         public Guid Id { get; set; }
         public string Token { get; set; }
         public DateTime ExpiryTime { get; set; }
+        public DateTime CreationTime { get; set; }
+        public string Owner { get; set; }
 
         public RefreshToken()
         {

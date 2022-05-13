@@ -39,5 +39,23 @@ namespace Identity.Controllers
         {
             return await LoginUser(userCredentials, "Admin");
         }
+
+        [HttpPost("[action]")]
+        [ProducesResponseType(typeof(AuthenticationModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public new async Task<ActionResult<AuthenticationModel>> Refresh([FromBody] RefreshTokenDTO refreshTokenCredentials)
+        {
+            return await base.Refresh(refreshTokenCredentials);
+        }
+
+        [Authorize]
+        [HttpPost("[action]")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public new async Task<IActionResult> Logout([FromBody] RefreshTokenDTO refreshTokenCredentials)
+        {
+            return await base.Logout(refreshTokenCredentials);
+        }
     }
 }

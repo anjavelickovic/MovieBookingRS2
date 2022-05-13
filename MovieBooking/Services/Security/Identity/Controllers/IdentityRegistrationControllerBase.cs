@@ -67,5 +67,41 @@ namespace Identity.Controllers
 
             return Ok(await _authService.AuthenticateUser(user));
         }
+
+        protected async Task<ActionResult<AuthenticationModel>> Refresh(RefreshTokenDTO refreshTokenCredentials)
+        {
+            var user = await _userRepository.GetUserByUsername(refreshTokenCredentials.UserName);
+            if (user == null)
+            {
+                return Forbid();
+            }
+
+            var lastRefreshToken = await _userRepository.GetLastRefreshToken(user);
+            if (lastRefreshToken == null || lastRefreshToken.Token != refreshTokenCredentials.RefreshToken)
+            {
+                await _userRepository.RemoveAllRefreshTokensFromUser(user);
+                return Unauthorized();
+            }
+
+            if (lastRefreshToken.ExpiryTime < DateTime.Now)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(await _authService.AuthenticateUser(user));
+        }
+
+        protected async Task<IActionResult> Logout(RefreshTokenDTO refreshTokenCredentials)
+        {
+            var user = await _userRepository.GetUserByUsername(refreshTokenCredentials.UserName);
+            if (user == null)
+            {
+                return Forbid();
+            }
+
+            await _userRepository.RemoveAllRefreshTokensFromUser(user);
+
+            return Accepted();
+        }
     }
 }

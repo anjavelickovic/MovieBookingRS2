@@ -1,4 +1,5 @@
-﻿using Identity.DTOs;
+﻿using Identity.Context;
+using Identity.DTOs;
 using Identity.Entities;
 using Identity.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,11 +19,13 @@ namespace Identity.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
+        private readonly IdentityContext _identityContext;
 
-        public AuthenticationService(IUserRepository userRepository, IConfiguration configuration)
+        public AuthenticationService(IUserRepository userRepository, IConfiguration configuration, IdentityContext identityContext)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _identityContext = identityContext ?? throw new ArgumentNullException(nameof(identityContext));
         }
 
         public async Task<User> ValidateUser(UserCredentialsDTO userCredentials)
@@ -39,8 +43,11 @@ namespace Identity.Services
         public async Task<AuthenticationModel> AuthenticateUser(User user)
         {
             var accessToken = await CreateAccessToken(user);
+            var refreshToken = await CreateRefreshToken(user);
 
-            return new AuthenticationModel { AccessToken = accessToken };
+            await _userRepository.AddRefreshTokenToUser(user, refreshToken);
+
+            return new AuthenticationModel { AccessToken = accessToken, RefreshToken = refreshToken.Token };
         }
 
         private async Task<string> CreateAccessToken(User user)
@@ -91,6 +98,40 @@ namespace Identity.Services
             );
 
             return token;
+        }
+
+        private async Task<RefreshToken> CreateRefreshToken(User user)
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+
+            var token = new RefreshToken
+            {
+                Token = Convert.ToBase64String(randomNumber),
+                ExpiryTime = DateTime.Now.AddDays(Convert.ToDouble(_configuration.GetValue<string>("RefreshTokenExpires"))),
+                CreationTime = DateTime.Now,
+                Owner = user.UserName
+            };
+
+            _identityContext.RefreshTokens.Add(token);
+            await _identityContext.SaveChangesAsync();
+
+            return token;
+        }
+
+        public async Task RemoveRefreshToken(User user, string refreshToken) 
+        {
+            await _userRepository.RemoveRefreshTokenFromUser(user, refreshToken);
+
+            var token = _identityContext.RefreshTokens.FirstOrDefault(r => r.Token == refreshToken);
+            if (token == null)
+            {
+                return;
+            }
+
+            _identityContext.RefreshTokens.Remove(token);
+            await _identityContext.SaveChangesAsync();
         }
 
     }

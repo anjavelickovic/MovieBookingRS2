@@ -1,4 +1,5 @@
-﻿using Identity.Entities;
+﻿using Identity.Context;
+using Identity.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,10 +12,12 @@ namespace Identity.Repositories
     public class UserRepository: IUserRepository
     {
         private readonly UserManager<User> _userManager;
+        private readonly IdentityContext _identityContext;
 
-        public UserRepository(UserManager<User> userManager)
+        public UserRepository(UserManager<User> userManager, IdentityContext identityContext)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _identityContext = identityContext ?? throw new ArgumentNullException(nameof(identityContext));
         }
 
         public async Task<bool> CreateUser(User user, string password)
@@ -95,6 +98,37 @@ namespace Identity.Repositories
             var allUsers = await _userManager.Users.ToListAsync();
             foreach (var user in allUsers)
                 await _userManager.DeleteAsync(user);
+        }
+
+        public async Task<bool> AddRefreshTokenToUser(User user, RefreshToken refreshToken) 
+        {
+            user.RefreshTokens.Add(refreshToken);
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
+        public async Task<bool> RemoveRefreshTokenFromUser(User user, string refreshToken) 
+        {
+            user.RefreshTokens.RemoveAll(r => r.Token == refreshToken);
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
+        public async Task<RefreshToken> GetLastRefreshToken(User user) 
+        {
+            var userTokens = await _identityContext.RefreshTokens.Where(t => (t.Owner == user.UserName)).ToListAsync();
+            if (userTokens.Count == 0) 
+            {
+                return null;
+            }
+            return userTokens.OrderByDescending(t => t.CreationTime).First();
+        }
+
+        public async Task RemoveAllRefreshTokensFromUser(User user) 
+        {
+            var userTokens = await _identityContext.RefreshTokens.Where(t => (t.Owner == user.UserName)).ToListAsync();
+            _identityContext.RemoveRange(userTokens);
+            await _identityContext.SaveChangesAsync();
         }
     }
 }
