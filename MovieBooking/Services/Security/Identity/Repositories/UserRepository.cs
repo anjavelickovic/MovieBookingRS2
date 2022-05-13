@@ -29,7 +29,14 @@ namespace Identity.Repositories
             return result.Succeeded;
         }
 
-        public async Task<bool> ChangeEmail(User user, string newEmail)
+        public async Task<bool> ChangeUserName(User user, string newUserName) 
+        {
+            user.UserName = newUserName;
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
+        public async Task<bool> ChangeUserEmail(User user, string newEmail)
         {
             var emailToken = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
             var result = await _userManager.ChangeEmailAsync(user, newEmail, emailToken);
@@ -81,6 +88,13 @@ namespace Identity.Repositories
         public async Task<IEnumerable<string>> GetUserRoles(User user) 
         {
             return await _userManager.GetRolesAsync(user);
+        }
+
+        public async Task RemoveAllUsers() 
+        {
+            var allUsers = await _userManager.Users.ToListAsync();
+            foreach (var user in allUsers)
+                await _userManager.DeleteAsync(user);
         }
     }
 }

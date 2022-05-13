@@ -44,6 +44,7 @@ namespace Identity
             services.AddAutoMapper(configuration =>
             {
                 configuration.CreateMap<User, CreateUserDTO>().ReverseMap();
+                configuration.CreateMap<User, UserDetailsDTO>().ReverseMap();
             });
 
             services.AddControllers();
