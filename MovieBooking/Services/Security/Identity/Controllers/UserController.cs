@@ -67,13 +67,9 @@ namespace Identity.Controllers
         public async Task<ActionResult<bool>> ChangeUserName([FromBody] ChangeUserNameDTO request)
         {
             var user = await _userRepository.GetUserByUsername(User.FindFirstValue(ClaimTypes.Name));
-            System.Diagnostics.Debug.WriteLine("ovde0");
-            System.Diagnostics.Debug.WriteLine(user);
 
             if (!await _userRepository.CheckPassword(user, request.Password)) 
             {
-                System.Diagnostics.Debug.WriteLine("ovde1");
-
                 return Forbid();
             }
 
