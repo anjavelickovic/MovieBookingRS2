@@ -11,6 +11,7 @@ namespace Identity.Context
 {
     public class IdentityContext : IdentityDbContext<User>
     {
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public IdentityContext(DbContextOptions options) : base(options)
         {
         }
@@ -20,6 +21,7 @@ namespace Identity.Context
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new UserConfiguration());
         }
     }
 }
