@@ -22,6 +22,12 @@ services:
       context: .
       dockerfile: Services/Projection/Projections.API/Dockerfile
 
+  projections.grpc:
+    image: ${DOCKER_REGISTRY-}projectionsgrpc
+    build:
+      context: .
+      dockerfile: Services/Projection/Projections.GRPC/Dockerfile
+
   reservationsdb:
     image: redis:alpine
 

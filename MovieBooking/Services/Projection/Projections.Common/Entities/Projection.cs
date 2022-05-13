@@ -18,6 +18,6 @@ namespace Projections.Common.Entities
         public string ProjectionDate { get; set; }
         public string ProjectionTerm { get; set; }
         public int NumberOfReservedSeats { get; set; }
-        public decimal Price { get; set; }
+        public int Price { get; set; }
     }
 }

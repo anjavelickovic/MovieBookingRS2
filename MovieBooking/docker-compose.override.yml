@@ -42,6 +42,16 @@ services:
     ports:
        - "8005:80"
 
+  projections.grpc:
+    container_name: projections.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    depends_on:
+       - mongodb
+    ports:
+       - "8006:80"
+
   reservationsdb:
     container_name: reservationsdb
     restart: always

@@ -1,0 +1,35 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Projections.GRPC.Protos";
+
+service ProjectionProtoService {
+	rpc GetProjection (GetProjectionRequest) returns (GetProjectionResponse);
+    rpc UpdateProjection(UpdateProjectionRequest) returns (UpdateProjectionResponse);
+}
+
+message GetProjectionRequest {
+    string id = 1;
+}
+
+message GetProjectionResponse {
+	string id = 1;
+    string movieId = 2;
+    string movieTitle = 3;
+    string runtime = 4;
+    string theaterHallId = 5;
+    string theaterHallName = 6;
+    int32 mumberOfSeats = 7;
+    string projectionDate = 8;
+    string projectionTerm = 9;
+    int32 numberOfReservedSeats = 10;
+    int32 price = 11;
+}
+
+message UpdateProjectionRequest {
+    string id = 1;
+    int32 numberOfSeats = 2;
+}
+
+message UpdateProjectionResponse {
+    bool updated = 1;
+}
