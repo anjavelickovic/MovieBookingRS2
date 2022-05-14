@@ -157,6 +157,19 @@ namespace Movies.API.Repositories
             return true;
         }
 
+        public async Task UpdateInformationForAllMovies() 
+        {
+            List<Movie> movies = await _movieContext.Movies.Find(p => true).ToListAsync();
+            foreach (var movie in movies) 
+            {
+                var updatedMovie = (await ImdbClient.FetchJsonDataForMovie(movie.Id)).ToObject<Movie>();
+                var filter = Builders<Movie>.Filter
+                    .Eq(movie => movie.Id, updatedMovie.Id);
+
+                await _movieContext.Movies.ReplaceOneAsync(filter, updatedMovie);
+            }
+        }
+
         public async Task<bool> DeleteMovie(string id)
         {
             var deleteResult = await _movieContext.Movies.DeleteOneAsync(movie => (movie.Id == id));

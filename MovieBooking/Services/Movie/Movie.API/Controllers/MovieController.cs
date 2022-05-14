@@ -150,5 +150,14 @@ namespace Movies.API.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPut("[action]")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateInformationForAllMovies()
+        {
+            await _repository.UpdateInformationForAllMovies();
+            return Ok();
+        }
+
     }
 }
