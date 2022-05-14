@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Movies.API.DTOs;
 using Movies.API.Repositories;
@@ -9,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace Movies.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class MovieController : ControllerBase
     {
         private readonly IMovieRepository _repository;
 
-        public MovieController(IMovieRepository repository) 
+        public MovieController(IMovieRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
@@ -113,7 +115,8 @@ namespace Movies.API.Controllers
             return Ok(movies);
         }
 
-        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("[action]")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
         public async Task<ActionResult<MovieDTO>> CreateMovie([FromBody] CreateMovieDTO movie)
         {
@@ -122,7 +125,8 @@ namespace Movies.API.Controllers
             return CreatedAtRoute("GetMovie", new { id = movie.Id }, movie);
         }
 
-        [HttpPost("{id}")]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("[action]/{id}")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<MovieDTO>> CreateMovieById(string id)
@@ -137,7 +141,8 @@ namespace Movies.API.Controllers
             return movie;
         }
 
-        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("[action]/{id}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteMovie(string id)
         {
