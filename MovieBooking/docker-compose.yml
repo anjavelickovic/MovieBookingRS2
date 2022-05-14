@@ -40,6 +40,12 @@ services:
   identitydb:
     image: mysql
 
+  identity:
+    image: ${DOCKER_REGISTRY-}identity
+    build:
+      context: .
+      dockerfile: Services/Security/Identity/Dockerfile
+
 volumes:
   postgres_data:
   pgadmin_data:
