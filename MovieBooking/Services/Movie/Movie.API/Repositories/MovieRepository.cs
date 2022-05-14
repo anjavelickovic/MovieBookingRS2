@@ -159,12 +159,11 @@ namespace Movies.API.Repositories
 
         public async Task UpdateInformationForAllMovies() 
         {
-            List<Movie> movies = await _movieContext.Movies.Find(p => true).ToListAsync();
+            var movies = await _movieContext.Movies.Find(p => true).ToListAsync();
             foreach (var movie in movies) 
             {
                 var updatedMovie = (await ImdbClient.FetchJsonDataForMovie(movie.Id)).ToObject<Movie>();
-                var filter = Builders<Movie>.Filter
-                    .Eq(movie => movie.Id, updatedMovie.Id);
+                var filter = Builders<Movie>.Filter.Eq(movie => movie.Id, updatedMovie.Id);
 
                 await _movieContext.Movies.ReplaceOneAsync(filter, updatedMovie);
             }
