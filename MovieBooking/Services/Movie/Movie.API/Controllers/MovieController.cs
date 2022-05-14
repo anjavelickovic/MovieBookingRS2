@@ -75,6 +75,18 @@ namespace Movies.API.Controllers
             return Ok(movies);
         }
 
+        // example string: Action&Comedy&Drama/True
+        [HttpGet("[action]/{genres}/{containAllGenres}")]
+        [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesByGenres(string genres, bool containAllGenres)
+        {
+            var allGenres = genres.Split("&").ToArray();
+
+            var movies = await _repository.GetMoviesByGenres(allGenres, containAllGenres);
+
+            return Ok(movies);
+        }
+
         [HttpGet("[action]/{director}")]
         [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesByDirector(string director)
@@ -142,20 +154,20 @@ namespace Movies.API.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("[action]/{id}")]
-        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteMovie(string id)
-        {
-            await _repository.DeleteMovie(id);
-            return Ok();
-        }
-
-        [Authorize(Roles = "Admin")]
         [HttpPut("[action]")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateInformationForAllMovies()
         {
             await _repository.UpdateInformationForAllMovies();
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("[action]/{id}")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteMovie(string id)
+        {
+            await _repository.DeleteMovie(id);
             return Ok();
         }
 
