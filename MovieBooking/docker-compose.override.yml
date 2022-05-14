@@ -83,3 +83,29 @@ services:
         - discountdb
     ports:
       - "80:8003"
+
+  identitydb:
+    container_name: identitydb
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IdentityDb
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - identity_data:/var/lib/mysql
+ 
+  identity:
+    container_name: identity
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings:IdentityConnectionString=server=identitydb;user=user;password=1234;database=IdentityDb;
+    depends_on:
+      - identitydb
+    ports:
+      - "4000:80"
+
