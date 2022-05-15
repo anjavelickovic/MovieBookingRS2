@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Movies.API.DTOs;
 using Movies.API.Repositories;
@@ -9,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace Movies.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class MovieController : ControllerBase
     {
         private readonly IMovieRepository _repository;
 
-        public MovieController(IMovieRepository repository) 
+        public MovieController(IMovieRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
@@ -73,6 +75,18 @@ namespace Movies.API.Controllers
             return Ok(movies);
         }
 
+        // example string: Action&Comedy&Drama/True
+        [HttpGet("[action]/{genres}/{containAllGenres}")]
+        [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesByGenres(string genres, bool containAllGenres)
+        {
+            var allGenres = genres.Split("&").ToArray();
+
+            var movies = await _repository.GetMoviesByGenres(allGenres, containAllGenres);
+
+            return Ok(movies);
+        }
+
         [HttpGet("[action]/{director}")]
         [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesByDirector(string director)
@@ -113,7 +127,8 @@ namespace Movies.API.Controllers
             return Ok(movies);
         }
 
-        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("[action]")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
         public async Task<ActionResult<MovieDTO>> CreateMovie([FromBody] CreateMovieDTO movie)
         {
@@ -122,7 +137,8 @@ namespace Movies.API.Controllers
             return CreatedAtRoute("GetMovie", new { id = movie.Id }, movie);
         }
 
-        [HttpPost("{id}")]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("[action]/{id}")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<MovieDTO>> CreateMovieById(string id)
@@ -137,7 +153,17 @@ namespace Movies.API.Controllers
             return movie;
         }
 
-        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [HttpPut("[action]")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateInformationForAllMovies()
+        {
+            await _repository.UpdateInformationForAllMovies();
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("[action]/{id}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteMovie(string id)
         {
