@@ -19,7 +19,7 @@ namespace TheaterHalls.API.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         [ProducesResponseType(typeof(IEnumerable<TheaterHall>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TheaterHall>>> GetTheaterHalls()
         {
@@ -27,7 +27,7 @@ namespace TheaterHalls.API.Controllers
             return Ok(theaterHalls);
         }
 
-        [HttpGet("{id}", Name = "GetTheaterHall")]
+        [HttpGet("[action]/{id}", Name = "GetTheaterHall")]
         [ProducesResponseType(typeof(TheaterHall), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(TheaterHall), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TheaterHall>> GetTheaterHall(string id)
@@ -40,7 +40,7 @@ namespace TheaterHalls.API.Controllers
             return Ok(theaterHall);
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         [ProducesResponseType(typeof(IEnumerable<TheaterHall>), StatusCodes.Status201Created)]
         public async Task<ActionResult<TheaterHall>> CreateTheaterHall([FromBody] TheaterHall theaterHall)
         {
@@ -49,14 +49,14 @@ namespace TheaterHalls.API.Controllers
             return CreatedAtRoute("GetTheaterHall", new { id = theaterHall.Id }, theaterHall);
         }
 
-        [HttpPut]
+        [HttpPut("[action]")]
         [ProducesResponseType(typeof(TheaterHall), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateTheaterHall([FromBody] TheaterHall theaterHall)
         {
             return Ok(await _repository.UpdateTheaterHall(theaterHall));
         }
 
-        [HttpDelete]
+        [HttpDelete("[action]")]
         [ProducesResponseType(typeof(TheaterHall), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteTheaterHall(string id)
         {
