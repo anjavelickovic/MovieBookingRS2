@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discount.GRPC.Protos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Projections.GRPC.Protos;
-using Reservations.API.GrpcServices;
-using Reservations.API.Repositories;
+using TheaterHalls.API.Data;
+using TheaterHalls.API.Repositories;
 
-namespace Reservations.API
+namespace TheaterHalls.API
 {
     public class Startup
     {
@@ -29,30 +27,15 @@ namespace Reservations.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = Configuration.GetValue<string>("CacheSettings:ConnectionString");
-            });
-
-            services.AddScoped<IReservationsRepository, ReservationsRepository>();
-
-            services.AddAutoMapper(configuration =>
-            { 
-                configuration.CreateMap<bool, UpdateProjectionResponse>().ReverseMap();
-            });
-
-            services.AddGrpcClient<CouponProtoService.CouponProtoServiceClient>(
-                options => options.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
-            services.AddScoped<CouponGrpcService>();
-
-            services.AddGrpcClient<ProjectionProtoService.ProjectionProtoServiceClient>(
-                options => options.Address = new Uri(Configuration["GrpcSettings:ProjectionUrl"]));
-            services.AddScoped<ProjectionGrpcService>();
 
             services.AddControllers();
+
+            services.AddScoped<ITheaterHallContext, TheaterHallContext>();
+            services.AddScoped<ITheaterHallRepository, TheaterHallRepository>();
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Reservations.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TheaterHalls.API", Version = "v1" });
             });
         }
 
@@ -63,7 +46,7 @@ namespace Reservations.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Reservations.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TheaterHalls.API v1"));
             }
 
             app.UseRouting();

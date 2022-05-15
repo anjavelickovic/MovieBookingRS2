@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  moviesdb:
+  mongodb:
     image: mongo
 
   movies.api:
@@ -9,6 +9,24 @@ services:
     build:
       context: .
       dockerfile: Services/Movie/Movie.API/Dockerfile
+
+  theaterhalls.api:
+    image: ${DOCKER_REGISTRY-}theaterhalls
+    build:
+      context: .
+      dockerfile: Services/TheaterHall/TheaterHalls.API/Dockerfile
+
+  projections.api:
+    image: ${DOCKER_REGISTRY-}projections
+    build:
+      context: .
+      dockerfile: Services/Projection/Projections.API/Dockerfile
+
+  projections.grpc:
+    image: ${DOCKER_REGISTRY-}projectionsgrpc
+    build:
+      context: .
+      dockerfile: Services/Projection/Projections.GRPC/Dockerfile
 
   reservationsdb:
     image: redis:alpine
@@ -49,5 +67,5 @@ services:
 volumes:
   postgres_data:
   pgadmin_data:
-  movies_data:
+  mongo_data:
   identity_data:

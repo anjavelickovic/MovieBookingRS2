@@ -7,11 +7,12 @@ namespace Reservations.API.Repositories
 {
     public interface IReservationsRepository
     {
-        Task<ReservationBasket> GetAllReservations(string username);
-        Task<List<Reservation>> GetMovieReservations(string username, string movieId);
+        Task<ReservationBasket> GetReservations(string username);
+        Task<Dictionary<string, Reservation>> GetMovieReservations(string username, string movieId);
+        Task<ReservationBasket> AddReservation(string username, Reservation reservation);
         Task<ReservationBasket> UpdateReservations(string username, Reservation reservation);
-        Task DeleteAllReservations(string username);
+        Task DeleteReservations(string username);
         Task DeleteMovieReservations(string username, string movieId);
-        Task DeleteMovieReservation(string username, Reservation reservation);
+        Task DeleteReservation(string username, Reservation reservation);
     }
 }
