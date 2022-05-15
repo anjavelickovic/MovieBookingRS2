@@ -64,9 +64,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "CacheSettings:ConnectionString=reservationsdb:6379"
       - "GrpcSettings:DiscountUrl=http://discount.grpc"
+      - "GrpcSettings:ProjectionUrl=http://projections.grpc"
     depends_on:
       - reservationsdb
       - discount.grpc
+      - projections.grpc
     ports:
       - "8001:80"
 

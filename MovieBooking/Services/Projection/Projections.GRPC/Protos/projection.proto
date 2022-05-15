@@ -18,7 +18,7 @@ message GetProjectionResponse {
     string runtime = 4;
     string theaterHallId = 5;
     string theaterHallName = 6;
-    int32 mumberOfSeats = 7;
+    int32 numberOfSeats = 7;
     string projectionDate = 8;
     string projectionTerm = 9;
     int32 numberOfReservedSeats = 10;

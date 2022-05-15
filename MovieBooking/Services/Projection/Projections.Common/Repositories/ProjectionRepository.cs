@@ -21,6 +21,11 @@ namespace Projections.Common.Repositories
             return await _context.Projections.Find(p => true).ToListAsync();
         }
 
+        public async Task<IEnumerable<Projection>> GetProjectionsByDate(string date)
+        {
+            return await _context.Projections.Find(p => p.ProjectionDate == date).ToListAsync();
+        }
+
         public async Task<IEnumerable<Projection>> GetMovieProjections(string movieId)
         {
             return await _context.Projections.Find(p => p.MovieId == movieId).ToListAsync();
@@ -48,7 +53,7 @@ namespace Projections.Common.Repositories
 
         public async Task<bool> UpdateProjection(Projection projection)
         {
-            IEnumerable<Projection> projections = _context.Projections.Find(p => p.MovieId == projection.MovieId).ToList();
+            IEnumerable<Projection> projections = _context.Projections.Find(p => p.Id == projection.Id).ToList();
             foreach (Projection projectionItem in projections)
             {
                 if (!projectionItem.Id.Equals(projection.Id) &&
@@ -68,6 +73,30 @@ namespace Projections.Common.Repositories
         {
             var deleteResult = await _context.Projections.DeleteOneAsync(p => p.Id == id);
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
+        }
+
+        public async Task<bool> DeleteMovieProjections(string movieId)
+        {
+            var deleted = true;
+            var projections = await GetMovieProjections(movieId);
+            foreach (var projection in projections)
+            {
+                var deleteResult =  await _context.Projections.DeleteOneAsync(p => p.Id == projection.Id);
+                deleted = deleted && deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
+            }
+            return deleted;
+        }
+
+        public async Task<bool> DeleteProjections()
+        {
+            var deleted = true;
+            var projections = await GetProjections();
+            foreach (var projection in projections)
+            {
+                var deleteResult = await _context.Projections.DeleteOneAsync(p => p.Id == projection.Id);
+                deleted = deleted && deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
+            }
+            return deleted;
         }
     }
 }

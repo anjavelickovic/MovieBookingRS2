@@ -29,7 +29,7 @@ namespace Projections.GRPC.Services
                 throw new RpcException(new Status(StatusCode.NotFound, $"Projection {request.Id} is not found"));
             }
 
-            _logger.LogInformation("Projection id: {id}", projection.Id);
+            _logger.LogInformation("Projection with id: {id} is fetched", projection.Id);
 
             return _mapper.Map<GetProjectionResponse>(projection);
         }
@@ -42,12 +42,25 @@ namespace Projections.GRPC.Services
                 throw new RpcException(new Status(StatusCode.NotFound, $"Projection {request.Id} is not found"));
             }
 
-            _logger.LogInformation("Updating projection id: {id}", projection.Id);
+            _logger.LogInformation("Updating projection with id: {id}", projection.Id);
 
-            projection.NumberOfReservedSeats = request.NumberOfSeats;
-            var updated =  await _repository.UpdateProjection(projection);
+            var updateProjectionResponse = new UpdateProjectionResponse();
 
-            return _mapper.Map<UpdateProjectionResponse>(updated);
+            if (projection.NumberOfReservedSeats + request.NumberOfSeats > projection.NumberOfSeats)
+            {
+                _logger.LogInformation("There is only {} places left", projection.NumberOfSeats - projection.NumberOfReservedSeats);
+                updateProjectionResponse.Updated = false;
+                return updateProjectionResponse;
+
+            }
+            else
+            {
+                projection.NumberOfReservedSeats += request.NumberOfSeats;
+                var updated = await _repository.UpdateProjection(projection);
+                updateProjectionResponse.Updated = updated;
+                return updateProjectionResponse;
+            }
+
         }
     }
 }
