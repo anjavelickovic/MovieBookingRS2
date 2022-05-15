@@ -56,6 +56,7 @@ services:
       dockerfile: Services/Discount/Discount.GRPC/Dockerfile
 
   identitydb:
+    platform: linux/amd64
     image: mysql
 
   identity:
