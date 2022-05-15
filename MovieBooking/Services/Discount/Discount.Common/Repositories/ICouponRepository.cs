@@ -6,10 +6,10 @@ namespace Discount.Common.Repositories
 {
     public interface ICouponRepository
     {
-        Task<CouponDTO> GetDiscount(string movieName);
+        Task<CouponDTO> GetDiscount(string movieId);
         Task<bool> CreateDiscount(CreateCouponDTO couponDTO);
         Task<bool> UpdateDiscount(UpdateCouponDTO couponDTO);
-        Task<bool> DeleteDiscount(string movieName);
+        Task<bool> DeleteDiscount(string movieId);
         Task<IEnumerable<CouponDTO>> GetRandomDiscounts(int numberOfDiscounts);
 
     }

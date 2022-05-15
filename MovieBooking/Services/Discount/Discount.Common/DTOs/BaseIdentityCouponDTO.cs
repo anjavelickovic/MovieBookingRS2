@@ -8,6 +8,6 @@ namespace Discount.Common.DTOs
 {
     public class BaseIdentityCouponDTO : BaseCouponDTO
     {
-        public string Id { get; set; }
+        public string MovieId { get; set; }
     }
 }

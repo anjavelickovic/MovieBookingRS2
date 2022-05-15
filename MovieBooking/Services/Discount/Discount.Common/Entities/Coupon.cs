@@ -8,7 +8,7 @@ namespace Discount.Common.Entities
 {
     public class Coupon
     {
-        public string Id { get; set; }
+        public string MovieId { get; set; }
         public string MovieName { get; set; }
         public int Amount { get; set; }
     }

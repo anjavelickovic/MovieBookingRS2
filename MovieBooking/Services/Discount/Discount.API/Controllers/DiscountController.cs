@@ -20,12 +20,12 @@ namespace Discount.API.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        [HttpGet("{movieName}")]
+        [HttpGet("{movieId}")]
         [ProducesResponseType(typeof(CouponDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CouponDTO>> GetDiscount(string movieName)
+        public async Task<ActionResult<CouponDTO>> GetDiscount(string movieId)
         {
-            var coupon = await _repository.GetDiscount(movieName);
+            var coupon = await _repository.GetDiscount(movieId);
             if (coupon == null)
             {
                 return NotFound();
@@ -38,8 +38,8 @@ namespace Discount.API.Controllers
         public async Task<ActionResult<CouponDTO>> CreateDiscount([FromBody] CreateCouponDTO couponDTO)
         {
             await _repository.CreateDiscount(couponDTO);
-            var coupon = await _repository.GetDiscount(couponDTO.MovieName);
-            return CreatedAtAction("GetDiscount", new { movieName = coupon.MovieName }, coupon);
+            var coupon = await _repository.GetDiscount(couponDTO.MovieId);
+            return CreatedAtAction("GetDiscount", new { movieId = coupon.MovieId }, coupon);
         }
 
         [HttpPut]
@@ -49,11 +49,11 @@ namespace Discount.API.Controllers
             return Ok(await _repository.UpdateDiscount(coupon));
         }
 
-        [HttpDelete("{movieName}", Name = "DeleteDiscount")]
+        [HttpDelete("{movieId}", Name = "DeleteDiscount")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> DeleteDiscount(string movieName)
+        public async Task<ActionResult<bool>> DeleteDiscount(string movieId)
         {
-            return Ok(await _repository.DeleteDiscount(movieName));
+            return Ok(await _repository.DeleteDiscount(movieId));
         }
     }
 }
