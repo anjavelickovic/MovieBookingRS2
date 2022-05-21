@@ -11,9 +11,9 @@ namespace Administration.Application.Contracts.Persistence
     public interface IAsyncRepository<T> where T : AggregateRoot
     {
         Task<IReadOnlyList<T>> GetAllAsync();
-
         Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate);
+        Task<T> AddAsync(T entity);
 
-        // dosta drugih metoda koje treba dodati: update, delete....
+        // i druge metode koje treba dodati: update, delete....
     }
 }

@@ -11,6 +11,7 @@ namespace Administration.Application.Features.Commands.CreateReservation
     {
         public string BuyerId { get; private set; }
         public string BuyerUsername { get; private set; }
+        public string Email { get; set; }
 
         public IEnumerable<TicketDTO> Tickets { get; set; }
 
