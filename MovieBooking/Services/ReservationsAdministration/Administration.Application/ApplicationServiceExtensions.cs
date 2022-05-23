@@ -10,17 +10,17 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Administration.Application
+namespace Ordering.Application
 {
-    public static class ApplicationServiceExtensions
+    public static class ApplicationServiceRegistration
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            services.AddTransient(typeof(IPipelineBehavior<,>, typeof(UnhandledExceptionBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>, typeof(ValidationBehavior<,>)); ;
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             return services;
         }
