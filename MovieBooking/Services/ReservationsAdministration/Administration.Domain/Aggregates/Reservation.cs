@@ -14,22 +14,24 @@ namespace Administration.Domain.Aggregates
         public string BuyerId { get; private set; }
         public string BuyerUsername { get; private set; }
         public DateTime ReservationDate { get; private set; }
-        public PhoneNumber PhoneNumer { get;private set; }
-        
+        public PhoneNumber PhoneNumber { get;private set; }
+        public string Email { get; set; }
+
         private readonly List<TicketReservation> _ticketReservations = new();
         public IReadOnlyCollection<TicketReservation> TicketReservations => _ticketReservations;
 
-        public Reservation(string buyerId, string buyerUsername, PhoneNumber phoneNumer)
+        public Reservation(string buyerId, string buyerUsername, PhoneNumber phoneNumber, string email)
         {
             BuyerId = buyerId ?? throw new ArgumentNullException(nameof(buyerId));
             BuyerUsername = buyerUsername ?? throw new ArgumentNullException(nameof(buyerUsername));
-            PhoneNumer = phoneNumer ?? throw new ArgumentNullException(nameof(phoneNumer));
+            PhoneNumber = phoneNumber ?? throw new ArgumentNullException(nameof(phoneNumber));
+            Email = email ?? throw new ArgumentNullException(nameof(email));
             ReservationDate = DateTime.Now;
         }
 
         // za porudzbine koje vec postoje u bazi
-        public Reservation(int id, string buyerId, string buyerUsername, PhoneNumber phoneNumer)
-            : this(buyerId, buyerUsername, phoneNumer)
+        public Reservation(int id, string buyerId, string buyerUsername, PhoneNumber phoneNumer, string email)
+            :this(buyerId, buyerUsername, phoneNumer, email)
         {
             Id = id;
         }
