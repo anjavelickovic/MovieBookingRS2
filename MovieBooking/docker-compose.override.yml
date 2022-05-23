@@ -27,7 +27,6 @@ services:
     ports:
       - "6379:6379"
 
-  
   reservations.api:
     container_name: reservations.api
     environment:
@@ -81,3 +80,15 @@ services:
         - discountdb
     ports:
       - "8003:80"
+
+    
+  administrationdb:
+    container_name: administrationdb
+    environment:
+      - SA_PASSWORD=RS12345678
+      - ACCEPT_EULA=Y
+    restart: always
+    ports:
+      - "1433:1433"
+    volumes:
+      - administrationdb_data:/var/opt/mssql/data

@@ -25,6 +25,9 @@ services:
   pgadmin:
     image: dpage/pgadmin4
 
+  administrationdb:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    
   discount.api:
     image: ${DOCKER_REGISTRY-}discountapi
     build:
@@ -41,3 +44,4 @@ volumes:
   postgres_data:
   pgadmin_data:
   movies_data:
+  administrationdb_data:
