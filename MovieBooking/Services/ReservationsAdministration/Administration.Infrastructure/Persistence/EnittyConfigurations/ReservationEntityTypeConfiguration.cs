@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Administration.Infrastructure.Persistence.EnittyConfigurations
 {
-    public class ReservationTypeConfiguration : IEntityTypeConfiguration<Reservation>
+    public class ReservationEntityTypeConfiguration : IEntityTypeConfiguration<Reservation>
     {
         public void Configure(EntityTypeBuilder<Reservation> builder)
         {
