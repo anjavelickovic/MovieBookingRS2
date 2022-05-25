@@ -2,7 +2,6 @@
 using Administration.Domain.Aggregates;
 using Administration.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -15,18 +15,17 @@ namespace Administration.Domain.Aggregates
         public string BuyerUsername { get; private set; }
         public DateTime ReservationDate { get; private set; }
         public PhoneNumber PhoneNumber { get;private set; }
-        public string Email { get; set; }
+        public string Email { get; private set; }
 
         private readonly List<TicketReservation> _ticketReservations = new();
         public IReadOnlyCollection<TicketReservation> TicketReservations => _ticketReservations;
 
         public Reservation(string buyerId, string buyerUsername, PhoneNumber phoneNumber, string email)
         {
-            BuyerId = buyerId ?? throw new ArgumentNullException(nameof(buyerId));
-            BuyerUsername = buyerUsername ?? throw new ArgumentNullException(nameof(buyerUsername));
-            PhoneNumber = phoneNumber ?? throw new ArgumentNullException(nameof(phoneNumber));
-            Email = email ?? throw new ArgumentNullException(nameof(email));
-            ReservationDate = DateTime.Now;
+            BuyerId = buyerId;
+            BuyerUsername = buyerUsername;
+            PhoneNumber = phoneNumber;
+            Email = email;
         }
 
         // za porudzbine koje vec postoje u bazi

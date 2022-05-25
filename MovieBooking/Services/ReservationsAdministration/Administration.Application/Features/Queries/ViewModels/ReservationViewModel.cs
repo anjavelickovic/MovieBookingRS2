@@ -8,9 +8,9 @@ namespace Administration.Application.Features.Queries.ViewModels
 {
     public class ReservationViewModel
     {
-        public int Id { get; protected set; }
-        public string BuyerId { get; private set; }
-        public string BuyerUsername { get; private set; }
+        public int Id { get; set; }
+        public string BuyerId { get; set; }
+        public string BuyerUsername { get; set; }
         public decimal TotalPrice { get; set; }
 
         public IEnumerable<TicketViewModel> Tickets { get; set; }

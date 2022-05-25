@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ordering.Infrastructure.Repositories
+namespace Administration.Infrastructure.Repositories
 {
     public class RepositoryBase<T> : IAsyncRepository<T> where T : AggregateRoot
     {
