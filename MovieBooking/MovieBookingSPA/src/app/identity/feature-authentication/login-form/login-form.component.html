@@ -1,0 +1,41 @@
+
+
+<form [formGroup]="loginForm" (ngSubmit)="onLoginFormSubmit()"
+    style="margin: 2vh 4vh 4vh 4vh" autocomplete="off"> 
+    <div class="form-group">
+        <label for="usernameOrEmail">Username or email</label>
+        <input class="input-sm" type="text" id="usernameOrEmail" class="form-control form-control-sm"
+            formControlName="usernameOrEmail" />
+
+        <span *ngIf="showFormErrors && usernameOrEmail?.errors?.['required']" class="error">
+            Username or email required
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control form-control-sm"
+            formControlName="password" />
+        
+        <span *ngIf="showFormErrors && password?.errors?.['required']" class="error">
+            Password required
+        </span>
+        <span *ngIf="showFormErrors && !password?.errors?.['required'] && password?.errors?.['minlength']" class="error">
+            Minimum password length is 8 characters
+        </span>
+    </div>
+    
+    <div class="form-group">
+        <span *ngIf="showServerError" class="error">Wrong username/email or password</span>
+    </div>
+    
+
+    <button type="submit" class="btn btn-warning btn-sm btn-block">
+        Login
+    </button>
+
+    
+    <a style="float: right; margin-top: 1.5vh;" (click)="registerForm()">
+        Register
+    </a>
+        
+</form>

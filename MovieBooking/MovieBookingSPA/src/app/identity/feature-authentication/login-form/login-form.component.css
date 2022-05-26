@@ -1,0 +1,14 @@
+a {
+    color: blue;
+    text-decoration: underline;
+    font-size: 11px;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+span.error {
+    font-size: 11px;
+    color: red;
+}
