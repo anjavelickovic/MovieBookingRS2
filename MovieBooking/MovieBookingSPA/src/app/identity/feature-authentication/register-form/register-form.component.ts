@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, of } from 'rxjs';
+import { catchError, from, of, switchMap } from 'rxjs';
 import { AuthenticationFacadeService } from '../../domain/application-services/authentication-facade.service';
 
 interface IRegisterFormData {
@@ -62,27 +62,27 @@ export class RegisterFormComponent implements OnInit {
       return;
     }
 
-
     const data: IRegisterFormData = this.registerForm.value as IRegisterFormData;
 
-    
     this.authenticationService.registerCustomer(data.firstName, data.lastName, data.username, data.password, data.email)
-    .pipe(catchError((err) => {
-      console.log(err);
-      this.showServerError = true;
-      return of(false);
+    .pipe(
+      switchMap(
+        success => {
+          this.registerForm.reset();
+          // poziv login metode
+          return this.authenticationService.loginCustomer(data.email, data.password);
+        }),
+      catchError((err) => {
+        this.showServerError = true;
+        console.log(err);
+        return of(false);
     }))
     .subscribe(
       success => {
-        if(success == true){
-          console.log("registracija uspesna")
-          this.registerForm.reset();
-          // poziv login metode
-          // rutiranje na pocetnu stranu
-        }
-        else{
-          console.log("registracija neuspesna")
-        }})
+        if (success){
+        // rutiranje na pocetnu stranu
+          window.alert("uspesna registracija");
+    }})
   }
 
   public get firstName(){
