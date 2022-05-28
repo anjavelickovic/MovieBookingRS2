@@ -80,8 +80,8 @@ export class RegisterFormComponent implements OnInit {
     .subscribe(
       success => {
         if (success){
-        // rutiranje na pocetnu stranu
           window.alert("uspesna registracija");
+          this.router.navigate((['/main']));
     }})
   }
 

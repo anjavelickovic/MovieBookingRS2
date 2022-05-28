@@ -57,7 +57,7 @@ export class LoginFormComponent implements OnInit {
     .subscribe(
       result => {
         if(result[0] || result[1]){
-        // rutiranje na pocetnu stranu
+          this.router.navigate((['/main']));
         }
         else{
           this.showServerError = true;
