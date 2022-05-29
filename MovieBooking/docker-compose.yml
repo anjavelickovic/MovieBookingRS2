@@ -75,10 +75,7 @@ services:
 volumes:
   postgres_data:
   pgadmin_data:
-<<<<<<< HEAD
   movies_data:
   administrationdb_data:
-=======
   mongo_data:
   identity_data:
->>>>>>> 081626cd6ceecbd6b81a03fcfe9628d183ccc0ad
