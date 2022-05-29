@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using Grpc.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Reservations.API.Entities;
+using Reservations.API.GrpcServices;
 using Reservations.API.Repositories;
 
 namespace Reservations.API.Controllers
@@ -13,57 +17,168 @@ namespace Reservations.API.Controllers
     public class ReservationsController : ControllerBase
     {
         private readonly IReservationsRepository _repository;
+        private readonly CouponGrpcService _couponGrpcService;
+        private readonly ProjectionGrpcService _projectionGrpcService;
+        private readonly ILogger<ReservationsController> _logger;
+        private readonly IMapper _mapper;
 
-        public ReservationsController(IReservationsRepository repository)
+        public ReservationsController(IReservationsRepository repository, CouponGrpcService couponGrpcService, ProjectionGrpcService projectionGrpcService, ILogger<ReservationsController> logger, IMapper mapper)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _couponGrpcService = couponGrpcService ?? throw new ArgumentNullException(nameof(couponGrpcService));
+            _projectionGrpcService = projectionGrpcService ?? throw new ArgumentNullException(nameof(projectionGrpcService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet("{username}")]
+        [HttpGet("[action]/{username}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ReservationBasket>> GetAllReservations(string username)
+        public async Task<ActionResult<ReservationBasket>> GetReservations(string username)
         {
-            var basket = await _repository.GetAllReservations(username);
+            var basket = await _repository.GetReservations(username);
             return Ok(basket ?? new ReservationBasket(username));
         }
 
-        [HttpGet("{username}/movieId/{movieId}")]
+        [HttpGet("[action]/username/{username}/movieId/{movieId}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
         public async Task<ActionResult<ReservationBasket>> GetMovieReservations(string username, string movieId)
         {
             var reservation = await _repository.GetMovieReservations(username, movieId);
-            return Ok(reservation ?? new List<Reservation>());
+            return Ok(reservation ?? new Dictionary<string, Reservation>());
         }
 
 
-        [HttpPut("username")]
+        [HttpPost("[action]/{username}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ReservationBasket>> AddReservation(string username, [FromBody] Reservation reservation)
+        {
+            try
+            {
+                var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
+                reservation.Price -= coupon.Amount;
+
+            }
+            catch (RpcException e)
+            {
+                _logger.LogInformation("Error while retrieving coupon for movie {MovieTtitle}: {msg}", reservation.MovieTitle, e.Message);
+            }
+            try
+            {
+                var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
+                var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, reservation.NumberOfTickets);
+                if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
+                {
+                    _logger.LogInformation("There is no enough seats");
+                    return BadRequest(null);
+                }
+            }
+            catch(RpcException e)
+            {
+                _logger.LogInformation("Error while retrieving projection for movie {MovieTtitle}: {msg}", reservation.MovieTitle, e.Message);
+            }
+
+            return Ok(await _repository.AddReservation(username, reservation));
+        }
+
+        [HttpPut("[action]/{username}")]
+        [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ReservationBasket>> UpdateReservations(string username, [FromBody] Reservation reservation)
         {
+            try
+            {
+                var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
+                reservation.Price -= coupon.Amount;
+
+            }
+            catch (RpcException e)
+            {
+                _logger.LogInformation("Error while retrieving coupon for movie {MovieTtitle}: {msg}", reservation.MovieTitle, e.Message);
+            }
+            try
+            {
+                var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
+                var reservations = await _repository.GetMovieReservations(username, reservation.MovieId);
+                var reservationItem = reservations[reservation.ProjectionId];
+
+                var numberOfSeats = reservation.NumberOfTickets - reservationItem.NumberOfTickets;
+                var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, numberOfSeats);
+                if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
+                {
+                    _logger.LogInformation("There is no enough seats");
+                    return BadRequest(null);
+                }
+            }
+            catch (RpcException e)
+            {
+                _logger.LogInformation("Error while retrieving projection for movie {MovieTtitle}: {msg}", reservation.MovieTitle, e.Message);
+            }
+
             return Ok(await _repository.UpdateReservations(username, reservation));
         }
 
-        [HttpDelete("{username}")]
+        [HttpDelete("[action]/{username}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteAllReservations(string username)
+        public async Task<IActionResult> DeleteReservations(string username)
         {
-            await _repository.DeleteAllReservations(username);
+            ReservationBasket reservationBasket = await _repository.GetReservations(username);
+            foreach (var reservationDict in reservationBasket.Reservations.Values)
+            {
+                foreach (var reservation in reservationDict.Values)
+                {
+                    try
+                    {
+                        var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
+                        var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, - reservation.NumberOfTickets);
+                    }
+                    catch (RpcException e)
+                    {
+                        _logger.LogInformation("Error while retrieving projection for movie {MovieTtitle}: {msg}", reservation.MovieTitle, e.Message);
+                    }
+                }
+            }
+
+            await _repository.DeleteReservations(username);
             return Ok();
         }
 
-        [HttpDelete("{username}/movieId/{movieId}")]
+        [HttpDelete("[action]/username/{username}/movieId/{movieId}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteMovieReservations(string username, string movieId)
         {
+            ReservationBasket reservationBasket = await _repository.GetReservations(username);
+            foreach (var reservation in reservationBasket.Reservations[movieId])
+            {
+                try
+                { 
+                    var projection = await _projectionGrpcService.GetProjection(reservation.Value.ProjectionId);
+                    var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, -reservation.Value.NumberOfTickets);
+                }
+                catch (RpcException e)
+                {
+                    _logger.LogInformation("Error while retrieving projection for movie {MovieTtitle}: {msg}", reservation.Value.MovieTitle, e.Message);
+                }
+            }
+
             await _repository.DeleteMovieReservations(username, movieId);
             return Ok();
         }
 
-        [HttpDelete("deleteOne/{username}")]
+        [HttpDelete("[action]/{username}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteMovieReservation(string username, [FromBody] Reservation reservation)
+        public async Task<IActionResult> DeleteReservation(string username, [FromBody] Reservation reservation)
         {
-            await _repository.DeleteMovieReservation(username, reservation);
+            try
+            {
+                var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
+                var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, -reservation.NumberOfTickets);
+            }
+            catch (RpcException e)
+            {
+                _logger.LogInformation("Error while retrieving projection for movie {MovieTtitle}: {msg}", reservation.MovieTitle, e.Message);
+            }
+            await _repository.DeleteReservation(username, reservation);
             return Ok();
         }
 

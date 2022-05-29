@@ -1,25 +1,56 @@
 version: '3.4'
 
 services:
-  moviesdb:
-    container_name: moviesdb
+
+  mongodb:
+    container_name: mongodb
     restart: always
     ports:
       - "27017:27017"
     volumes:
-      - movies_data:/data/db
+      - mongo_data:/data/db
 
   movies.api:
     container_name: movies.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=mongodb://moviesdb:27017"
+      - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
       - OMDB_API_KEY=${OMDB_API_KEY}
       - IMDB_API_KEY=${IMDB_API_KEY}
     depends_on:
-      - moviesdb
+      - mongodb
     ports:
       - "8000:80"
+
+  theaterhalls.api:
+    container_name: theaterhalls.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    depends_on:
+      - mongodb
+    ports:
+      - "8004:80"
+
+  projections.api:
+    container_name: projections.api
+    environment:
+       - ASPNETCORE_ENVIRONMENT=Development
+       - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    depends_on:
+       - mongodb
+    ports:
+       - "8005:80"
+
+  projections.grpc:
+    container_name: projections.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    depends_on:
+       - mongodb
+    ports:
+       - "8006:80"
 
   reservationsdb:
     container_name: reservationsdb
@@ -32,8 +63,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "CacheSettings:ConnectionString=reservationsdb:6379"
+      - "GrpcSettings:DiscountUrl=http://discount.grpc"
+      - "GrpcSettings:ProjectionUrl=http://projections.grpc"
     depends_on:
       - reservationsdb
+      - discount.grpc
+      - projections.grpc
     ports:
       - "8001:80"
 
@@ -60,7 +95,6 @@ services:
     volumes:
       - pgadmin_data:/root/.pgadmin
 
-
   discount.api:
     container_name: discount.api
     environment:
@@ -77,7 +111,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=admin1234;"
     depends_on:
-        - discountdb
+      - discountdb
     ports:
       - "8003:80"
 
@@ -103,3 +137,27 @@ services:
     ports:
       - "8004:80"
 
+  identitydb:
+    container_name: identitydb
+    restart: always
+    environment:
+      - MYSQL_DATABASE=IdentityDb
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - identity_data:/var/lib/mysql
+ 
+  identity:
+    container_name: identity
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings:IdentityConnectionString=server=identitydb;user=user;password=1234;database=IdentityDb;
+    depends_on:
+      - identitydb
+    ports:
+      - "4000:80"

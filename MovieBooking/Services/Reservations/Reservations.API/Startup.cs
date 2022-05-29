@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discount.GRPC.Protos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Projections.GRPC.Protos;
+using Reservations.API.GrpcServices;
 using Reservations.API.Repositories;
 
 namespace Reservations.API
@@ -32,6 +35,19 @@ namespace Reservations.API
             });
 
             services.AddScoped<IReservationsRepository, ReservationsRepository>();
+
+            services.AddAutoMapper(configuration =>
+            { 
+                configuration.CreateMap<bool, UpdateProjectionResponse>().ReverseMap();
+            });
+
+            services.AddGrpcClient<CouponProtoService.CouponProtoServiceClient>(
+                options => options.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
+            services.AddScoped<CouponGrpcService>();
+
+            services.AddGrpcClient<ProjectionProtoService.ProjectionProtoServiceClient>(
+                options => options.Address = new Uri(Configuration["GrpcSettings:ProjectionUrl"]));
+            services.AddScoped<ProjectionGrpcService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
