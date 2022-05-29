@@ -40,6 +40,12 @@ services:
       context: .
       dockerfile: Services/Discount/Discount.GRPC/Dockerfile
 
+  administration.api:
+    image: ${DOCKER_REGISTRY-}administrationapi
+    build:
+      context: .
+      dockerfile: Services/ReservationsAdministration/Administration.API/Dockerfile
+
 volumes:
   postgres_data:
   pgadmin_data:

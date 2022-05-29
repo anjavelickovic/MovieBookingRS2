@@ -92,3 +92,14 @@ services:
       - "1433:1433"
     volumes:
       - administrationdb_data:/var/opt/mssql/data
+
+  administration.api:
+    container_name: administration.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=sa;Password=RS12345678;"
+    depends_on: 
+      - administrationdb
+    ports:
+      - "8004:80"
+
