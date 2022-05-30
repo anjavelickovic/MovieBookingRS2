@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using Reservations.API.Entities;
 using Reservations.API.GrpcServices;
 using Reservations.API.Repositories;
+using EventBus.Messages.Events;
+using MassTransit;
 
 namespace Reservations.API.Controllers
 {
@@ -21,14 +23,16 @@ namespace Reservations.API.Controllers
         private readonly ProjectionGrpcService _projectionGrpcService;
         private readonly ILogger<ReservationsController> _logger;
         private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public ReservationsController(IReservationsRepository repository, CouponGrpcService couponGrpcService, ProjectionGrpcService projectionGrpcService, ILogger<ReservationsController> logger, IMapper mapper)
+        public ReservationsController(IReservationsRepository repository, CouponGrpcService couponGrpcService, ProjectionGrpcService projectionGrpcService, ILogger<ReservationsController> logger, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _couponGrpcService = couponGrpcService ?? throw new ArgumentNullException(nameof(couponGrpcService));
             _projectionGrpcService = projectionGrpcService ?? throw new ArgumentNullException(nameof(projectionGrpcService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         }
 
         [HttpGet("[action]/{username}")]
@@ -180,6 +184,28 @@ namespace Reservations.API.Controllers
             }
             await _repository.DeleteReservation(username, reservation);
             return Ok();
+        }
+
+        [HttpPost("[action]")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Checkout([FromBody] ReservationBasketCheckout basketCheckout)
+        {
+            // Get existing basket
+            var reservationBasket = await _repository.GetReservations(basketCheckout.BuyerUsername);
+            if (reservationBasket == null)
+            {
+                return BadRequest();
+            }
+
+            // Send checkout event
+            var eventMessage = _mapper.Map<ReservationBasketCheckoutEvent>(basketCheckout);
+            await _publishEndpoint.Publish(eventMessage);
+
+            // Remove the basket
+            await _repository.DeleteReservations(basketCheckout.BuyerUsername);
+
+            return Accepted();
         }
 
     }
