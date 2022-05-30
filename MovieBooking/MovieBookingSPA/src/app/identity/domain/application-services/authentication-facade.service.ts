@@ -59,11 +59,26 @@ export class AuthenticationFacadeService {
     const request: ILoginRequest = {userNameOrEmail, password};
 
     return this.authenticationService.loginAdmin(request).pipe(
-      map( (loginResponse: ILoginResponse) => {
-        console.log(loginResponse)
+      switchMap( (loginResponse: ILoginResponse) => {
+        this.appStateService.setAccessToken(loginResponse.accessToken);
+        this.appStateService.setRefreshToken(loginResponse.refreshToken);
+
+        const payload = this.jwtService.parsePayload(loginResponse.accessToken);
+        this.appStateService.setUsername(payload[JwtPayloadKeys.Username]);
+        this.appStateService.setEmail(payload[JwtPayloadKeys.Email]);
+        this.appStateService.setRole(payload[JwtPayloadKeys.Role]);
+
+        return this.userService.getUserDetails(payload[JwtPayloadKeys.Username]);
+      }),
+      map((userDetails: IUserDetails) => {
+        this.appStateService.setFirstName(userDetails.firstName);
+        this.appStateService.setLastName(userDetails.lastName);
+        this.appStateService.setUserId(userDetails.id);
+
         return true;
       }),
       catchError((err) => {
+        this.appStateService.clearAppState();
         return of(false);
       })
     );
