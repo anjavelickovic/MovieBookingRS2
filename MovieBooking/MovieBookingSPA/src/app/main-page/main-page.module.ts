@@ -14,6 +14,9 @@ import { HeaderComponent } from './header/header.component';
   imports: [
     CommonModule,
     MainPageRoutingModule
+  ],
+  exports: [
+    HeaderComponent
   ]
 })
 export class MainPageModule { }

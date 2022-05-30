@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ILoginRequest } from '../models/login-request';
 import { ILoginResponse } from '../models/login-response';
+import { ILogoutRequest } from '../models/logout-request';
 import { IRegisterRequest } from '../models/register-request';
 
 @Injectable({
@@ -29,6 +30,14 @@ export class AuthenticationService {
 
   public loginAdmin(request: ILoginRequest): Observable<ILoginResponse> {
     return this.httpClient.post<ILoginResponse>(`${this.urlAdmin}/LoginAdmin`, request);
+  }
+
+  public logoutCustomer(request: ILogoutRequest): Observable<any> {
+    return this.httpClient.post(`${this.urlCustomer}/Logout`, request);
+  }
+
+  public logoutAdmin(request: ILogoutRequest): Observable<any> {
+    return this.httpClient.post(`${this.urlAdmin}/Logout`, request);
   }
 
 }

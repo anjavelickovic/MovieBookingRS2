@@ -12,6 +12,7 @@ export interface IAppState {
 
     hasRole(role: Role): boolean;
     clone(): IAppState;
+    isEmpty(): boolean;
 }
 
 export class AppState implements IAppState {
@@ -19,7 +20,7 @@ export class AppState implements IAppState {
     public refreshToken?: string;
     public username?: string;
     public email?: string;
-    role?: Role;
+    public role?: Role;
     public firstName?: string;
     public lastName?: string;
     public userId?: string;
@@ -66,4 +67,14 @@ export class AppState implements IAppState {
         return newState;
     }
 
+    public isEmpty(): boolean {
+        return this.accessToken === undefined 
+        && this.refreshToken === undefined
+        && this.username === undefined
+        && this.email === undefined
+        && this.role === undefined
+        && this.firstName === undefined
+        && this.lastName === undefined
+        && this.userId === undefined
+    }
 }

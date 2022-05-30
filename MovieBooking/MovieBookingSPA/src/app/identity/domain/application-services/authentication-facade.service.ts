@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, take } from 'rxjs';
+import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 import { JwtPayloadKeys } from 'src/app/shared/jwt/jwt-payload-keys';
 import { JwtService } from 'src/app/shared/jwt/jwt.service';
 import { AuthenticationService } from '../infrastructure/authentication.service';
 import { ILoginRequest } from '../models/login-request';
 import { ILoginResponse } from '../models/login-response';
+import { ILogoutRequest } from '../models/logout-request';
 import { IRegisterRequest } from '../models/register-request';
 import { IUserDetails } from '../models/user-details';
 import { UserFacadeService } from './user-facade.service';
@@ -83,4 +85,48 @@ export class AuthenticationFacadeService {
       })
     );
   }
+
+
+  public logoutCustomer(): Observable<boolean> {
+
+    return this.appStateService.getAppState().pipe(
+      map((appState: IAppState) => {
+        return appState;
+      }),
+      take(1),
+      map((appState: IAppState) => {
+        const request: ILogoutRequest = { userName: appState.username as string, refreshToken: appState.refreshToken as string };
+        return request;
+      }),
+      switchMap((request: ILogoutRequest) => this.authenticationService.logoutCustomer(request)),
+      map(() => {
+        this.appStateService.clearAppState();
+        return true;
+      }),
+      catchError((err) => {
+        console.error(err);
+        return of(false);
+      })
+    );
+  }
+
+  public logoutAdmin(): Observable<boolean> {
+    return this.appStateService.getAppState().pipe(
+      take(1),
+      map((appState: IAppState) => {
+        const request: ILogoutRequest = { userName: appState.username as string, refreshToken: appState.refreshToken as string };
+        return request;
+      }),
+      switchMap((request: ILogoutRequest) => this.authenticationService.logoutAdmin(request)),
+      map(() => {
+        this.appStateService.clearAppState();
+        return true;
+      }),
+      catchError((err) => {
+        console.error(err);
+        return of(false);
+      })
+    );
+  }
+
 }

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthenticationFacadeService } from 'src/app/identity/domain/application-services/authentication-facade.service';
 import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 
@@ -11,7 +13,8 @@ export class HeaderComponent implements OnInit {
 
   public appState: IAppState;
 
-  constructor(private appStateService: AppStateService) {
+  constructor(private appStateService: AppStateService, 
+              private authenticationService: AuthenticationFacadeService, private router: Router) {
 
     this.appStateService.getAppState().subscribe(
       (appState: IAppState) => {
@@ -19,14 +22,21 @@ export class HeaderComponent implements OnInit {
       }
     );
 
-   }
+  }
 
   ngOnInit(): void {
   }
 
   public logout(): void {
-    // this.router.navigate(['']);
-    window.alert("logout")
+    if(this.appState.role === 'Customer'){
+      this.authenticationService.logoutCustomer().subscribe(value => {});
+    }
+    else{
+      this.authenticationService.logoutAdmin().subscribe(value => {});
+    }
+
+    this.router.navigate(['\identity', 'logout']);
+
   }
 
   public profile(): void {
