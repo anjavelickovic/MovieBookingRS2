@@ -9,20 +9,23 @@ using System.Threading.Tasks;
 namespace Administration.Domain.Entities
 {
     public class TicketReservation : EntityBase
-    {   
-        public string MovieTitle { get; private set; }
-        public string MovieId { get; private set; }
-        public decimal Price { get; private set; }
-        public string CinemaHallId { get; set; }
-        public string CinemaHallName { get; set; }
-        public int NumberOfTickets { get; private set; } = 0;
+    {
+        public string ProjectionId { get; set; }
+        public string MovieId { get; set; }
+        public string MovieTitle { get; set; }
+        public string TheaterHallId { get; set; }
+        public string TheaterHallName { get; set; }
+        public decimal Price { get; set; }
+        public int NumberOfTickets { get; set; } = 0;
 
-        public TicketReservation(string movieTitle, string movieId, decimal price, string theaterHallId, string theaterHallName, int numberOfTickets)
+
+        public TicketReservation(string projectionId, string movieTitle, string movieId, decimal price, string theaterHallId, string theaterHallName, int numberOfTickets)
         {
+            ProjectionId = projectionId ?? throw new ArgumentNullException(nameof(projectionId));
             MovieTitle = movieTitle ?? throw new ArgumentNullException(nameof(movieTitle));
             MovieId = movieId ?? throw new ArgumentNullException(nameof(movieId));
-            CinemaHallId = theaterHallId ?? throw new ArgumentNullException(nameof(theaterHallId));
-            CinemaHallName = theaterHallName ?? throw new ArgumentNullException(nameof(theaterHallName));
+            TheaterHallId = theaterHallId ?? throw new ArgumentNullException(nameof(theaterHallId));
+            TheaterHallName = theaterHallName ?? throw new ArgumentNullException(nameof(theaterHallName));
             Price = price;
             AddTickets(numberOfTickets);
         }

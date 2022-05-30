@@ -115,17 +115,23 @@ services:
     ports:
       - "8003:80"
 
-    
   administrationdb:
     container_name: administrationdb
     environment:
-      - SA_PASSWORD=RS12345678
-      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=RS12345678
+      - ACCEPT_EULA=1
     restart: always
     ports:
       - "1433:1433"
     volumes:
       - administrationdb_data:/var/opt/mssql/data
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   administration.api:
     container_name: administration.api
@@ -135,7 +141,7 @@ services:
     depends_on: 
       - administrationdb
     ports:
-      - "8004:80"
+      - "8007:80"
 
   identitydb:
     container_name: identitydb
