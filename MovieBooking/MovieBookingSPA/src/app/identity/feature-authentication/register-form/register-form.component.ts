@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, from, of, switchMap } from 'rxjs';
+import { Role } from 'src/app/shared/app-state/role';
 import { AuthenticationFacadeService } from '../../domain/application-services/authentication-facade.service';
 
 interface IRegisterFormData {
@@ -70,7 +71,7 @@ export class RegisterFormComponent implements OnInit {
         success => {
           this.registerForm.reset();
           // poziv login metode
-          return this.authenticationService.loginCustomer(data.email, data.password);
+          return this.authenticationService.login(data.email, data.password, Role.Customer);
         }),
       catchError((err) => {
         this.showServerError = true;

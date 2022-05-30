@@ -1,9 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Role } from 'src/app/shared/app-state/role';
 import { ILoginRequest } from '../models/login-request';
 import { ILoginResponse } from '../models/login-response';
 import { ILogoutRequest } from '../models/logout-request';
+import { IRefreshTokenRequest } from '../models/refresh-token-request';
+import { IRefreshTokenResponse } from '../models/refresh-token-response';
 import { IRegisterRequest } from '../models/register-request';
 
 @Injectable({
@@ -15,8 +18,9 @@ export class AuthenticationService {
 
   constructor(private httpClient: HttpClient) {}
 
-  public loginCustomer(request: ILoginRequest): Observable<ILoginResponse> {
-    return this.httpClient.post<ILoginResponse>(`${this.urlCustomer}/LoginCustomer`, request);
+  public login(request: ILoginRequest, role: Role): Observable<ILoginResponse> {
+    const url = (role === 'Customer') ? this.urlCustomer : this.urlAdmin;
+    return this.httpClient.post<ILoginResponse>(`${url}/Login${role}`, request);
   }
 
   public registerCustomer(request: IRegisterRequest): Observable<any> {
@@ -28,16 +32,14 @@ export class AuthenticationService {
     return this.httpClient.post(`${this.urlCustomer}/RegisterCustomer`, body, {headers: headers, responseType: 'text'});
   }
 
-  public loginAdmin(request: ILoginRequest): Observable<ILoginResponse> {
-    return this.httpClient.post<ILoginResponse>(`${this.urlAdmin}/LoginAdmin`, request);
+  public refreshToken(request: IRefreshTokenRequest, role: Role): Observable<IRefreshTokenResponse> {
+    const url = (role === 'Customer') ? this.urlCustomer : this.urlAdmin;
+    return this.httpClient.post<IRefreshTokenResponse>(`${url}/Refresh`, request);
   }
 
-  public logoutCustomer(request: ILogoutRequest): Observable<any> {
-    return this.httpClient.post(`${this.urlCustomer}/Logout`, request);
-  }
-
-  public logoutAdmin(request: ILogoutRequest): Observable<any> {
-    return this.httpClient.post(`${this.urlAdmin}/Logout`, request);
+  public logout(request: ILogoutRequest, role: Role): Observable<any> {
+    const url = (role === 'Customer') ? this.urlCustomer : this.urlAdmin;
+    return this.httpClient.post(`${url}/Logout`, request);
   }
 
 }

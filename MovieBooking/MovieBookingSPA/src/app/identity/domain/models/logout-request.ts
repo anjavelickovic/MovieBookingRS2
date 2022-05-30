@@ -1,4 +1,4 @@
-export interface ILogoutRequest {
-    userName: string;
-    refreshToken: string;
+import { IBasicRequest } from "./basic-request";
+
+export interface ILogoutRequest extends IBasicRequest {
 }

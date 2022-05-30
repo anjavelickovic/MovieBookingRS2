@@ -29,10 +29,10 @@ export class HeaderComponent implements OnInit {
 
   public logout(): void {
     if(this.appState.role === 'Customer'){
-      this.authenticationService.logoutCustomer().subscribe(value => {});
+      this.authenticationService.logout().subscribe(value => {});
     }
     else{
-      this.authenticationService.logoutAdmin().subscribe(value => {});
+      this.authenticationService.logout().subscribe(value => {});
     }
 
     this.router.navigate(['\identity', 'logout']);

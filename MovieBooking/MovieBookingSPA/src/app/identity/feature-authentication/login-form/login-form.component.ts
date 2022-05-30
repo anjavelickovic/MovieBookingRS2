@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, forkJoin, of } from 'rxjs';
+import { Role } from 'src/app/shared/app-state/role';
 import { AuthenticationFacadeService } from '../../domain/application-services/authentication-facade.service';
 
 interface ILoginFormData {
@@ -47,12 +48,11 @@ export class LoginFormComponent implements OnInit {
       return;
     }
 
-
     const data: ILoginFormData = this.loginForm.value as ILoginFormData;
 
     forkJoin([
-      this.authenticationService.loginAdmin(data.usernameOrEmail, data.password).pipe(catchError(error => of(error))),
-      this.authenticationService.loginCustomer(data.usernameOrEmail, data.password).pipe(catchError(error => of(error)))
+      this.authenticationService.login(data.usernameOrEmail, data.password, Role.Customer).pipe(catchError(error => of(error))),
+      this.authenticationService.login(data.usernameOrEmail, data.password, Role.Admin).pipe(catchError(error => of(error)))
     ])
     .subscribe(
       result => {
