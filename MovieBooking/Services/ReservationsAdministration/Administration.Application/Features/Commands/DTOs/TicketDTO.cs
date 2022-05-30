@@ -1,4 +1,4 @@
-﻿namespace Administration.Application.Features.Commands.CreateReservation
+﻿namespace Administration.Application.Features.Commands.DTOs
 {
     public class TicketDTO
     {
