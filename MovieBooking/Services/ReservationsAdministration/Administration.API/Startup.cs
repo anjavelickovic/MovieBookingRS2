@@ -1,3 +1,4 @@
+using Administration.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Administration.Application;
-using Administration.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;

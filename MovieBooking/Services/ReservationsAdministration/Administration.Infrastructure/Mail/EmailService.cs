@@ -2,6 +2,7 @@
 using Administration.Application.Models;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace Administration.Infrastructure.Mail
         private readonly EmailSettings _mailSettings;
         private readonly ILogger<EmailService> _logger;
 
-        public EmailService(EmailSettings mailSettings, ILogger<EmailService> logger)
+        public EmailService(IOptions<EmailSettings> mailSettings, ILogger<EmailService> logger)
         {
-            _mailSettings = mailSettings ?? throw new ArgumentNullException(nameof(mailSettings));
+            _mailSettings = mailSettings.Value ?? throw new ArgumentNullException(nameof(mailSettings));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 

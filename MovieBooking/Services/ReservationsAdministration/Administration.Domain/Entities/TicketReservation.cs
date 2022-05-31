@@ -1,5 +1,5 @@
-﻿using Administration.Domain.Exceptions;
-using Ordering.Domain.Common;
+﻿using Administration.Domain.Common;
+using Administration.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

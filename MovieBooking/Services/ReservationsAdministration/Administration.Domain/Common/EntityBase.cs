@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ordering.Domain.Common
+namespace Administration.Domain.Common
 {
     public class EntityBase
     {
