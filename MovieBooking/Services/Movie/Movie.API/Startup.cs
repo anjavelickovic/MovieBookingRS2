@@ -64,6 +64,12 @@ namespace Movies.API
                     };
                 });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -81,6 +87,7 @@ namespace Movies.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movies.API v1"));
             }
 
+            app.UseCors("CorsPolicy");
             app.UseRouting();
 
             app.UseAuthentication();
