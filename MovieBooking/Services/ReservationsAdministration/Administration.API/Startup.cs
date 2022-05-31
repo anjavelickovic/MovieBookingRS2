@@ -1,4 +1,3 @@
-using Administration.Application;
 using Administration.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,10 +7,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Administration.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MassTransit;
+using EventBus.Messages.Constants;
+using System.Reflection;
+using Administration.API.EventBusConsumers;
 
 namespace Administration.API
 {
@@ -29,6 +33,24 @@ namespace Administration.API
         {
             services.AddApplicationServices();
             services.AddInfrastructureServices(Configuration);
+
+            // AutoMapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            // EventBus
+            services.AddMassTransit(config =>
+            {
+                config.AddConsumer<ReservationBasketCheckoutConsumer>();
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+                    cfg.ReceiveEndpoint(EventBusConstants.ReservationBasketCheckoutQueue, c =>
+                    {
+                        c.ConfigureConsumer<ReservationBasketCheckoutConsumer>(ctx);
+                    });
+                });
+            });
+            services.AddMassTransitHostedService();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

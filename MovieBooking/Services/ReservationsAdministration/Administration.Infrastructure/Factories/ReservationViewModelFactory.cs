@@ -23,10 +23,12 @@ namespace Administration.Infrastructure.Factories
             {
                 var ticketVM = new TicketViewModel();
                 ticketVM.Id = ticket.Id;
+                ticketVM.ProjectionId = ticket.ProjectionId;
+                ticketVM.MovieTitle = ticket.MovieTitle;
                 ticketVM.MovieId = ticket.MovieId;
                 ticketVM.Price = ticket.Price;
-                ticketVM.CinemaHallId = ticket.CinemaHallId;
-                ticketVM.CinemaHallName = ticket.CinemaHallName;
+                ticketVM.TheaterHallId = ticket.TheaterHallId;
+                ticketVM.TheaterHallName = ticket.TheaterHallName;
                 ticketVM.NumberOfTickets = ticket.NumberOfTickets;
 
                 tickets.Add(ticketVM);

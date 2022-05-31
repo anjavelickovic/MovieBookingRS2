@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discount.GRPC.Protos;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ using Microsoft.OpenApi.Models;
 using Projections.GRPC.Protos;
 using Reservations.API.GrpcServices;
 using Reservations.API.Repositories;
+using Reservations.API.Entities;
+using EventBus.Messages.Events;
 
 namespace Reservations.API
 {
@@ -37,10 +40,12 @@ namespace Reservations.API
             services.AddScoped<IReservationsRepository, ReservationsRepository>();
 
             services.AddAutoMapper(configuration =>
-            { 
+            {
                 configuration.CreateMap<bool, UpdateProjectionResponse>().ReverseMap();
+                configuration.CreateMap<ReservationBasketCheckout, ReservationBasketCheckoutEvent>().ReverseMap();
             });
 
+            //GRPC
             services.AddGrpcClient<CouponProtoService.CouponProtoServiceClient>(
                 options => options.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
             services.AddScoped<CouponGrpcService>();
@@ -49,6 +54,17 @@ namespace Reservations.API
                 options => options.Address = new Uri(Configuration["GrpcSettings:ProjectionUrl"]));
             services.AddScoped<ProjectionGrpcService>();
 
+            // EventBus
+            services.AddMassTransit(config =>
+            {
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(Configuration["EventBusSettings:HostAddress"]);
+                });
+            });
+            services.AddMassTransitHostedService();
+
+            //
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

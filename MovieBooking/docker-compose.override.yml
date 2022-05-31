@@ -65,8 +65,10 @@ services:
       - "CacheSettings:ConnectionString=reservationsdb:6379"
       - "GrpcSettings:DiscountUrl=http://discount.grpc"
       - "GrpcSettings:ProjectionUrl=http://projections.grpc"
+      - "EventBusSettings:HostAdress=amqp://guest:guest@rabbitmq:5672"
     depends_on:
       - reservationsdb
+      - rabbitmq
       - discount.grpc
       - projections.grpc
     ports:
@@ -115,25 +117,33 @@ services:
     ports:
       - "8003:80"
 
-    
   administrationdb:
     container_name: administrationdb
     environment:
-      - SA_PASSWORD=RS12345678
-      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=RS12345678
+      - ACCEPT_EULA=1
     restart: always
     ports:
       - "1433:1433"
     volumes:
       - administrationdb_data:/var/opt/mssql/data
 
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   administration.api:
     container_name: administration.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=sa;Password=RS12345678;"
+      - "EventBusSettings:HostAdress=amqp://guest:guest@rabbitmq:5672"
     depends_on: 
       - administrationdb
+      - rabbitmq
     ports:
       - "8007:80"
 

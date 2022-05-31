@@ -45,7 +45,10 @@ services:
 
   administrationdb:
     image: mcr.microsoft.com/mssql/server:2017-latest
-    
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
   discount.api:
     image: ${DOCKER_REGISTRY-}discountapi
     build:
@@ -63,6 +66,7 @@ services:
     build:
       context: .
       dockerfile: Services/ReservationsAdministration/Administration.API/Dockerfile
+
   identitydb:
     image: mysql
 

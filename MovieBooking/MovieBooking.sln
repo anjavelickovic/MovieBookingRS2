@@ -15,9 +15,6 @@ EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F66E6F65-9EAD-499D-8247-2620CC8105C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0BC7E8D0-D3A6-49CC-BCEC-01417D9C850F}"
-	ProjectSection(SolutionItems) = preProject
-		Services\ReservationsAdministration\Administration.Application\ApplicationServiceExtensions.cs = Services\ReservationsAdministration\Administration.Application\ApplicationServiceExtensions.cs
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reservations.API", "Services\Reservations\Reservations.API\Reservations.API.csproj", "{6BCA55C1-6A63-4A18-921E-A3E1099FC326}"
 EndProject
@@ -48,6 +45,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Administration.API", "Services\ReservationsAdministration\Administration.API\Administration.API.csproj", "{017962C5-42C2-4694-B7E5-3BE4F2EC6A42}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Administration.Infrastructure", "Services\ReservationsAdministration\Administration.Infrastructure\Administration.Infrastructure.csproj", "{C02507FE-34FD-47B0-AD23-E93F32311884}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.Messages", "Common\EventBus.Messages\EventBus.Messages.csproj", "{B88B4797-D767-494E-A7C1-D8A2F5BBF433}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +114,10 @@ Global
 		{C02507FE-34FD-47B0-AD23-E93F32311884}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C02507FE-34FD-47B0-AD23-E93F32311884}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C02507FE-34FD-47B0-AD23-E93F32311884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B88B4797-D767-494E-A7C1-D8A2F5BBF433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B88B4797-D767-494E-A7C1-D8A2F5BBF433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B88B4797-D767-494E-A7C1-D8A2F5BBF433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B88B4797-D767-494E-A7C1-D8A2F5BBF433}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
