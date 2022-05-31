@@ -10,6 +10,7 @@ COPY ["Services/ReservationsAdministration/Administration.API/Administration.API
 COPY ["Services/ReservationsAdministration/Administration.Application/Administration.Application.csproj", "Services/ReservationsAdministration/Administration.Application/"]
 COPY ["Services/ReservationsAdministration/Administration.Domain/Administration.Domain.csproj", "Services/ReservationsAdministration/Administration.Domain/"]
 COPY ["Services/ReservationsAdministration/Administration.Infrastructure/Administration.Infrastructure.csproj", "Services/ReservationsAdministration/Administration.Infrastructure/"]
+COPY ["Common/EventBus.Messages/EventBus.Messages.csproj", "Common/EventBus.Messages/"]
 RUN dotnet restore "Services/ReservationsAdministration/Administration.API/Administration.API.csproj"
 COPY . .
 WORKDIR "/src/Services/ReservationsAdministration/Administration.API"

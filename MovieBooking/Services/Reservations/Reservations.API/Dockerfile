@@ -7,6 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["Services/Reservations/Reservations.API/Reservations.API.csproj", "Services/Reservations/Reservations.API/"]
+COPY ["Common/EventBus.Messages/EventBus.Messages.csproj", "Common/EventBus.Messages/"]
 RUN dotnet restore "Services/Reservations/Reservations.API/Reservations.API.csproj"
 COPY . .
 WORKDIR "/src/Services/Reservations/Reservations.API"
