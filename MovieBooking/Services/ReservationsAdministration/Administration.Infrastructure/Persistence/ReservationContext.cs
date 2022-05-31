@@ -1,7 +1,7 @@
 ﻿using Administration.Domain.Aggregates;
+using Administration.Domain.Common;
 using Administration.Infrastructure.Persistence.EnittyConfigurations;
 using Microsoft.EntityFrameworkCore;
-using Ordering.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace Administration.Infrastructure.Persistence
 {
     public class ReservationContext : DbContext
     {
-        protected ReservationContext(DbContextOptions options) : base(options)
+        public ReservationContext(DbContextOptions options) : base(options)
         {
         }
 

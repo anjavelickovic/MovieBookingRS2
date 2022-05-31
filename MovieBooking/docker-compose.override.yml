@@ -135,7 +135,7 @@ services:
     depends_on: 
       - administrationdb
     ports:
-      - "8004:80"
+      - "8007:80"
 
   identitydb:
     container_name: identitydb
