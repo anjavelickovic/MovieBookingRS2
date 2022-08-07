@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NotAuthenticatedGuard } from '../shared/guards/not-authenticated.guard';
 import { LoginFormComponent } from './feature-authentication/login-form/login-form.component';
 import { LogoutComponent } from './feature-authentication/logout/logout.component';
 import { RegisterFormComponent } from './feature-authentication/register-form/register-form.component';
@@ -9,7 +10,7 @@ const routes: Routes = [
   { path: '', component: IdentityComponent, 
               children: [{ path: 'login', component: LoginFormComponent },
                          { path: 'register', component: RegisterFormComponent}] },
-  { path: 'logout', component: LogoutComponent }
+  { path: 'logout', component: LogoutComponent, canActivate: [NotAuthenticatedGuard] }
 ];
 
 @NgModule({
