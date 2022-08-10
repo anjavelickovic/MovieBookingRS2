@@ -44,7 +44,8 @@ services:
     image: dpage/pgadmin4
 
   administrationdb:
-    image: mcr.microsoft.com/mssql/server:2017-latest
+    platform: linux/amd64
+    image: mcr.microsoft.com/azure-sql-edge
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -68,6 +69,7 @@ services:
       dockerfile: Services/ReservationsAdministration/Administration.API/Dockerfile
 
   identitydb:
+    platform: linux/amd64
     image: mysql
 
   identity:
