@@ -17,7 +17,7 @@ namespace EventBus.Messages.Events
     public class ReservationBasketCheckoutEvent: IntegrationBaseEvent
     {
         public string BuyerId { get; private set; }
-        public string BuyerUsername { get; private set; }
+        public string BuyerUsername { get; set; }
         public string Email { get; set; }
         public IEnumerable<ReservationItem> Tickets { get; set; }
 

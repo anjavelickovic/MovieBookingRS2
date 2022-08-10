@@ -43,6 +43,7 @@ namespace Reservations.API
             {
                 configuration.CreateMap<bool, UpdateProjectionResponse>().ReverseMap();
                 configuration.CreateMap<ReservationBasketCheckout, ReservationBasketCheckoutEvent>().ReverseMap();
+                configuration.CreateMap<ReservationItem, Reservation>().ReverseMap();
             });
 
             //GRPC
