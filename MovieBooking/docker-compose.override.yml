@@ -164,6 +164,7 @@ services:
  
   identity:
     container_name: identity
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings:IdentityConnectionString=server=identitydb;user=user;password=1234;database=IdentityDb;
