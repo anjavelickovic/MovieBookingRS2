@@ -65,7 +65,7 @@ services:
       - "CacheSettings:ConnectionString=reservationsdb:6379"
       - "GrpcSettings:DiscountUrl=http://discount.grpc"
       - "GrpcSettings:ProjectionUrl=http://projections.grpc"
-      - "EventBusSettings:HostAdress=amqp://guest:guest@rabbitmq:5672"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
     depends_on:
       - reservationsdb
       - rabbitmq
@@ -140,7 +140,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=sa;Password=RS12345678;"
-      - "EventBusSettings:HostAdress=amqp://guest:guest@rabbitmq:5672"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
     depends_on: 
       - administrationdb
       - rabbitmq

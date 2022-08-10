@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discount.GRPC.Protos;
+using AutoMapper;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,7 @@ namespace Reservations.API
             {
                 configuration.CreateMap<bool, UpdateProjectionResponse>().ReverseMap();
                 configuration.CreateMap<ReservationBasketCheckout, ReservationBasketCheckoutEvent>().ReverseMap();
+                configuration.CreateMap<ReservationItem, Reservation>().ReverseMap();
             });
 
             //GRPC
