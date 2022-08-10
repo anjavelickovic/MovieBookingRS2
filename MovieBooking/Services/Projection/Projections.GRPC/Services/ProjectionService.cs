@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Grpc.Core;
@@ -55,7 +56,7 @@ namespace Projections.GRPC.Services
             }
             else
             {
-                projection.NumberOfReservedSeats += request.NumberOfSeats;
+                projection.ReserveSeats(request.NumberOfSeats);
                 var updated = await _repository.UpdateProjection(projection);
                 updateProjectionResponse.Updated = updated;
                 return updateProjectionResponse;

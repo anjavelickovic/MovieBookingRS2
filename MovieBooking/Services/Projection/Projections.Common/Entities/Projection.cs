@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -19,5 +20,15 @@ namespace Projections.Common.Entities
         public string ProjectionTerm { get; set; }
         public int NumberOfReservedSeats { get; set; }
         public int Price { get; set; }
+
+        private Object updatingReservedSeats = new Object();
+
+        public void ReserveSeats(int numberOfSeats)
+        {
+            lock (updatingReservedSeats)
+            {
+                NumberOfReservedSeats += numberOfSeats;
+            }
+        }
     }
 }

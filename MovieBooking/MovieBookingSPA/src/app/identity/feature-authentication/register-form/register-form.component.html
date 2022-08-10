@@ -1,0 +1,87 @@
+<form [formGroup]="registerForm" (ngSubmit)="onRegisterFormSubmit()"
+    style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+    <div class="form-group">
+        <label for="firstName">First name</label>
+        <input type="text" id="firstName" class="form-control form-control-sm"
+            formControlName="firstName" />
+
+        <span *ngIf="showFormErrors && firstName?.errors?.['required']" class="error">
+            First name required
+        </span>
+        <span *ngIf="showFormErrors && (firstName?.errors?.['minlength'] || firstName?.errors?.['maxlength'])" class="error">
+            First name length must be between 4 and 25 characters
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="lastName">Last name</label>
+        <input type="text" id="lastName" class="form-control form-control-sm"
+            formControlName="lastName" />
+
+        <span *ngIf="showFormErrors && lastName?.errors?.['required']" class="error">
+            Last name required
+        </span>
+        <span *ngIf="showFormErrors && (lastName?.errors?.['minlength'] || lastName?.errors?.['maxlength'])" class="error">
+            Last name length must be between 4 and 25 characters
+        </span>
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" class="form-control form-control-sm"
+            formControlName="username" />
+
+        <span *ngIf="showFormErrors && username?.errors?.['required']" class="error">
+            Username required
+        </span>
+        <span *ngIf="showFormErrors && (username?.errors?.['minlength'] || username?.errors?.['maxlength'])" class="error">
+            Username length must be between 4 and 25 characters
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control form-control-sm"
+            formControlName="password" />
+
+        <span *ngIf="showFormErrors && password?.errors?.['required']" class="error">
+            Password required
+        </span>
+        <span *ngIf="showFormErrors && (password?.errors?.['minlength'] || password?.errors?.['maxlength'])" class="error">
+            Password length must be between 8 and 25 characters
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="confirmPassword">Confirm password</label>
+        <input type="password" id="confirmPassword" class="form-control form-control-sm"
+            formControlName="confirmPassword" />
+
+        <span *ngIf="showFormErrors && confirmPassword?.errors?.['unconfirmedPassword']" class="error">
+            Passwords must match
+        </span>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-control form-control-sm"
+            formControlName="email" />
+
+        <span *ngIf="showFormErrors && email?.errors?.['required']" class="error">
+            Email required
+        </span>
+        <span *ngIf="showFormErrors && email?.errors?.['email']" class="error">
+            Invalid email
+        </span>
+    </div>
+
+    
+    <div class="form-group">
+        <span *ngIf="showServerError" class="error">Username or email already in use</span>
+    </div>
+
+    <button type="submit" class="btn btn-info btn-sm btn-block">
+        Register
+    </button>
+
+    <a style="float: right; margin-top: 1.5vh;" (click)="loginForm()">
+        Back to login
+    </a>
+</form>
