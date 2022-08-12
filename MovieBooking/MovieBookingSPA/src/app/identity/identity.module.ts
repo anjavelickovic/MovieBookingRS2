@@ -9,6 +9,7 @@ import { RegisterFormComponent } from './feature-authentication/register-form/re
 import { MainPageModule } from '../main-page/main-page.module';
 import { LogoutComponent } from './feature-authentication/logout/logout.component';
 import { UserProfileComponent } from './feature-user-info/user-profile/user-profile.component';
+import { ChangeUserInfoComponent } from './feature-user-info/change-user-info/change-user-info.component';
 
 
 @NgModule({
@@ -16,9 +17,9 @@ import { UserProfileComponent } from './feature-user-info/user-profile/user-prof
     IdentityComponent,
     LoginFormComponent,
     RegisterFormComponent,
-    LogoutComponent
     LogoutComponent,
     UserProfileComponent,
+    ChangeUserInfoComponent
   ],
   imports: [
     CommonModule,
