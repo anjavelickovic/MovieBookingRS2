@@ -30,8 +30,12 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['\identity', 'logout']);
   }
 
+  public mainPage(): void {
+    this.router.navigate(['\main']);
+  }
+
   public profile(): void {
-    window.alert("profile")
+    this.router.navigate(['\identity', 'profile']);
   }
 
   public getMovie(): void {

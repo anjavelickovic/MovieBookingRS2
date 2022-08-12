@@ -1,0 +1,188 @@
+<app-header></app-header>
+<div style="margin: 1vh 2vh 2vh 2vh; width: 50%;">
+
+    <div class="tab">
+        <button (click)="option('changePassword')" [ngClass]="isActive('changePassword')">Password</button>
+        <button (click)="option('changeFirstName')" [ngClass]="isActive('changeFirstName')">First name</button>
+        <button (click)="option('changeLastName')" [ngClass]="isActive('changeLastName')">Last Name</button>
+        <button (click)="option('changeUsername')" [ngClass]="isActive('changeUsername')">Username</button>
+        <button (click)="option('changeEmail')" [ngClass]="isActive('changeEmail')">Email</button>
+    </div>
+    
+    <div id="changePassword" class="tabcontent" *ngIf="showPasswordChangeForm">
+        <h3 style="color: rgb(50, 159, 209)">Change Password</h3>
+        <div style=" padding-bottom: 30px;">
+            <form [formGroup]="passwordChangeForm" (ngSubmit)="onPasswordChangeSubmit()" autocomplete="off">
+                    
+                <div class="form-group">
+                    <label for="passwordChangePassword">Current password</label>
+                    <input type="password" id="passwordChangePassword" formControlName="passwordChangePassword" class="form-control form-control-sm">
+            
+                    <span *ngIf="showPasswordErrors && passwordChangePassword?.errors?.['required']" class="error">
+                        Current password required
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">New password</label>
+                    <input type="password" id="newPassword" formControlName="newPassword" class="form-control form-control-sm">
+            
+                    <span *ngIf="showPasswordErrors && newPassword?.errors?.['required']" class="error">
+                        Password required
+                    </span>
+                    <span *ngIf="showPasswordErrors && (newPassword?.errors?.['minlength'] || newPassword?.errors?.['maxlength'])" class="error">
+                        Password length must be between 8 and 25 characters
+                    </span>
+                </div>
+
+                <div class="form-group" style="padding-bottom: 10px;">
+                    <label for="confirmNewPassword">Confirm new password</label>
+                    <input type="password" id="confirmNewPassword" formControlName="confirmNewPassword"  class="form-control form-control-sm">
+            
+                    <span *ngIf="showPasswordErrors && confirmNewPassword?.errors?.['unconfirmedPassword']" class="error">
+                        Passwords must match
+                    </span>
+                </div>
+                
+                <button type="submit" class="btn btn-warning btn-sm btn-block">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="changeFirstName" class="tabcontent" *ngIf="showFirstNameChangeForm">
+        <h3 style="color: rgb(50, 159, 209)">Change First name</h3>
+        <div style=" padding-bottom: 30px;">
+            <form [formGroup]="firstNameChangeForm" (ngSubmit)="onFirstNameChangeSubmit()" autocomplete="off">
+
+                <div class="form-group">
+                    <label for="firstName">New First name</label>
+                    <input type="text" id="firstName" formControlName="firstName" class="form-control form-control-sm">
+            
+                    <span *ngIf="showFirstNameChangeFormErrors && firstName?.errors?.['required']" class="error">
+                        First name required
+                    </span>
+                    <span *ngIf="showFirstNameChangeFormErrors && (firstName?.errors?.['minlength'] || firstName?.errors?.['maxlength'])" class="error">
+                        First name length must be between 4 and 25 characters
+                    </span>
+                </div>
+
+                <div class="form-group" style="padding-bottom: 10px;">
+                    <label for="passwordChangeFirstName">Password</label>
+                    <input type="password" id="passwordChangeFirstName" formControlName="passwordChangeFirstName" class="form-control form-control-sm">
+            
+                    <span *ngIf="showPasswordErrors && passwordChangeFirstName?.errors?.['required']" class="error">
+                        Current password required
+                    </span>
+                </div>
+                
+                <button type="submit" class="btn btn-warning btn-sm btn-block">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="changeLastName" class="tabcontent" *ngIf="showLastNameChangeForm">
+        <h3 style="color: rgb(50, 159, 209)">Change Last name</h3>
+        <div style=" padding-bottom: 30px;">
+            <form [formGroup]="lastNameChangeForm" (ngSubmit)="onLastNameChangeSubmit()" autocomplete="off">
+
+                <div class="form-group">
+                    <label for="lastName">New Last name</label>
+                    <input type="text" id="lastName" formControlName="lastName" class="form-control form-control-sm">
+            
+                    <span *ngIf="showLastNameChangeFormErrors && lastName?.errors?.['required']" class="error">
+                        Last name required
+                    </span>
+                    <span *ngIf="showLastNameChangeFormErrors && (lastName?.errors?.['minlength'] || lastName?.errors?.['maxlength'])" class="error">
+                        Last name length must be between 4 and 25 characters
+                    </span>
+                </div>
+
+                <div class="form-group" style="padding-bottom: 10px;">
+                    <label for="passwordChangeLastName">Password</label>
+                    <input type="password" id="passwordChangeLastName" formControlName="passwordChangeLastName" class="form-control form-control-sm">
+            
+                    <span *ngIf="showPasswordErrors && passwordChangeLastName?.errors?.['required']" class="error">
+                        Current password required
+                    </span>
+                </div>
+                
+                <button type="submit" class="btn btn-warning btn-sm btn-block">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="changeUsername" class="tabcontent" *ngIf="showUsernameChangeForm">
+        <h3 style="color: rgb(50, 159, 209)">Change Username</h3>
+        <div style=" padding-bottom: 30px;">
+            <form [formGroup]="usernameChangeForm" (ngSubmit)="onUsernameChangeSubmit()" autocomplete="off">
+
+                <div class="form-group">
+                    <label for="username">New Username</label>
+                    <input type="text" id="username" class="form-control form-control-sm"
+                        formControlName="username" />
+            
+                    <span *ngIf="showUsernameChangeFormErrors && username?.errors?.['required']" class="error">
+                        Username required
+                    </span>
+                    <span *ngIf="showUsernameChangeFormErrors && (username?.errors?.['minlength'] || username?.errors?.['maxlength'])" class="error">
+                        Username length must be between 4 and 25 characters
+                    </span>
+                </div>
+
+                <div class="form-group" style="padding-bottom: 10px;">
+                    <label for="passwordChangeUsername">Password</label>
+                    <input type="password" id="passwordChangeUsername" formControlName="passwordChangeUsername" class="form-control form-control-sm">
+            
+                    <span *ngIf="showPasswordErrors && passwordChangeUsername?.errors?.['required']" class="error">
+                        Current password required
+                    </span>
+                </div>
+                
+                <button type="submit" class="btn btn-warning btn-sm btn-block">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="changeEmail" class="tabcontent" *ngIf="showEmailChangeForm">
+        <h3 style="color: rgb(50, 159, 209)">Change Email</h3>
+        <div style=" padding-bottom: 30px;">
+            <form [formGroup]="emailChangeForm" (ngSubmit)="onEmailChangeSubmit()" autocomplete="off">
+
+                <div class="form-group">
+                    <label for="email">New Email</label>
+                    <input type="email" id="email" class="form-control form-control-sm"
+                        formControlName="email" />
+            
+                    <span *ngIf="showEmailChangeFormErrors && email?.errors?.['required']" class="error">
+                        Email required
+                    </span>
+                    <span *ngIf="showEmailChangeFormErrors && email?.errors?.['email']" class="error">
+                        Invalid email
+                    </span>
+                </div>
+
+                <div class="form-group" style="padding-bottom: 10px;">
+                    <label for="passwordChangeEmail">Password</label>
+                    <input type="password" id="passwordChangeEmail" formControlName="passwordChangeEmail" class="form-control form-control-sm">
+            
+                    <span *ngIf="showPasswordErrors && passwordChangeEmail?.errors?.['required']" class="error">
+                        Current password required
+                    </span>
+                </div>
+                
+                <button type="submit" class="btn btn-warning btn-sm btn-block">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
