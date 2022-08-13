@@ -154,6 +154,7 @@ services:
       - MYSQL_DATABASE=IdentityDb
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_HOST=%
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - '3306:3306'
@@ -167,7 +168,7 @@ services:
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings:IdentityConnectionString=server=identitydb;user=user;password=1234;database=IdentityDb;
+      - ConnectionStrings:IdentityConnectionString=server=identitydb;user=${MYSQL_USER};password=${MYSQL_PASSWORD};database=IdentityDb;
     depends_on:
       - identitydb
     ports:
