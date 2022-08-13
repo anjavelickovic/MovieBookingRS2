@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
@@ -13,11 +13,11 @@ import { UserFacadeService } from '../../domain/application-services/user-facade
 })
 export class ChangeUserInfoComponent implements OnInit {
   
-  public passwordChangeForm: FormGroup;
-  public firstNameChangeForm: FormGroup;
-  public lastNameChangeForm: FormGroup;
-  public usernameChangeForm: FormGroup;
-  public emailChangeForm: FormGroup;
+  public passwordChangeForm: UntypedFormGroup;
+  public firstNameChangeForm: UntypedFormGroup;
+  public lastNameChangeForm: UntypedFormGroup;
+  public usernameChangeForm: UntypedFormGroup;
+  public emailChangeForm: UntypedFormGroup;
 
   public showPasswordErrors: boolean;
   public showFirstNameChangeFormErrors: boolean;
@@ -31,7 +31,7 @@ export class ChangeUserInfoComponent implements OnInit {
   public showUsernameChangeForm: boolean;
   public showEmailChangeForm: boolean;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserFacadeService,
+  constructor(private formBuilder: UntypedFormBuilder, private userService: UserFacadeService,
               private appStateService: AppStateService, private router: Router) {
 
     this.passwordChangeForm = this.formBuilder.group({

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, from, of, switchMap } from 'rxjs';
 import { Role } from 'src/app/shared/app-state/role';
@@ -20,12 +20,12 @@ interface IRegisterFormData {
 })
 export class RegisterFormComponent implements OnInit {
 
-  public registerForm: FormGroup;
+  public registerForm: UntypedFormGroup;
   public showFormErrors: boolean;
   public showServerError: boolean;
 
   constructor(private authenticationService: AuthenticationFacadeService, 
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router) {
 
       this.showFormErrors = false;
