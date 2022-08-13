@@ -64,6 +64,36 @@ namespace Identity.Controllers
         [Authorize(Roles = "Customer")]
         [HttpPut("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<bool>> ChangeFirstName([FromBody] ChangeFirstNameDTO request)
+        {
+            var user = await _userRepository.GetUserByUsername(User.FindFirstValue(ClaimTypes.Name));
+
+            if (!await _userRepository.CheckPassword(user, request.Password))
+            {
+                return Forbid();
+            }
+
+            return await _userRepository.ChangeFirstName(user, request.NewFirstName);
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPut("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<bool>> ChangeLastName([FromBody] ChangeLastNameDTO request)
+        {
+            var user = await _userRepository.GetUserByUsername(User.FindFirstValue(ClaimTypes.Name));
+
+            if (!await _userRepository.CheckPassword(user, request.Password))
+            {
+                return Forbid();
+            }
+
+            return await _userRepository.ChangeLastName(user, request.NewLastName);
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpPut("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ChangeUserName([FromBody] ChangeUserNameDTO request)
         {
             var user = await _userRepository.GetUserByUsername(User.FindFirstValue(ClaimTypes.Name));

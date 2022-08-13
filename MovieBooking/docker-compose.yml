@@ -68,7 +68,6 @@ services:
       dockerfile: Services/ReservationsAdministration/Administration.API/Dockerfile
 
   identitydb:
-    platform: linux/amd64
     image: mysql
 
   identity:
