@@ -23,6 +23,7 @@ namespace Discount.Common.Extensions
             {
                 configuration.CreateMap<CouponDTO, Coupon>().ReverseMap();
             });
+            
 
             // CORS
             services.AddCors(options =>

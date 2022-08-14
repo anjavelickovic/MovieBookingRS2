@@ -1,4 +1,5 @@
 ﻿using Discount.Common.DTOs;
+using Discount.Common.Entities;
 using Discount.Common.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,13 @@ namespace Discount.API.Controllers
         public DiscountController(ICouponRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+
+        [HttpGet()]
+        [ProducesResponseType(typeof(CouponDTO), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CouponDTO>>> GetDiscounts(){
+            var discounts = await _repository.GetDiscounts();
+            return Ok(discounts);
         }
 
         [HttpGet("{movieName}")]

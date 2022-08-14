@@ -22,6 +22,16 @@ namespace Discount.Common.Repositories
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        public async Task<IEnumerable<CouponDTO>> GetDiscounts()
+        {
+            using var connection = _context.GetConnection();
+            
+            var coupons = await connection.QueryAsync<Coupon>("SELECT * FROM Coupon");
+
+            var r = new Random();
+            return _mapper.Map<IEnumerable<CouponDTO>>(coupons);
+           }
+
         public async Task<CouponDTO> GetDiscount(string movieName)
         {
             using var connection = _context.GetConnection();
