@@ -126,5 +126,7 @@
       }
     }
   },
-  "defaultProject": "MovieBookingSPA"
+  "cli": {
+    "analytics": false
+  }
 }

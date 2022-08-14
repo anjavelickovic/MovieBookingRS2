@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, forkJoin, of } from 'rxjs';
 import { Role } from 'src/app/shared/app-state/role';
@@ -17,12 +17,12 @@ interface ILoginFormData {
 })
 export class LoginFormComponent implements OnInit {
 
-  public loginForm: FormGroup;
+  public loginForm: UntypedFormGroup;
   public showFormErrors: boolean;
   public showServerError: boolean;
 
   constructor(private authenticationService: AuthenticationFacadeService, 
-              private formBuilder: FormBuilder,
+              private formBuilder: UntypedFormBuilder,
               private router: Router) {
 
     this.showFormErrors = false;
