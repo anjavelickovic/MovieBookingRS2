@@ -1,0 +1,12 @@
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+.marg {
+    margin-top: 20px;
+    margin-left: 40px;
+}
+span.error {
+    font-size: 11px;
+    color: red;
+}

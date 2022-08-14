@@ -1,0 +1,5 @@
+<div *ngFor="let theaterHall of theaterHalls" style="padding-left:15px; padding-top: 15px;">
+    <h4>{{theaterHall.name}}</h4>
+    <a [routerLink]="['/theater-hall', theaterHall.id]" class="btn btn-primary">See more</a>
+    <hr>
+</div>
