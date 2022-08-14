@@ -1,0 +1,123 @@
+
+<nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(50, 159, 209)">
+        
+    <div class="navbar-brand mx-auto" style="color:rgb(152, 207, 232);">
+        <h3><b><i>Theater Hall Details</i></b></h3>
+    </div>
+
+    <!--Back button--> 
+    <button class="btn btn-primary" style="margin-right: 15px;" [routerLink]="['/theater-hall']">Back</button>
+
+</nav>
+
+<!--Theater Hall Info-->
+<div *ngIf="theaterHall; else elseBlock" class="marg">
+    <h4>Name: {{ theaterHall.name }}</h4>
+    <h4>Number of seats: {{theaterHall.numberOfSeats}}</h4>
+    <h4>Available terms:</h4>
+    <li *ngFor="let term of theaterHall.terms">
+        {{term}}
+    </li>
+</div>
+<ng-template #elseBlock>
+    <div *ngIf="!theaterHall" class="marg">
+        <h4>Loading...</h4>
+    </div>
+</ng-template>
+
+
+<div class="flex; marg" > 
+    <!--Delete button--> 
+    <button 
+        class="btn" 
+        style="background-color: red; color: aliceblue; margin-right: 10px;"
+        (click)="open(deleteModal)">
+            Delete
+    </button>
+    <ng-template #deleteModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete {{theaterHall.name}}?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="deleteTheaterHall()">Yes</button>
+            <button class="btn btn-outline-dark" (click)="close()">No</button>
+        </div>
+    </ng-template>
+    
+    <!--Update button--> 
+    <button class="btn" 
+            style="background-color: blue; color: aliceblue" 
+        (click)="open(updateModal)">
+            Update
+    </button>
+    
+    <ng-template #updateModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Update {{ theaterHall.name}}</h4>            
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="theaterHallForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+                    <div class="form-group">
+                        <label for="name" >Name</label>
+                        <input type="text" id="name" class="form-control form-control-sm"
+                            formControlName="name" />
+
+                        <span *ngIf="showFormErrors && name?.errors?.['required']" class="error">
+                            Name is required
+                        </span>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label for="numberOfSeats">Number Of Seats</label>
+                        <input type="text" id="numberOfSeats" class="form-control form-control-sm"
+                            formControlName="numberOfSeats" />
+
+                        <span *ngIf="showFormErrors && numberOfSeats?.errors?.['required']" class="error">
+                            Number of seats is required
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group">
+                            <p style="margin-top: 10px ;">
+                                Terms: [ <code>{{ terms.value }}</code> ]
+                            </p>
+                            <span *ngIf="showFormErrors && terms?.errors?.['required']" class="error">
+                                One term is required
+                            </span>
+                        </div>
+                        <button style="margin-top: 10px;" class="btn btn-outline-dark" (click)="addTerm()">Add term</button>
+                        <div *ngFor="let control of terms.controls; index as i">
+                            <label for="term" style="margin-top: 5px;">Term</label>
+                            <div class="flex">
+                                <input class="form-control form-control-sm" [formControl]="$any(terms.controls[i])" style="margin-right: 5px;"/>
+                                <button class="btn btn-outline-dark" (click)="removeTerm(i)">Remove</button>
+                            </div>
+                            <span *ngIf="showFormErrors && terms.controls[i]?.errors?.['pattern']" class="error">
+                                Term is not in the correct format (hh:mm AM/PM)
+                            </span>
+                            <span *ngIf="showFormErrors && terms.controls[i]?.errors?.['required']" class="error">
+                                Term is required
+                            </span>
+                        </div>
+                    </div>  
+                    
+                    <div class="form-group">
+                        <span *ngIf="showServerError" class="error">Server Error</span>
+                    </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="onTheaterHallFormSubmit()">Update</button>
+        </div>
+    </ng-template>
+</div>
