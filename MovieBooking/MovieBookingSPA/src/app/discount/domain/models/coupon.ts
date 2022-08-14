@@ -1,4 +1,4 @@
-export interface ICreateCoupon {
+export interface ICoupon {
     id : string
     movieName : string,
     amount : number, 

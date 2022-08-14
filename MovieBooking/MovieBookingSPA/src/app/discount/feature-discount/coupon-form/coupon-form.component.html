@@ -3,7 +3,7 @@
 
 <h4> Create new coupon</h4>
 
-<form [formGroup]="couponForm" (ngSubmit)="onCouponCreate()" class="form">
+<form [formGroup]="couponForm" (ngSubmit)="onCouponFormSubmit()" class="form">
     <div class="form-group">
         <label class="form-label">id</label>
         <input type="text" formControlName="id" class="form-control">

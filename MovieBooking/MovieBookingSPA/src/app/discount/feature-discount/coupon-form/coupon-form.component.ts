@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
+import { ICoupon } from '../../domain/models/coupon';
+
+interface ICouponFormData {
+  id : string, 
+  movieName : string, 
+  amount : number
+}
 
 @Component({
   selector: 'app-coupon-form',
@@ -9,7 +17,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class CouponFormComponent implements OnInit {
   public couponForm : FormGroup;
 
-  constructor() { 
+  constructor(private discountService : DiscountFacadeService) { 
     this.couponForm = new FormGroup({
       id : new FormControl("", [Validators.required]),
       movieName: new FormControl("", [Validators.required]),
@@ -20,8 +28,20 @@ export class CouponFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public onCouponCreate(): void {
+  public onCouponFormSubmit(): void {
     // TODO 
-    // sta se desi kada se kreira kupon
+    if(this.couponForm.invalid){
+      window.alert('Form has errors');
+      return;
+    }
+
+    const data : ICouponFormData = this.couponForm.value as ICouponFormData;
+    this.discountService.createDiscount(data.id, data.movieName, data.amount).subscribe((coupon : ICoupon) => {
+      if(coupon != null)
+        window.alert('Coupon created!');
+      else
+        window.alert('There was a problem with creating coupon!');
+    });
+    this.couponForm.reset();
   }
 }
