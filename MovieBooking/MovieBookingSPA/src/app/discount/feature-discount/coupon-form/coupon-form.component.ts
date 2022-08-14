@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
-import { ICoupon } from '../../domain/models/coupon';
+import { ICreateCoupon } from '../../domain/models/create-coupon';
 
 interface ICouponFormData {
   id : string, 
@@ -36,7 +36,7 @@ export class CouponFormComponent implements OnInit {
     }
 
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
-    this.discountService.createDiscount(data.id, data.movieName, data.amount).subscribe((coupon : ICoupon) => {
+    this.discountService.createDiscount(data.id, data.movieName, data.amount).subscribe((coupon : ICreateCoupon) => {
       if(coupon != null)
         window.alert('Coupon created!');
       else

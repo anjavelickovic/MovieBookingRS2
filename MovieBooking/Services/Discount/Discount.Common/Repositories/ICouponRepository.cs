@@ -11,7 +11,7 @@ namespace Discount.Common.Repositories
         Task<CouponDTO> GetDiscount(string movieName);
         Task<bool> CreateDiscount(CreateCouponDTO couponDTO);
         Task<bool> UpdateDiscount(UpdateCouponDTO couponDTO);
-        Task<bool> DeleteDiscount(string movieName);
+        Task<bool> DeleteDiscount(string id);
         Task<IEnumerable<CouponDTO>> GetRandomDiscounts(int numberOfDiscounts);
 
     }

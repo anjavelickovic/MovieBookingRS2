@@ -66,13 +66,13 @@ namespace Discount.Common.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteDiscount(string movieName)
+        public async Task<bool> DeleteDiscount(string id)
         {
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "DELETE FROM Coupon WHERE MovieName = @MovieName",
-                new { MovieName = movieName });
+                "DELETE FROM Coupon WHERE Id = @Id",
+                new { Id = id });
 
             if (affected == 0)
                 return false;

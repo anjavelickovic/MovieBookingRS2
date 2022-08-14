@@ -5,12 +5,16 @@ import { DiscountRoutingModule } from './discount-routing.module';
 import { DiscountComponent } from './discount.component';
 import { CouponFormComponent } from './feature-discount/coupon-form/coupon-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CouponListComponent } from './feature-discount/coupon-list/coupon-list/coupon-list.component';
+import { CouponDeleteFormComponent } from './feature-discount/coupon-delete-form/coupon-delete-form.component';
 
 
 @NgModule({
   declarations: [
     DiscountComponent,
-    CouponFormComponent
+    CouponFormComponent,
+    CouponListComponent,
+    CouponDeleteFormComponent
   ],
   imports: [
     CommonModule,

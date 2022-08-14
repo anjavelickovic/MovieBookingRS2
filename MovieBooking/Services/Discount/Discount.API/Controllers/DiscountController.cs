@@ -14,6 +14,7 @@ namespace Discount.API.Controllers
     [Route("api/v1/[controller]")]
     public class DiscountController : ControllerBase
     {
+    
         private readonly ICouponRepository _repository;
 
         public DiscountController(ICouponRepository repository)
@@ -57,11 +58,11 @@ namespace Discount.API.Controllers
             return Ok(await _repository.UpdateDiscount(coupon));
         }
 
-        [HttpDelete("{movieName}", Name = "DeleteDiscount")]
+        [HttpDelete("{id}", Name = "DeleteDiscount")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> DeleteDiscount(string movieName)
+        public async Task<ActionResult<bool>> DeleteDiscount(string id)
         {
-            return Ok(await _repository.DeleteDiscount(movieName));
+            return Ok(await _repository.DeleteDiscount(id));
         }
     }
 }
