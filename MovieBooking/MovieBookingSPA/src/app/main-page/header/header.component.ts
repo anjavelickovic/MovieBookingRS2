@@ -13,8 +13,7 @@ export class HeaderComponent implements OnInit {
 
   public appState: IAppState;
 
-  constructor(private appStateService: AppStateService, 
-              private authenticationService: AuthenticationFacadeService, private router: Router) {
+  constructor(private appStateService: AppStateService, private router: Router) {
 
     this.appStateService.getAppState().subscribe(
       (appState: IAppState) => {
@@ -28,19 +27,15 @@ export class HeaderComponent implements OnInit {
   }
 
   public logout(): void {
-    if(this.appState.role === 'Customer'){
-      this.authenticationService.logout().subscribe(value => {});
-    }
-    else{
-      this.authenticationService.logout().subscribe(value => {});
-    }
-
     this.router.navigate(['\identity', 'logout']);
+  }
 
+  public mainPage(): void {
+    this.router.navigate(['\main']);
   }
 
   public profile(): void {
-    window.alert("profile")
+    this.router.navigate(['\identity', 'profile']);
   }
 
   public getMovie(): void {
