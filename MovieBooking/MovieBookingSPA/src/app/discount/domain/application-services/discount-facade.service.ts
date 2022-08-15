@@ -7,6 +7,7 @@ import { ICreateCoupon } from '../models/create-coupon';
 @Injectable({
   providedIn: 'root'
 })
+
 export class DiscountFacadeService {
 
   constructor(private discountService : DiscountService) { }
@@ -29,4 +30,16 @@ export class DiscountFacadeService {
   public deleteDiscount(id : string) : Observable<boolean> {
     return this.discountService.deleteDiscount(id);
   }
+
+  public updateDiscount(id : string, movieName : string, amount : number) : Observable<boolean> {
+    const coupon : ICreateCoupon = {id, movieName, amount};
+
+    return this.discountService.updateDiscount(coupon).pipe(
+      catchError((err) => {
+        console.log(err);
+        return of(false);
+      })
+    );
+  }
+
 }

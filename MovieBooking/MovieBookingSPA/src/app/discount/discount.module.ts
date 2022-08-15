@@ -7,6 +7,7 @@ import { CouponFormComponent } from './feature-discount/coupon-form/coupon-form.
 import { ReactiveFormsModule } from '@angular/forms';
 import { CouponListComponent } from './feature-discount/coupon-list/coupon-list/coupon-list.component';
 import { CouponDeleteFormComponent } from './feature-discount/coupon-delete-form/coupon-delete-form.component';
+import { CouponUpdateFormComponent } from './feature-discount/coupon-update-form/coupon-update-form.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { CouponDeleteFormComponent } from './feature-discount/coupon-delete-form
     DiscountComponent,
     CouponFormComponent,
     CouponListComponent,
-    CouponDeleteFormComponent
+    CouponDeleteFormComponent,
+    CouponUpdateFormComponent
   ],
   imports: [
     CommonModule,

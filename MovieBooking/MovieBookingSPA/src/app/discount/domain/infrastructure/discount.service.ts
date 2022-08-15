@@ -20,6 +20,10 @@ export class DiscountService {
     return this.httpClient.get<ICoupon[]>(this.discountUrl);
   }
 
+  public updateDiscount(coupon : ICreateCoupon) : Observable<boolean> {
+    return this.httpClient.put<boolean>(this.discountUrl, coupon);
+  }
+
   public deleteDiscount(id : string) : Observable<boolean> {
     return this.httpClient.delete<boolean>(this.discountUrl + id);  
   }
