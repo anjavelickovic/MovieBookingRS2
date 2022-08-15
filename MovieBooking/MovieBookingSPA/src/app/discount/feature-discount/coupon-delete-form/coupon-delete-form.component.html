@@ -1,12 +1,31 @@
-<br>
-<h4> Delete coupon</h4>
-<p> Please insert id for movie</p>
+<button class="btn btn-primary" 
+        (click)="open(mymodal)">
+        Delete coupon
+</button>
 
-<form [formGroup]="couponForm" (ngSubmit)="onCouponDelete()" class="form">
-    <div class="form-group">
-        <label class="form-label">id</label>
-        <input type="text" formControlName="id" class="form-control">
+<ng-template #mymodal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Create new coupon</h4>            
+
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">×</span>
+        </button>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3">delete coupon</button>
-</form>
+    <div class="modal-body">
+
+        <p> Please insert id for movie</p>
+
+        <form [formGroup]="couponForm" class="form">
+            <div class="form-group">
+                <label class="form-label">id</label>
+                <input type="text" formControlName="id" class="form-control">
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-outline-dark" (click)="onCouponDelete()">Delete coupon</button>
+    </div>
+
+</ng-template>

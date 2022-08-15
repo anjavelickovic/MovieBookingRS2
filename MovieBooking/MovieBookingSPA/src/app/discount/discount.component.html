@@ -1,21 +1,14 @@
-<div class="container">
-    <br>
-    <h2> Admin coupon service </h2>
-    <br>
-    <ul>
-        <li>
-            <a [routerLink]="['create_coupon']">CREATE NEW COUPON</a>
-        </li>
-        <li>
-            <a [routerLink]="['coupons_list']">LIST OF ALL COUPONS</a>
-        </li>
-        <li>
-            <a [routerLink]="['update_coupon']">UPDATE COUPON</a>
-        </li>
-        <li>
-            <a [routerLink]="['delete_coupon']">DELETE COUPON</a>
-        </li>
-    </ul>
-    
-    <router-outlet></router-outlet>
+<div style="background-color: rgb(50, 159, 209)">
+    <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(50, 159, 209)">
+   
+        <div class="navbar-brand mx-auto" style="color:rgb(152, 207, 232);">
+            <h3><b><i>Coupons</i></b></h3>
+        </div>
+
+        <app-coupon-form style="padding-right: 15px;"></app-coupon-form>
+        <app-coupon-update-form style="padding-right: 15px;"></app-coupon-update-form>
+        <app-coupon-delete-form style="padding-right: 15px;"></app-coupon-delete-form>
+    </nav>
 </div>
+
+<app-coupon-list></app-coupon-list>

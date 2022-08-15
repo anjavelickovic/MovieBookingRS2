@@ -1,8 +1,26 @@
-<br>
-<table *ngFor="let coupon of coupons" style="padding-left:15px; padding-top: 15px;">
-    <tr>
-        <td> {{coupon.id}} </td>
-        <td> {{coupon.movieName}} </td>
-        <td> {{coupon.amount}} </td>
-    </tr>
-</table>
+    <div class="form-group" style="margin-top: 10px;">
+       <br><br>
+        <div class="mx-auto" style="width: 90%;">
+            <table class="table table-hover">
+            <thead>
+                <tr>
+                  <th scope="col">id</th>
+                  <th scope="col">movie name</th>
+                  <th scope="col">amount</th>
+                </tr>
+              </thead>
+          
+            <tbody>
+
+                <tr *ngFor="let coupon of coupons" style="padding-left:15px; padding-top: 15px;">
+                    <td> {{coupon.id}} </td>
+                    <td> {{coupon.movieName}} </td>
+                    <td> {{coupon.amount}} </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+        </div>
+
+    </div>

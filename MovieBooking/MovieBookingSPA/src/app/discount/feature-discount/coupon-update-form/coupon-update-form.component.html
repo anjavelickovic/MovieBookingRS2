@@ -1,22 +1,38 @@
-<br>
+<button class="btn btn-primary" 
+        (click)="open(mymodal)">
+        Update coupon
+</button>
 
-<h4> Update coupon</h4>
+<ng-template #mymodal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Update coupon</h4>            
 
-<form [formGroup]="couponForm" (ngSubmit)="onCouponUpdate()" class="form">
-    <div class="form-group">
-        <label class="form-label">id</label>
-        <input type="text" formControlName="id" class="form-control">
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">×</span>
+        </button>
     </div>
 
-    <div>
-        <label class="form-label">movie name</label>
-        <input type="string" formControlName="movieName" class="form-control">
+    <div class="modal-body">
+        <form [formGroup]="couponForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+            <div class="form-group">
+                <label class="form-label">id</label>
+                <input type="text" formControlName="id" class="form-control">
+            </div>
+
+            <div>
+                <label class="form-label">movie name</label>
+                <input type="string" formControlName="movieName" class="form-control">
+            </div>
+
+            <div>
+                <label class="form-label">amount</label>
+                <input type="number" formControlName="amount" class="form-control">
+            </div>
+        </form>
     </div>
 
-    <div>
-        <label class="form-label">amount</label>
-        <input type="number" formControlName="amount" class="form-control">
+    <div class="modal-footer">
+        <button class="btn btn-outline-dark" (click)="onCouponUpdate()">Update coupon</button>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3">create new coupon</button>
-</form>
+</ng-template>
