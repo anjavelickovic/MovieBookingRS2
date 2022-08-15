@@ -2,7 +2,7 @@
 
 <div id="body">
     <app-sidebar></app-sidebar>
-    <div>
+    <div [ngClass] = "isAuthenticated()">
         <router-outlet></router-outlet>
     </div>
 </div>
