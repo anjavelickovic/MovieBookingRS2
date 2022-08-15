@@ -33,6 +33,12 @@ namespace TheaterHalls.API
             services.AddScoped<ITheaterHallContext, TheaterHallContext>();
             services.AddScoped<ITheaterHallRepository, TheaterHallRepository>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TheaterHalls.API", Version = "v1" });
@@ -49,6 +55,7 @@ namespace TheaterHalls.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TheaterHalls.API v1"));
             }
 
+            app.UseCors("CorsPolicy");
             app.UseRouting();
 
             app.UseAuthorization();
