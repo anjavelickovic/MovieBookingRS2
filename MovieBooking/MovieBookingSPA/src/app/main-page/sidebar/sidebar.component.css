@@ -1,8 +1,13 @@
 #sidebar { 
-    float:left;
-    width:200px;
-    background-color:rgb(152, 207, 232);
-    height:100vh;
+  height: 100%;
+  width:200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color:rgb(152, 207, 232);
+  overflow-x: hidden;
+  padding-top: 20px;
  }
 
 * {
@@ -27,7 +32,7 @@
     cursor: pointer;
 }
 
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 1050px) {
     #sidebar {
       width: 100%;
       height: auto;
@@ -37,7 +42,7 @@
     div.content {margin-left: 0;}
   }
   
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 1050px) {
     #sidebar a {
       text-align: center;
       float: none;
