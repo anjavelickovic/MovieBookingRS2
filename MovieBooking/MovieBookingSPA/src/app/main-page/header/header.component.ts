@@ -45,4 +45,8 @@ export class HeaderComponent implements OnInit {
   public advancedSearch(): void{
     window.alert("advanced search")
   }
+
+  public isMainPage(): boolean{
+    return this.router.url === '/main'
+  }
 }
