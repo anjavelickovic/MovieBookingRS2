@@ -37,3 +37,7 @@ ul, li {
   border: 1px solid #ccc;
   border-top: none;
 }
+
+input {
+  width: 70%;
+}
