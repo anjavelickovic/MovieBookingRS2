@@ -27,15 +27,15 @@ export class HeaderComponent implements OnInit {
   }
 
   public logout(): void {
-    this.router.navigate(['\identity', 'logout']);
+    this.router.navigate(['/identity', 'logout']);
   }
 
   public mainPage(): void {
-    this.router.navigate(['\main']);
+    this.router.navigate(['/main']);
   }
 
   public profile(): void {
-    this.router.navigate(['\identity', 'profile']);
+    this.router.navigate(['/identity', 'profile']);
   }
 
   public getMovie(): void {
