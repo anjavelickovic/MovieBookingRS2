@@ -1,0 +1,16 @@
+#body { 
+    overflow:auto;
+}
+
+.main-content-authenticated {
+    margin-left: 200px;
+    padding: 0px 10px;
+}
+
+@media screen and (max-width: 1050px) {
+    .main-content-authenticated {
+      margin-left: 10px;
+      padding: 0px 0px;
+    }
+    
+  }
