@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'identity', loadChildren: () => import('./identity/identity.module').then(m => m.IdentityModule) },
   { path: 'theater-hall', loadChildren: () => import('./theater-hall/theater-hall.module').then(m => m.TheaterHallModule), canActivate: [AdminGuard]},
   { path: 'main', loadChildren: () => import('./main-page/main-page.module').then(m => m.MainPageModule), canActivate: [NotAuthenticatedGuard] },
+  { path: '**', redirectTo: '/main', pathMatch: 'full' },
 ];
 
 @NgModule({
