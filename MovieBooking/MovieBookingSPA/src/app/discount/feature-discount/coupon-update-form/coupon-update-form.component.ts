@@ -18,22 +18,44 @@ export class CouponUpdateFormComponent implements OnInit {
   
   public couponForm : FormGroup;
   public modalReference: NgbModalRef;
+  public showFormErrors: boolean;
+  public showServerError: boolean;
 
   constructor(private modalService: NgbModal,
             private discountService : DiscountFacadeService) { 
+    this.showFormErrors = false;
+    this.showServerError = false;
+          
     this.couponForm = new FormGroup({
       id : new FormControl("", [Validators.required]),
       movieName : new FormControl("", [Validators.required]),
-      amount : new FormControl("", [Validators.required])
+      amount : new FormControl("", [Validators.required, Validators.min(1)])
     });
   }
 
+  
+  public get id() {
+    return this.couponForm.get('id');
+  }
+
+  public get movieName() {
+    return this.couponForm.get('movieName');
+  }
+
+  public get amount() {
+    return this.couponForm.get('amount');
+  }
+  
   ngOnInit(): void {
   }
 
   public onCouponUpdate() : void {
-    if(this.couponForm.invalid){
-      window.alert('Form has errors');
+
+    this.showFormErrors = false;
+    this.showServerError = false;
+    
+    if (this.couponForm.invalid) {
+      this.showFormErrors = true;
       return;
     }
 
@@ -46,7 +68,7 @@ export class CouponUpdateFormComponent implements OnInit {
         window.alert('There was a problem with updating coupon, please try again!');
     }, 
     complete: () => {
-      window.alert("Updated coupon for movie " + data.movieName);
+      window.alert("Updated coupon for movie with id: " + this.id);
       this.couponForm.reset();
       this.modalReference.close();
       window.location.reload();

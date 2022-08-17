@@ -17,16 +17,22 @@
             <div class="form-group">
                 <label class="form-label">id</label>
                 <input type="text" formControlName="id" class="form-control">
-            </div>
-
-            <div>
-                <label class="form-label">movie name</label>
-                <input type="string" formControlName="movieName" class="form-control">
+                
+                <span *ngIf="showFormErrors && id?.errors?.['required']" class="error">
+                    id is required
+                </span>    
             </div>
 
             <div>
                 <label class="form-label">amount</label>
                 <input type="number" formControlName="amount" class="form-control">
+            
+                <span *ngIf="showFormErrors && amount?.errors?.['min']" class="error">
+                    Minimum amount is 1
+                </span>
+                <span *ngIf="showFormErrors && amount?.errors?.['required']" class="error">
+                    Amount is required
+                </span>
             </div>
         </form>
     </div>

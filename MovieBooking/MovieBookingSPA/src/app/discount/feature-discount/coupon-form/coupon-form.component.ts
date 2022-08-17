@@ -18,9 +18,14 @@ interface ICouponFormData {
 export class CouponFormComponent implements OnInit {
   public couponForm : FormGroup;
   public modalReference: NgbModalRef;
+  public showFormErrors: boolean;
+  public showServerError: boolean;
 
   constructor(private modalService: NgbModal,
             private discountService : DiscountFacadeService) { 
+    this.showFormErrors = false;
+    this.showServerError = false;
+          
     this.couponForm = new FormGroup({
       id : new FormControl("", [Validators.required]),
       movieName: new FormControl("", [Validators.required]),
@@ -28,12 +33,28 @@ export class CouponFormComponent implements OnInit {
     });
   }
 
+  public get id() {
+    return this.couponForm.get('id');
+  }
+
+  public get movieName() {
+    return this.couponForm.get('movieName');
+  }
+
+  public get amount() {
+    return this.couponForm.get('amount');
+  }
+
   ngOnInit(): void {
   }
 
   public onCouponFormSubmit(): void { 
-    if(this.couponForm.invalid){
-      window.alert('Form has errors');
+
+    this.showFormErrors = false;
+    this.showServerError = false;
+    
+    if (this.couponForm.invalid) {
+      this.showFormErrors = true;
       return;
     }
 

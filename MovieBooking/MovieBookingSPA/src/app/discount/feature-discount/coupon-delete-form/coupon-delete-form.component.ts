@@ -16,9 +16,14 @@ export class CouponDeleteFormComponent implements OnInit {
 
   public couponForm : FormGroup
   public modalReference: NgbModalRef;
+  public showFormErrors: boolean;
+  public showServerError: boolean;
 
   constructor(private modalService: NgbModal,
               private discountService : DiscountFacadeService) { 
+      this.showFormErrors = false;
+      this.showServerError = false;
+            
       this.couponForm = new FormGroup({
         id : new FormControl("", [Validators.required]),
       });
@@ -27,9 +32,17 @@ export class CouponDeleteFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public get id() {
+    return this.couponForm.get('id');
+  }
+
   public onCouponDelete() : void{
-    if(this.couponForm.invalid){
-      window.alert('Form has errors');
+    
+    this.showFormErrors = false;
+    this.showServerError = false;
+    
+    if (this.couponForm.invalid) {
+      this.showFormErrors = true;
       return;
     }
 

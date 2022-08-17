@@ -20,6 +20,10 @@
             <div class="form-group">
                 <label class="form-label">id</label>
                 <input type="text" formControlName="id" class="form-control">
+
+                <span *ngIf="showFormErrors && id?.errors?.['required']" class="error">
+                    id is required
+                </span>    
             </div>
         </form>
     </div>

@@ -57,7 +57,7 @@ namespace Discount.Common.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "UPDATE Coupon SET MovieName=@MovieName, Amount = @Amount, ModifiedDate = @ModifiedDate WHERE Id = @Id",
+                "UPDATE Coupon SET Amount = @Amount, ModifiedDate = @ModifiedDate WHERE Id = @Id",
                 new { couponDTO.MovieName, couponDTO.Amount, ModifiedDate = couponDTO.ModifiedDate, couponDTO.Id });
 
             if (affected == 0)
