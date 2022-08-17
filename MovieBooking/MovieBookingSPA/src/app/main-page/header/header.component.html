@@ -4,7 +4,7 @@
             <h3><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
         </div>
             
-        <div class="form-group" *ngIf="isMainPage()">
+        <div class="form-group" *ngIf="!appState?.isEmpty()" style="margin-right:5px">
             <input 
             id="query" 
             type="text" 
@@ -16,26 +16,21 @@
             <a class="nav-link" (click)="advancedSearch()" style="font-size: 10px; color:rgb(152, 207, 232); float: right;">Advanced search</a>
         </div>
 
-        <!--
-        <select name="cars" id="cars" class="form-control" style="width: auto">
-            <option value="volvo">Title</option>
-            <option value="saab">Year</option>
-            <option value="opel">Runtime</option>
-            <option value="audi">Audi</option>
-            </select>
+       
+        <select name="criteria" id="criteria" class="form-select" style="width: auto; margin-right: 10px; margin-bottom: 15px;">
+            <option value="title">Title</option>
+            <option value="mainActor">Main Actor</option>
+            <option value="genre">Genre</option>
+            <option value="year">Year</option>
+            <option value="director">Director</option>
+            <option value="language">Language</option>
+        </select>
             
-        -->  
 
-        <div class="navbar-nav" style="text-align: center;  margin-right: 55px;"  *ngIf="!appState?.isEmpty()">
-            <div class="dropdown">
-                <span class="nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:rgb(152, 207, 232); ">
-                    {{ appState?.username }}
-                </span>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" (click)="profile()">My profile</a>
-                    <a class="dropdown-item" (click)="logout()">Logout</a>
-                </div>
-            </div>
+        <div style="text-align: center;  margin-right: 55px;"  *ngIf="!appState?.isEmpty()">
+            <span (click)="profile()" type="button"  style="color:rgb(152, 207, 232); ">
+                {{ appState?.username }}
+            </span>
         </div>
     </nav>
 </div>
