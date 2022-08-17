@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, switchMap, take } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, take, throwError } from 'rxjs';
 import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 import { Role } from 'src/app/shared/app-state/role';
@@ -56,7 +56,7 @@ export class AuthenticationFacadeService {
       }),
       catchError((err) => {
         this.appStateService.clearAppState();
-        return of(false);
+        return throwError(() => err);
       })
     );
   }
