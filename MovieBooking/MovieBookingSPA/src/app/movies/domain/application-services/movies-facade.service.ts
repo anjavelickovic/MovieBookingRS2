@@ -13,4 +13,12 @@ export class MoviesFacadeService {
   public getMovieDetails(id: string): Observable<IMovieDetails> {
     return this.moviesService.getMovieDetails(id);
   }
+
+  public GetRandomAiringMovies(numberOfMovies: number): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetRandomAiringMovies(numberOfMovies);
+  }
+
+  public GetRandomUpcomingMovies(numberOfMovies: number): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetRandomUpcomingMovies(numberOfMovies);
+  }
 }
