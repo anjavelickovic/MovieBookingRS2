@@ -41,6 +41,9 @@ namespace Movies.API.Helpers
 				var responseOmdbString = await responseOmdb.Content.ReadAsStringAsync().ConfigureAwait(false);
 				var jo = JObject.Parse(responseOmdbString);
 
+				if (jo.Property("Response").ToObject<string>() == "False")
+					return null;
+
 				var responseImdb = await responseImdbTask;
 				jo.Add(new JProperty("Trailer", responseImdb.LinkEmbed));
 
