@@ -1,2 +1,20 @@
-<app-header></app-header>
-<p>main-page works!</p>
+<div>
+  <h1 style="margin-top: 20px;">Currently airing</h1>
+
+  <div id="imagesDIV">
+    <div class="item" *ngFor="let movie of randomAiringMovies">
+      <img [src]="movie.poster" (click)="moviePage(movie.id)"/>
+      <span class="caption">{{ movie.title }}</span>
+    </div>
+  </div>
+
+  <h1 style="margin-top: 20px;">Upcoming movies</h1>
+
+  <div id="imagesDIV">
+    <div class="item" *ngFor="let movie of randomUpcomingMovies">
+      <img [src]="movie.poster" (click)="moviePage(movie.id)" />
+      <span class="caption">{{ movie.title }}</span>
+    </div>
+  </div>
+
+</div>
