@@ -9,7 +9,8 @@ namespace Movies.API.Repositories
     public interface IMovieRepository
     {
         Task<MovieDTO> GetMovieById(string id);
-        Task<IEnumerable<MovieDTO>> GetRandomMovies(int numberOfMovies);
+        Task<IEnumerable<MovieDTO>> GetAllMovies();
+        Task<IEnumerable<MovieDTO>> GetRandomMovies(bool upcomingMovies, int numberOfMovies);
         Task<IEnumerable<MovieDTO>> GetMoviesByTitle(string name);
         Task<IEnumerable<MovieDTO>> GetMoviesByYear(int year);
         Task<IEnumerable<MovieDTO>> GetMoviesByRuntime(int lowerBound, int upperBound);
