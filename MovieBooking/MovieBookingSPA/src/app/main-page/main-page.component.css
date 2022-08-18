@@ -27,3 +27,7 @@
 .item>img:hover {
     cursor: pointer;
 }
+
+p:hover {
+    cursor: pointer;
+}

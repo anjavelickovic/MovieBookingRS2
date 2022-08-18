@@ -1,6 +1,9 @@
 <div>
 
-  <h1 style="margin-top: 20px;">Currently airing</h1>
+  <div style="margin-top: 20px">
+      <h1 style="display: inline">Currently airing</h1>
+      <p style="display: inline; margin-left: 10px; font-size: 32px" title="Refresh" (click)="fetchRandomAiringMovies()">↻</p>
+  </div>
   <div id="imagesDIV">
     <div class="item" *ngFor="let movie of randomAiringMovies">
       <img [src]="movie.poster" (click)="moviePage(movie.id)"/>
@@ -8,7 +11,10 @@
     </div>
   </div>
 
-  <h1 style="margin-top: 20px;">Upcoming movies</h1>
+  <div style="margin-top: 20px">
+    <h1 style="display: inline">Upcoming movies</h1>
+    <p style="display: inline; margin-left: 10px; font-size: 32px" title="Refresh" (click)="fetchRandomUpcomingMovies()">↻</p>
+  </div>
   <div id="imagesDIV">
     <div class="item" *ngFor="let movie of randomUpcomingMovies">
       <img [src]="movie.poster" (click)="moviePage(movie.id)" />
