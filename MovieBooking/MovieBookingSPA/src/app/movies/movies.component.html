@@ -20,7 +20,7 @@
                     </tr>
                     <tr>
                         <td>{{ movieDetails.imdbRating === null ? "Releasing" : "Released" }}</td>
-                        <td>{{ movieDetails.released }}</td>
+                        <td>{{ movieDetails.released  === null ? "unknown" : movieDetails.released }}</td>
                     </tr>
                     <tr>
                         <td>Runtime</td>
@@ -61,7 +61,7 @@
             
             </div>
 
-            <div>
+            <div *ngIf = "movieDetails.trailer != null">
                 <iframe [src]="trailerConfiguration()" width="520" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
             </div>
             
