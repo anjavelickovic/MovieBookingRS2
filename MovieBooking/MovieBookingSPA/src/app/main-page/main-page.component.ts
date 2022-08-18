@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { catchError, Observable, of } from 'rxjs';
 import { MoviesFacadeService } from '../movies/domain/application-services/movies-facade.service'
 import { IMovieDetails } from '../movies/domain/models/movie-details';
+import { LocalStorageKeys } from '../shared/local-storage/local-storage-keys';
+import { LocalStorageService } from '../shared/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-main-page',
@@ -20,7 +22,9 @@ export class MainPageComponent implements OnInit {
 
   public items: Array<number> = [1,2,3,4];
 
-  constructor(private movieService: MoviesFacadeService, private router: Router) {
+  constructor(private movieService: MoviesFacadeService,
+              private localStorageService: LocalStorageService,
+              private router: Router) {
 
     this.randomAiringMoviesObservable = this.movieService.GetRandomAiringMovies(this.NUMBER_OF_MOVIES).pipe(
       catchError((err: HttpErrorResponse) => {
@@ -41,23 +45,43 @@ export class MainPageComponent implements OnInit {
           window.alert("Internal server error");
         return of(false);
     }));
-    
-    this.randomAiringMoviesObservable.subscribe(
-      (result: boolean | Array<IMovieDetails>) => {
-        if (result !== false){
-          this.randomAiringMovies = result as Array<IMovieDetails>;
-    }});
 
-    this.randomUpcomingMoviesObservable.subscribe(
-      (result: boolean | Array<IMovieDetails>) => {
-        if (result !== false){
-          this.randomUpcomingMovies = result as Array<IMovieDetails>;
-    }});
+    if(this.localStorageService.get(LocalStorageKeys.RandomAiringMovies) == null) {
+      this.fetchRandomAiringMovies();
+    }
+    else{
+      this.randomAiringMovies = this.localStorageService.get(LocalStorageKeys.RandomAiringMovies);
+    }
+
+    if(this.localStorageService.get(LocalStorageKeys.RandomUpcomingMovies) == null) {
+      this.fetchRandomUpcomingMovies();
+    }
+    else{
+      this.randomUpcomingMovies = this.localStorageService.get(LocalStorageKeys.RandomUpcomingMovies);
+    }
 
   }  
 
   public moviePage(movieId: string): void {
     this.router.navigate((['/movies', movieId]));;
+  }
+
+  public fetchRandomAiringMovies(): void{
+    this.randomAiringMoviesObservable.subscribe(
+      (result: boolean | Array<IMovieDetails>) => {
+        if (result !== false){
+          this.randomAiringMovies = result as Array<IMovieDetails>;
+          this.localStorageService.set(LocalStorageKeys.RandomAiringMovies, this.randomAiringMovies);
+    }});
+  }
+
+  public fetchRandomUpcomingMovies(): void{
+    this.randomUpcomingMoviesObservable.subscribe(
+      (result: boolean | Array<IMovieDetails>) => {
+        if (result !== false){
+          this.randomUpcomingMovies = result as Array<IMovieDetails>;
+          this.localStorageService.set(LocalStorageKeys.RandomUpcomingMovies, this.randomUpcomingMovies);
+    }});
   }
 
   ngOnInit(): void {
