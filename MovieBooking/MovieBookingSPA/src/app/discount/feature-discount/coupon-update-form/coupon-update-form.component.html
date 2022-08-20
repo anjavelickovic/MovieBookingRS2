@@ -1,0 +1,44 @@
+<button class="btn btn-primary" 
+        (click)="open(mymodal)">
+        Update coupon
+</button>
+
+<ng-template #mymodal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Update coupon</h4>            
+
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="couponForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+            <div class="form-group">
+                <label class="form-label">id</label>
+                <input type="text" formControlName="id" class="form-control">
+                
+                <span *ngIf="showFormErrors && id?.errors?.['required']" class="error">
+                    id is required
+                </span>    
+            </div>
+
+            <div>
+                <label class="form-label">amount</label>
+                <input type="number" formControlName="amount" class="form-control">
+            
+                <span *ngIf="showFormErrors && amount?.errors?.['min']" class="error">
+                    Minimum amount is 1
+                </span>
+                <span *ngIf="showFormErrors && amount?.errors?.['required']" class="error">
+                    Amount is required
+                </span>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-outline-dark" (click)="onCouponUpdate()">Update coupon</button>
+    </div>
+
+</ng-template>

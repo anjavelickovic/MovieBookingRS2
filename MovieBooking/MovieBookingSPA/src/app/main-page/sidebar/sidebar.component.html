@@ -2,6 +2,8 @@
     <div class="sidebar-content">
         <div class="sidebar-field" (click)="mainPage()">Home</div>
         <div class="sidebar-field" (click)="profile()">Profile</div>
+        <div *ngIf="isAdmin()" class="sidebar-field" (click)="theaterHall()">Theater Hall</div>
+        <div *ngIf="isAdmin()" class="sidebar-field" (click)="projection()">Projection</div>
         <div class="sidebar-field" (click)="logout()">Sign Out</div>
     </div>    
 </div>

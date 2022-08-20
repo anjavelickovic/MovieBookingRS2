@@ -8,6 +8,6 @@ namespace Discount.Common.DTOs
 {
     public class CreateCouponDTO : BaseIdentityCouponDTO
     {
-        public DateTime CreationDate { get; set; } = DateTime.Now;
+        public DateTime CreationDate { get; set; }
     }
 }

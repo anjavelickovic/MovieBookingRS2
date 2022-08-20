@@ -25,5 +25,7 @@ namespace Movies.API.Repositories
         Task<bool> CreateMovieById(string id);
         Task UpdateInformationForAllMovies();
         Task<bool> DeleteMovie(string id);
+        Task<bool> DeleteMovies();
     }
+
 }

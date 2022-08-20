@@ -16,6 +16,10 @@ export class MoviesService {
     return this.httpClient.get<IMovieDetails>(`${this.url}/${id}`);
   }
 
+  public getMoviesDetails(): Observable<IMovieDetails[]> {
+    return this.httpClient.get<IMovieDetails[]>(this.url);
+  }
+
   public GetRandomAiringMovies(numberOfMovies: number): Observable<Array<IMovieDetails>> {
     return this.httpClient.get<Array<IMovieDetails>>(`${this.url}/GetRandomAiringMovies/${numberOfMovies}`);
   }

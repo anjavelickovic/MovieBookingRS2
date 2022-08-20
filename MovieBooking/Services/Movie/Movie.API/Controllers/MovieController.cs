@@ -22,6 +22,13 @@ namespace Movies.API.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
+        [HttpGet()]
+        [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
+        {
+            return Ok(await _repository.GetMovies());
+        }
+
         [HttpGet("{id}", Name = "GetMovie")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status404NotFound)]
@@ -184,6 +191,15 @@ namespace Movies.API.Controllers
         public async Task<IActionResult> DeleteMovie(string id)
         {
             await _repository.DeleteMovie(id);
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete()]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteMovies()
+        {
+            await _repository.DeleteMovies();
             return Ok();
         }
 

@@ -11,5 +11,8 @@ namespace Discount.Common.Entities
         public string Id { get; set; }
         public string MovieName { get; set; }
         public int Amount { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+
     }
 }

@@ -22,6 +22,16 @@ namespace Discount.Common.Repositories
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        public async Task<IEnumerable<CouponDTO>> GetDiscounts()
+        {
+            using var connection = _context.GetConnection();
+            
+            var coupons = await connection.QueryAsync<Coupon>("SELECT * FROM Coupon");
+
+            var r = new Random();
+            return _mapper.Map<IEnumerable<CouponDTO>>(coupons);
+           }
+
         public async Task<CouponDTO> GetDiscount(string movieName)
         {
             using var connection = _context.GetConnection();
@@ -47,7 +57,7 @@ namespace Discount.Common.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "UPDATE Coupon SET MovieName=@MovieName, Amount = @Amount, ModifiedDate = @ModifiedDate WHERE Id = @Id",
+                "UPDATE Coupon SET Amount = @Amount, ModifiedDate = @ModifiedDate WHERE Id = @Id",
                 new { couponDTO.MovieName, couponDTO.Amount, ModifiedDate = couponDTO.ModifiedDate, couponDTO.Id });
 
             if (affected == 0)
@@ -56,13 +66,13 @@ namespace Discount.Common.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteDiscount(string movieName)
+        public async Task<bool> DeleteDiscount(string id)
         {
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "DELETE FROM Coupon WHERE MovieName = @MovieName",
-                new { MovieName = movieName });
+                "DELETE FROM Coupon WHERE Id = @Id",
+                new { Id = id });
 
             if (affected == 0)
                 return false;
