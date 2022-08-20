@@ -9,13 +9,18 @@ import { IProjection } from '../models/projection.model';
 })
 export class ProjectionService {
   private readonly projectionUrl = "http://localhost:8005/api/v1/Projection/";
-  private readonly byMovie = "DeleteProjectionsByMovieTitle/";
-  private readonly byDate = "DeleteProjectionsByDate/";
+  private readonly deleteByMovieTtile = "DeleteProjectionsByMovieTitle/";
+  private readonly deleteByDate = "DeleteProjectionsByDate/";
+  private readonly getByMovieId = "GetMovieProjections/"
 
   constructor(private http: HttpClient) { }
 
   public getProjections(): Observable<IProjection[]>  { 
     return this.http.get<IProjection[]>(this.projectionUrl);
+  }
+
+  public getMovieProjections(movieId: string): Observable<IProjection[]>  { 
+    return this.http.get<IProjection[]>(this.projectionUrl + this.getByMovieId + movieId);
   }
 
   public getProjection(projectionId: string): Observable<IProjection>  { 
@@ -43,11 +48,11 @@ export class ProjectionService {
   }
 
   public deleteProjectionsByMovieTitle(movieTitle: string): Observable<any>{
-    return this.http.delete(this.projectionUrl + this.byMovie + movieTitle);
+    return this.http.delete(this.projectionUrl + this.deleteByMovieTtile + movieTitle);
   }
 
   public deleteProjectionsByDate(date: string): Observable<any>{
-    return this.http.delete(this.projectionUrl + this.byDate + date);
+    return this.http.delete(this.projectionUrl + this.deleteByDate + date);
   }
 
   public deleteProjections(): Observable<any>{

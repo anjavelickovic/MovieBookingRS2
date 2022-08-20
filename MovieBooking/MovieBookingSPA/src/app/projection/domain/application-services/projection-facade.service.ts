@@ -15,6 +15,10 @@ export class ProjectionFacadeService {
     return this.projectionService.getProjections();
   }
 
+  public getMovieProjections(movieId: string): Observable<IProjection[]>  { 
+    return this.projectionService.getMovieProjections(movieId);
+  }
+
   public getProjection(projectionId: string): Observable<IProjection> {
     return this.projectionService.getProjection(projectionId);
   }
