@@ -24,6 +24,12 @@ namespace Movies.API.Repositories
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        public async Task<IEnumerable<MovieDTO>> GetMovies()
+        {
+            var movies =  await _movieContext.Movies.Find(movie => true).ToListAsync();
+            return _mapper.Map<List<MovieDTO>>(movies);
+        }
+
         public async Task<MovieDTO> GetMovieById(string id)
         {
             var movie = await _movieContext.Movies.Find(movie => (movie.Id == id)).FirstOrDefaultAsync();
@@ -175,5 +181,16 @@ namespace Movies.API.Repositories
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
 
+        public async Task<bool> DeleteMovies()
+        {
+            var deleted = true;
+            var movies = await GetMovies();
+            foreach (var movie in movies)
+            {
+                var deleteResult = await _movieContext.Movies.DeleteOneAsync(p => p.Id == movie.Id);
+                deleted = deleted && deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
+            }
+            return deleted;
+        }
     }
 }

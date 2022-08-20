@@ -9,6 +9,7 @@ namespace Movies.API.Repositories
     public interface IMovieRepository
     {
         Task<MovieDTO> GetMovieById(string id);
+        Task<IEnumerable<MovieDTO>> GetMovies();
         Task<IEnumerable<MovieDTO>> GetRandomMovies(int numberOfMovies);
         Task<IEnumerable<MovieDTO>> GetMoviesByTitle(string name);
         Task<IEnumerable<MovieDTO>> GetMoviesByYear(int year);
@@ -24,5 +25,7 @@ namespace Movies.API.Repositories
         Task<bool> CreateMovieById(string id);
         Task UpdateInformationForAllMovies();
         Task<bool> DeleteMovie(string id);
+        Task<bool> DeleteMovies();
     }
+
 }

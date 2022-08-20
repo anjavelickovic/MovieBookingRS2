@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthenticationInterceptor } from './shared/interceptors/authentication.interceptor';
 import { MainPageModule } from './main-page/main-page.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { MainPageModule } from './main-page/main-page.module';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    MainPageModule
+    MainPageModule,
+    NgbModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true }
