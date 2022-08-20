@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthenticatedGuard } from './shared/guards/authenticated.guard';
 import { NotAuthenticatedGuard } from './shared/guards/not-authenticated.guard';
 
 const routes: Routes = [
@@ -9,6 +8,7 @@ const routes: Routes = [
   { path: 'main', loadChildren: () => import('./main-page/main-page.module').then(m => m.MainPageModule), canActivate: [NotAuthenticatedGuard] },
   { path: 'projection', loadChildren: () => import('./projection/projection.module').then(m => m.ProjectionModule), canActivate: [NotAuthenticatedGuard] },
   { path: 'movies', loadChildren: () => import('./movies/movies.module').then(m => m.MoviesModule) },
+  { path: 'discount', loadChildren: () => import('./discount/discount.module').then(m => m.DiscountModule) }
 ];
 
 @NgModule({
