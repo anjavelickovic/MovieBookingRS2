@@ -76,7 +76,8 @@ namespace Movies.API.Repositories
             var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
 
             return _mapper.Map<IEnumerable<MovieDTO>>(movies
-                .Select(movie => new { RuntimeInt = Int32.Parse(movie.Runtime.Substring(0, movie.Runtime.Length - 4)), Item = movie })
+                .Select(movie => new { RuntimeInt = 
+                        Int32.Parse( movie.Runtime?.Substring(0, movie.Runtime.Length - 4) ?? "-1"), Item = movie })
                 .Where(obj => lowerBound <= obj.RuntimeInt && obj.RuntimeInt <= upperBound)
                 .Select(obj => obj.Item));
         }
