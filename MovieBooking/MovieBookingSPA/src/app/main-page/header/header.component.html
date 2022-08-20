@@ -4,12 +4,12 @@
             <h3><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
         </div>
             
-        <div class="form-group" *ngIf="!appState?.isEmpty()" style="margin-right:5px">
+        <div class="form-group" *ngIf="isMainPage()" style="margin-right:5px">
             <input 
             id="query" 
             type="text" 
             class="form-control" 
-            placeholder="Search for movie"
+            placeholder="{{ searchCriteriaPlaceholderText}}"
             size="20"
             style="background-color: white;color: rgb(50, 159, 209);"
             (keyup.enter)="getMovie()">
@@ -17,15 +17,18 @@
         </div>
 
        
-        <select *ngIf="!appState?.isEmpty()" name="criteria" id="criteria" class="form-select" style="width: auto; margin-right: 10px; margin-bottom: 15px;">
+        <select *ngIf="isMainPage()" name="criteria" id="criteria" class="form-select"
+                [(ngModel)]="searchCriteria" (change)="changeSearchCriteriaPlaceholderText()" [value] = "searchCriteria">
+            <option value="id">Id</option>
             <option value="title">Title</option>
-            <option value="mainActor">Main Actor</option>
-            <option value="genre">Genre</option>
             <option value="year">Year</option>
+            <option value="runtime">Runtime</option>
+            <option value="genres">Genres</option>
             <option value="director">Director</option>
-            <option value="language">Language</option>
+            <option value="mainActor">Main Actor</option>
+            <option value="imdbRating">IMDb Rating</option>
+            <option value="imdbVotes">IMDb Votes</option>
         </select>
-            
 
         <div style="text-align: center;  margin-right: 55px;"  *ngIf="!appState?.isEmpty()">
             <span (click)="profile()" type="button"  style="color:rgb(152, 207, 232); ">

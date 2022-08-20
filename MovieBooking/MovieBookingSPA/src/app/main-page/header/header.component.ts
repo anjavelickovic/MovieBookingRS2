@@ -12,6 +12,8 @@ import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 export class HeaderComponent implements OnInit {
 
   public appState: IAppState;
+  public searchCriteria: string;
+  public searchCriteriaPlaceholderText: string;
 
   constructor(private appStateService: AppStateService, private router: Router) {
 
@@ -20,6 +22,9 @@ export class HeaderComponent implements OnInit {
         this.appState = appState;
       }
     );
+
+    this.searchCriteria = "title";
+    this.searchCriteriaPlaceholderText = "Search for movie";
 
   }
 
@@ -39,14 +44,40 @@ export class HeaderComponent implements OnInit {
   }
 
   public getMovie(): void {
-    window.alert("get movie")
+    this.router.navigate(['/search', this.searchCriteria]);
   }
 
   public advancedSearch(): void{
-    window.alert("advanced search")
+    this.router.navigate(['/search', 'advanced-search']);
   }
 
   public isMainPage(): boolean{
-    return this.router.url === '/main'
+    return this.router.url === '/main';
+  }
+
+  public changeSearchCriteriaPlaceholderText(): void {
+
+    switch(this.searchCriteria){
+      case "id":
+      case "title":
+      case "year":
+      case "director":
+      case "mainActor":    
+        this.searchCriteriaPlaceholderText = "Search for movie";
+        return;
+
+      case "runtime":
+      case "imdbRating":
+        this.searchCriteriaPlaceholderText = "Format: (lb, ub)";
+        return;
+
+      case "genres":
+        this.searchCriteriaPlaceholderText = "Format: (g1, g2, g3)";
+        return;
+
+      case "imdbVotes":
+        this.searchCriteriaPlaceholderText = "Format: lower bound";
+        return;
+    }
   }
 }
