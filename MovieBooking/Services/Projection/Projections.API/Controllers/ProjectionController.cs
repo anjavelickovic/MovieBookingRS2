@@ -19,7 +19,7 @@ namespace Projections.API.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        [HttpGet("[action]")]
+        [HttpGet()]
         [ProducesResponseType(typeof(IEnumerable<Projection>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Projection>>> GetProjections()
         {
@@ -40,7 +40,7 @@ namespace Projections.API.Controllers
             return Ok(await _repository.GetMovieProjections(movieId));
         }
 
-        [HttpGet("[action]/{id}", Name = "GetProjection")]
+        [HttpGet("{id}", Name = "GetProjection")]
         [ProducesResponseType(typeof(Projection), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Projection), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Projection>> GetProjection(string id)
@@ -53,7 +53,7 @@ namespace Projections.API.Controllers
             return Ok(projection);
         }
 
-        [HttpPost("[action]")]
+        [HttpPost()]
         [ProducesResponseType(typeof(IEnumerable<Projection>), StatusCodes.Status201Created)]
         public async Task<ActionResult<Projection>> CreateProjection([FromBody] Projection projection)
         {
@@ -62,28 +62,35 @@ namespace Projections.API.Controllers
             return CreatedAtRoute("GetProjection", new { id = projection.Id }, projection);
         }
 
-        [HttpPut("[action]")]
+        [HttpPut()]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateProjection([FromBody] Projection projection)
         {
             return Ok(await _repository.UpdateProjection(projection));
         }
 
-        [HttpDelete("[action]/{id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProjection(string id)
         {
             return Ok(await _repository.DeleteProjection(id));
         }
 
-        [HttpDelete("[action]/{movieId}")]
+        [HttpDelete("[action]/{movieTitle}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteMovieProjections(string movieId)
+        public async Task<IActionResult> DeleteProjectionsByMovieTitle(string movieTitle)
         { 
-            return Ok(await _repository.DeleteMovieProjections(movieId));
+            return Ok(await _repository.DeleteProjectionsByMovieTitle(movieTitle));
         }
 
-        [HttpDelete("[action]")]
+        [HttpDelete("[action]/{date}")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteProjectionsByDate(string date)
+        {
+            return Ok(await _repository.DeleteProjectionsByDate(date));
+        }
+
+        [HttpDelete()]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProjections()
         {

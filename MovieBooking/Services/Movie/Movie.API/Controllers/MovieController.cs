@@ -35,11 +35,27 @@ namespace Movies.API.Controllers
             return Ok(movie);
         }
 
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetAllMovies()
+        {
+            var movies = await _repository.GetAllMovies();
+            return Ok(movies);
+        }
+
+        [HttpPost("[action]/{numberOfMovies}")]
+        [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetRandomAiringMovies(int numberOfMovies, [FromBody] string[] feasibleMovies)
+        {
+            var movies = await _repository.GetRandomMovies(false, numberOfMovies, feasibleMovies);
+            return Ok(movies);
+        }
+
         [HttpGet("[action]/{numberOfMovies}")]
         [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetRandomMovies(int numberOfMovies)
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetRandomUpcomingMovies(int numberOfMovies)
         {
-            var movies = await _repository.GetRandomMovies(numberOfMovies);
+            var movies = await _repository.GetRandomMovies(true, numberOfMovies);
             return Ok(movies);
         }
 
@@ -168,6 +184,15 @@ namespace Movies.API.Controllers
         public async Task<IActionResult> DeleteMovie(string id)
         {
             await _repository.DeleteMovie(id);
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete()]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteMovies()
+        {
+            await _repository.DeleteMovies();
             return Ok();
         }
 

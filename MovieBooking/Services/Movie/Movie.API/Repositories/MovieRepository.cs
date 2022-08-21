@@ -30,9 +30,26 @@ namespace Movies.API.Repositories
             return _mapper.Map<MovieDTO>(movie);
         }
 
-        public async Task<IEnumerable<MovieDTO>> GetRandomMovies(int numberOfMovies = 10)
-        {
+        public async Task<IEnumerable<MovieDTO>> GetAllMovies() {
             var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
+        }
+
+        public async Task<IEnumerable<MovieDTO>> GetRandomMovies(bool upcomingMovies, int numberOfMovies, string[] feasibleMovies)
+        {
+            List<Movie> movies;
+
+            if (upcomingMovies){
+                movies = await _movieContext.Movies.Find(movie => !movie.ImdbVotes.HasValue).ToListAsync();
+            }
+            else {
+                movies = await _movieContext.Movies.Find(movie => movie.ImdbVotes.HasValue).ToListAsync();
+            }
+
+            if (feasibleMovies != null) {
+                movies = movies.Where(movie => feasibleMovies.Contains(movie.Id)).ToList();
+            }
+
             if (movies.Count <= numberOfMovies)
             {
                 return _mapper.Map<IEnumerable<MovieDTO>>(movies);
@@ -48,7 +65,7 @@ namespace Movies.API.Repositories
         public async Task<IEnumerable<MovieDTO>> GetMoviesByTitle(string name)
         {
             var movies = await _movieContext.Movies.Find(movie => 
-                                    movie.Title.Contains(name)).ToListAsync();
+                                    movie.Title.ToLower().Contains(name)).ToListAsync();
             return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
 
@@ -63,7 +80,8 @@ namespace Movies.API.Repositories
             var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
 
             return _mapper.Map<IEnumerable<MovieDTO>>(movies
-                .Select(movie => new { RuntimeInt = Int32.Parse(movie.Runtime.Substring(0, movie.Runtime.Length - 4)), Item = movie })
+                .Select(movie => new { RuntimeInt = 
+                        Int32.Parse( movie.Runtime?.Substring(0, movie.Runtime.Length - 4) ?? "-1"), Item = movie })
                 .Where(obj => lowerBound <= obj.RuntimeInt && obj.RuntimeInt <= upperBound)
                 .Select(obj => obj.Item));
         }
@@ -78,8 +96,8 @@ namespace Movies.API.Repositories
             var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
 
             if (containAllGenres) {
-                return _mapper.Map<IEnumerable<MovieDTO>> (movies.FindAll(movie =>
-                                        movie.Genres.Intersect(genres).Count() == genres.Count()));
+                return _mapper.Map<IEnumerable<MovieDTO>>(movies.FindAll(movie =>
+                       movie.Genres.Select(x => x.ToLower()).Intersect(genres.Select(x => x.ToLower())).Count() == genres.Count()));
             }
 
             var moviesSet = new HashSet<Movie>();
@@ -93,20 +111,36 @@ namespace Movies.API.Repositories
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByDirector(string director)
         {
-            var movies = await _movieContext.Movies.Find(movie => movie.Director.Contains(director)).ToListAsync();
+            var movies = await _movieContext.Movies.Find(movie => movie.Director.ToLower().Contains(director.ToLower())).ToListAsync();
             return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByMainActor(string mainActor)
         {
-            var movies = await _movieContext.Movies.Find(movie => movie.MainActors.Contains(mainActor)).ToListAsync();
-            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
+            mainActor = mainActor.ToLower();
+            var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
+
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies.FindAll(movie => {
+                foreach (var actor in movie.MainActors)
+                    if (actor.ToLower().Contains(mainActor))
+                        return true;
+                return false;
+            }
+            ));
         }
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByLanguage(string language)
         {
-            var movies = await _movieContext.Movies.Find(movie => movie.Languages.Contains(language)).ToListAsync();
-            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
+            language = language.ToLower();
+            var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
+
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies.FindAll(movie => {
+                foreach (var movieLanguage in movie.Languages)
+                    if (movieLanguage.ToLower().Contains(language))
+                        return true;
+                return false;
+            }
+            ));
         }
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(double lowerBound = 6.0f, double upperBound = 10.0f)
@@ -175,5 +209,16 @@ namespace Movies.API.Repositories
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
 
+        public async Task<bool> DeleteMovies()
+        {
+            var deleted = true;
+            var movies = await GetAllMovies();
+            foreach (var movie in movies)
+            {
+                var deleteResult = await _movieContext.Movies.DeleteOneAsync(p => p.Id == movie.Id);
+                deleted = deleted && deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
+            }
+            return deleted;
+        }
     }
 }

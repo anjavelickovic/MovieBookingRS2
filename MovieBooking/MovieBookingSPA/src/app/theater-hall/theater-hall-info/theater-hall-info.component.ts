@@ -1,9 +1,8 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, of, Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { TheaterHallFacadeService } from '../domain/application-services/theater-hall-facade.service';
 import { ICreateTheaterHallRequest } from '../domain/models/create-theater-hall-request.model';
 import { ITheaterHall } from '../domain/models/theater-hall.model';
@@ -99,7 +98,6 @@ export class TheaterHallInfoComponent implements OnInit {
   }
 
   public deleteTheaterHall(){
-    console.log(this.theaterHall.id);
     this.theaterHallFacadeService.deleteTheaterHall(this.theaterHall.id)
     .subscribe({
       error: (err) => {

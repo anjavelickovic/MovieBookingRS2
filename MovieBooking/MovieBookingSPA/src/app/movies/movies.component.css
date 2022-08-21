@@ -1,0 +1,19 @@
+.flex-container {
+    display: flex;
+  }
+  
+  .flex-container > div {
+    margin-right: 5px;
+    padding: 5px;
+  }
+  
+  @media screen and (max-width: 1300px) {
+    .flex-container {
+      display: inline;
+    } 
+  }
+
+  td {
+    padding-right: 20px;
+    padding-bottom: 10px;
+  }

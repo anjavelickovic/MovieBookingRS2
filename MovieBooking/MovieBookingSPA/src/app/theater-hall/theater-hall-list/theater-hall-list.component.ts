@@ -15,7 +15,7 @@ export class TheaterHallListComponent implements OnInit {
     this.theaterHallFacadeService.getTheaterHalls()
       .subscribe(theaterHalls => {
         this.theaterHalls = theaterHalls;
-      })
+    });
   }
   
   ngOnInit(): void {

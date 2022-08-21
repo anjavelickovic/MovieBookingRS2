@@ -1,3 +1,5 @@
 export enum LocalStorageKeys {
-    AppState = 'appState'
+    AppState = 'appState',
+    RandomAiringMovies = 'randomAiringMovies',
+    RandomUpcomingMovies = 'randomUpcomingMovies'
 }
