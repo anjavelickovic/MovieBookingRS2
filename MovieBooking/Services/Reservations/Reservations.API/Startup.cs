@@ -66,6 +66,13 @@ namespace Reservations.API
             });
             services.AddMassTransitHostedService();
 
+            //CORS policy
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
+
             //
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -83,6 +90,8 @@ namespace Reservations.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Reservations.API v1"));
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

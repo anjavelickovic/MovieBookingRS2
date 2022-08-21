@@ -57,7 +57,27 @@ namespace Reservations.API.Controllers
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ReservationBasket>> AddReservation(string username, [FromBody] Reservation reservation)
         {
-            try
+            var changeProjection = true;
+            var basket = await _repository.GetReservations(username);
+            basket = basket ?? new ReservationBasket(username);
+
+            foreach (var reservationsEntry in basket.Reservations)
+            {
+                foreach (var entry in reservationsEntry.Value)
+                {
+                    if (entry.Key.Equals(reservation.ProjectionId))
+                    {
+                        changeProjection = false;
+                    }
+                }
+            }
+
+            if (!changeProjection)
+            {
+                return BadRequest();
+            }
+
+                try
             {
                 var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
                 reservation.Price -= coupon.Amount;
@@ -69,13 +89,14 @@ namespace Reservations.API.Controllers
             }
             try
             {
-                var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
-                var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, reservation.NumberOfTickets);
-                if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
-                {
-                    _logger.LogInformation("There is no enough seats");
-                    return BadRequest(null);
-                }
+                    var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
+                    var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, reservation.NumberOfTickets);
+                    if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
+                    {
+                        _logger.LogInformation("There is no enough seats");
+                        return BadRequest(null);
+                    }
+                
             }
             catch(RpcException e)
             {
