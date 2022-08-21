@@ -55,6 +55,7 @@ namespace Reservations.API.Controllers
         [HttpPost("[action]/{username}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ReservationBasket>> AddReservation(string username, [FromBody] Reservation reservation)
         {
             var changeProjection = true;
@@ -74,7 +75,7 @@ namespace Reservations.API.Controllers
 
             if (!changeProjection)
             {
-                return BadRequest();
+                return BadRequest("You can not reserve more seats for same projection. Go into reservations and updated it.") ;
             }
 
                 try
@@ -93,8 +94,8 @@ namespace Reservations.API.Controllers
                     var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, reservation.NumberOfTickets);
                     if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
                     {
-                        _logger.LogInformation("There is no enough seats");
-                        return BadRequest(null);
+                        _logger.LogInformation("There is no enough seats for this projection");
+                        return NotFound("There is no enough seats for this projection");
                     }
                 
             }
@@ -106,7 +107,7 @@ namespace Reservations.API.Controllers
             return Ok(await _repository.AddReservation(username, reservation));
         }
 
-        [HttpPut("[action]/{username}")]
+        [HttpPut("{username}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ReservationBasket>> UpdateReservations(string username, [FromBody] Reservation reservation)
@@ -132,7 +133,7 @@ namespace Reservations.API.Controllers
                 if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
                 {
                     _logger.LogInformation("There is no enough seats");
-                    return BadRequest(null);
+                    return BadRequest();
                 }
             }
             catch (RpcException e)
