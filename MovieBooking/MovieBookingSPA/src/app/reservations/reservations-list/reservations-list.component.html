@@ -1,0 +1,87 @@
+<table class="table">
+    <thead>
+        <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Date</th>
+        <th scope="col">Term</th>
+        <th scope="col">Theater Hall</th>
+        <th scope="col">Price</th>
+        <th scope="col">Number of tickets</th>
+        <th scope="col">Update</th>
+        <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let reservationsByMovie of reservations | keyvalue">
+        <tr *ngFor="let reservationByProjection of reservationsByMovie.value | keyvalue">
+        <td>{{reservationByProjection.value.movieTitle}}</td>
+        <td>{{reservationByProjection.value.projectionDate}}</td>
+        <td>{{reservationByProjection.value.projectionTerm}}</td>
+        <td>{{reservationByProjection.value.theaterHallName}}</td>
+        <td>{{reservationByProjection.value.price}}</td>
+        <td>{{reservationByProjection.value.numberOfTickets}}</td>
+        <td>
+            <button
+                class="btn" 
+                style="background-color: blue; color: aliceblue"
+                (click)="open(reserveModal)" >
+                Update
+            </button>
+            <ng-template #reserveModal let-modal>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Update number of tickets</h4>            
+                    <button type="button" class="close" aria-label="Close" (click)="close()">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="reservationForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+                        <div class="form-group">
+                            <label for="numberOfTickets">Number of tickets</label>
+                            <input type="text" id="numberOfTickets" class="form-control form-control-sm"
+                                formControlName="numberOfTickets" />
+            
+                            <span *ngIf="numberOfTickets?.errors?.['required']" class="error">
+                                Number of tickets is required
+                            </span>
+                        </div>
+                    </form>
+                    <div>
+                        <p>Total price: {{reservationByProjection.value.price * numberOfTickets.value}}</p>
+                    </div>
+                    <span *ngIf="showServerErrors" class="error">
+                        {{errMsg}}
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-dark" (click)="onProjectionReserveFormSubmit(reservationByProjection.value)">Update</button>
+                </div>
+            </ng-template>
+        </td>
+        <td>
+            <!--Delete button--> 
+            <button
+                class="btn" 
+                style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px;"
+                (click)="open(deleteModal)">
+                Delete
+            </button>
+            <ng-template #deleteModal let-modal>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
+                    <button type="button" class="close" aria-label="Close" (click)="close()">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this reservation?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-dark" (click)="deleteReservation(reservationByProjection.value)">Yes</button>
+                    <button class="btn btn-outline-dark" (click)="close()">No</button>
+                </div>
+            </ng-template>
+        </td>
+        </tr>
+    </tbody>
+</table>
+

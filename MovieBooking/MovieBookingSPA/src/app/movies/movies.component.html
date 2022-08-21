@@ -103,6 +103,12 @@
                             </span>
                         </div>
                     </form>
+                    <div>
+                        <p>Total price: {{projection.price * numberOfTickets.value}}</p>
+                    </div>
+                    <span *ngIf="showServerErrors" class="error">
+                        {{errMsg}}
+                    </span>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-outline-dark" (click)="onProjectionReserveFormSubmit()">Reserve</button>
