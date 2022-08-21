@@ -22,13 +22,6 @@ namespace Movies.API.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        [HttpGet()]
-        [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
-        {
-            return Ok(await _repository.GetMovies());
-        }
-
         [HttpGet("{id}", Name = "GetMovie")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status404NotFound)]
@@ -50,11 +43,11 @@ namespace Movies.API.Controllers
             return Ok(movies);
         }
 
-        [HttpGet("[action]/{numberOfMovies}")]
+        [HttpPost("[action]/{numberOfMovies}")]
         [ProducesResponseType(typeof(IEnumerable<MovieDTO>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetRandomAiringMovies(int numberOfMovies)
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetRandomAiringMovies(int numberOfMovies, [FromBody] string[] feasibleMovies)
         {
-            var movies = await _repository.GetRandomMovies(false, numberOfMovies);
+            var movies = await _repository.GetRandomMovies(false, numberOfMovies, feasibleMovies);
             return Ok(movies);
         }
 

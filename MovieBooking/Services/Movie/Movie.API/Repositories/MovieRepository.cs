@@ -24,12 +24,6 @@ namespace Movies.API.Repositories
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<IEnumerable<MovieDTO>> GetMovies()
-        {
-            var movies =  await _movieContext.Movies.Find(movie => true).ToListAsync();
-            return _mapper.Map<List<MovieDTO>>(movies);
-        }
-
         public async Task<MovieDTO> GetMovieById(string id)
         {
             var movie = await _movieContext.Movies.Find(movie => (movie.Id == id)).FirstOrDefaultAsync();
@@ -41,7 +35,7 @@ namespace Movies.API.Repositories
             return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
 
-        public async Task<IEnumerable<MovieDTO>> GetRandomMovies(bool upcomingMovies, int numberOfMovies)
+        public async Task<IEnumerable<MovieDTO>> GetRandomMovies(bool upcomingMovies, int numberOfMovies, string[] feasibleMovies)
         {
             List<Movie> movies;
 
@@ -50,6 +44,10 @@ namespace Movies.API.Repositories
             }
             else {
                 movies = await _movieContext.Movies.Find(movie => movie.ImdbVotes.HasValue).ToListAsync();
+            }
+
+            if (feasibleMovies != null) {
+                movies = movies.Where(movie => feasibleMovies.Contains(movie.Id)).ToList();
             }
 
             if (movies.Count <= numberOfMovies)
@@ -214,7 +212,7 @@ namespace Movies.API.Repositories
         public async Task<bool> DeleteMovies()
         {
             var deleted = true;
-            var movies = await GetMovies();
+            var movies = await GetAllMovies();
             foreach (var movie in movies)
             {
                 var deleteResult = await _movieContext.Movies.DeleteOneAsync(p => p.Id == movie.Id);

@@ -1,11 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, switchMap, Observable, of } from 'rxjs';
 import { MoviesFacadeService } from '../movies/domain/application-services/movies-facade.service'
 import { IMovieDetails } from '../movies/domain/models/movie-details';
+import { ProjectionFacadeService } from '../projection/domain/application-services/projection-facade.service';
 import { LocalStorageKeys } from '../shared/local-storage/local-storage-keys';
 import { LocalStorageService } from '../shared/local-storage/local-storage.service';
+import { IProjection } from '../projection/domain/models/projection.model';
+
 
 @Component({
   selector: 'app-main-page',
@@ -15,6 +18,7 @@ import { LocalStorageService } from '../shared/local-storage/local-storage.servi
 export class MainPageComponent implements OnInit {
   private randomAiringMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private randomUpcomingMoviesObservable: Observable<boolean | IMovieDetails[]>;
+  private projectionsObservable: Observable<boolean | IProjection[]>;
   private NUMBER_OF_MOVIES = 6;
 
   public randomAiringMovies: Array<IMovieDetails>;
@@ -23,14 +27,15 @@ export class MainPageComponent implements OnInit {
   public items: Array<number> = [1,2,3,4];
 
   constructor(private movieService: MoviesFacadeService,
+              private projectionService: ProjectionFacadeService,
               private localStorageService: LocalStorageService,
               private router: Router) {
 
-    this.randomAiringMoviesObservable = this.movieService.GetRandomAiringMovies(this.NUMBER_OF_MOVIES).pipe(
+    this.projectionsObservable = this.projectionService.getProjections().pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 404)
-          window.alert("No movies in database");
+          window.alert("No projections in database");
         else
           window.alert("Internal server error");
         return of(false);
@@ -45,6 +50,25 @@ export class MainPageComponent implements OnInit {
           window.alert("Internal server error");
         return of(false);
     }));
+
+    this.randomAiringMoviesObservable = this.projectionsObservable.pipe(
+      switchMap( (result: boolean | Array<IProjection>) => {
+        if (result !== false){
+          var feasibleMovies: string[]  = (result as Array<IProjection>).map(projection => projection.movieId);
+          return this.movieService.GetRandomAiringMovies(this.NUMBER_OF_MOVIES, feasibleMovies)
+        }
+        return of(false);
+      }),
+    
+      catchError((err: HttpErrorResponse) => {
+        console.log(err);
+        if(err.status === 404)
+          window.alert("No movies in database");
+        else
+          window.alert("Internal server error");
+        return of(false);
+      })
+    );
 
     if(this.localStorageService.get(LocalStorageKeys.RandomAiringMovies) == null) {
       this.fetchRandomAiringMovies();
