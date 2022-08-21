@@ -1,8 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, of } from 'rxjs';
+import { ProjectionFacadeService } from '../projection/domain/application-services/projection-facade.service';
+import { IProjection } from '../projection/domain/models/projection.model';
+import { ReservationFacadeService } from '../reservations/domain/application-services/reservation-facade.service';
+import { IAddReservationForm } from '../reservations/domain/models/add-reservation-form.model';
 import { IAppState } from '../shared/app-state/app-state';
 import { AppStateService } from '../shared/app-state/app-state.service';
 import { MoviesFacadeService } from './domain/application-services/movies-facade.service';
@@ -17,11 +23,19 @@ export class MoviesComponent implements OnInit {
   
   public appState: IAppState;
   public movieDetails: IMovieDetails;
+  public projections: IProjection[];
+  public projectionReserveForm: UntypedFormGroup;
+  public modalReference: NgbModalRef;
+  public projection: IProjection;
 
   constructor(private movieService: MoviesFacadeService,
               private appStateService: AppStateService,
               private router: Router,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              private projectionFacadeService: ProjectionFacadeService,
+              private modalService: NgbModal,
+              private formBuilder: UntypedFormBuilder,
+              private reservationFacadeService: ReservationFacadeService) {
     const path = this.router.url;
     const movieId = path.substring( path.lastIndexOf('/') + 1 );
 
@@ -48,11 +62,54 @@ export class MoviesComponent implements OnInit {
         }
       }
     );
+
+    this.projectionFacadeService.getMovieProjections(movieId)
+     .subscribe((projections) => {
+          this.projections = projections;
+     });
+
+     this.projectionReserveForm = this.formBuilder.group({
+      numberOfTickets: ['', [Validators.required]]
+    });
   }
 
   ngOnInit(): void {
   }
 
+  public get numberOfTickets(){
+    return this.projectionReserveForm.get('numberOfTickets');
+  }
+
+  public open(content, projection) {
+    this.modalReference = this.modalService.open(content, {ariaLabelledBy: 'modal'});
+    this.projection = projection;
+  }
+
+  public close() {
+    this.modalReference.close();
+    this.projectionReserveForm.reset();
+  }
+
+  public onProjectionReserveFormSubmit(){
+    const data: IAddReservationForm = this.projectionReserveForm.value as IAddReservationForm;
+    console.log(data);
+
+    console.log(this.projection);
+    this.reservationFacadeService.addReservation(this.projection.id, this.projection.movieId, this.projection.movieTitle,
+      this.projection.theaterHallName, this.projection.theaterHallId, this.projection.price, data.numberOfTickets)
+     .subscribe({
+      error: (err) => {
+        console.log(err);
+        return of(false);
+      },
+      complete: () => {
+        window.alert("Projection for " + this.projection.movieTitle + " reserved");
+        this.projectionReserveForm.reset();
+        this.modalReference.close();
+        window.location.reload();
+      }
+    });
+  }
   public trailerConfiguration(){
     return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieDetails.trailer + "?autoplay=false&width=520");
   }

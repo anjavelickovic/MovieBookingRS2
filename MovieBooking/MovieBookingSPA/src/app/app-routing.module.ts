@@ -8,7 +8,8 @@ const routes: Routes = [
   { path: 'main', loadChildren: () => import('./main-page/main-page.module').then(m => m.MainPageModule), canActivate: [NotAuthenticatedGuard] },
   { path: 'projection', loadChildren: () => import('./projection/projection.module').then(m => m.ProjectionModule), canActivate: [NotAuthenticatedGuard] },
   { path: 'movies', loadChildren: () => import('./movies/movies.module').then(m => m.MoviesModule) },
-  { path: 'discount', loadChildren: () => import('./discount/discount.module').then(m => m.DiscountModule) }
+  { path: 'discount', loadChildren: () => import('./discount/discount.module').then(m => m.DiscountModule) },
+  { path: 'reservations', loadChildren: () => import('./reservations/reservations.module').then(m => m.ReservationsModule) }
 ];
 
 @NgModule({
