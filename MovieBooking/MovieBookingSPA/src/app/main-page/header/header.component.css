@@ -7,3 +7,15 @@ select {
     margin-right: 10px;
     margin-bottom: 15px;
 }
+
+.wide { display: none; }
+.narrow { display: inline; }
+
+@media screen and (min-width: 1050px) {
+    h3 {
+        margin-left: 190px
+    }
+    .wide { display: inline; }
+    .narrow { display: none; }
+  }
+
