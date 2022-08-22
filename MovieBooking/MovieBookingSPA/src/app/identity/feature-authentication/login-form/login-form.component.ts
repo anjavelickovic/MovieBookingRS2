@@ -58,15 +58,13 @@ export class LoginFormComponent implements OnInit {
       result => {
         if(result[0] || result[1]){
           this.router.navigate((['/main']));
+          this.loginForm.reset();
         }
         else{
           this.showServerError = true;
         }
       }
     )
-
-    this.loginForm.reset();
-
   }
 
   public registerForm(): void {
