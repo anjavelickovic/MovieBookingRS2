@@ -25,4 +25,44 @@ export class MoviesFacadeService {
   public GetRandomUpcomingMovies(numberOfMovies: number): Observable<Array<IMovieDetails>>{
     return this.moviesService.GetRandomUpcomingMovies(numberOfMovies);
   }
+
+  public GetMovieById(id: string): Observable<IMovieDetails>{
+    return this.moviesService.GetMovieById(id);
+  }
+
+  public GetMoviesByTitle(title: string): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByTitle(title);
+  }
+
+  public GetMoviesByYear(year: number): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByYear(year);
+  }
+
+  public GetMoviesByRuntime(lowerBound: number, upperBound: number): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByRuntime(lowerBound, upperBound);
+  }
+
+  public GetMoviesByGenres(genres: string): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByGenres(genres);
+  }
+
+  public GetMoviesByDirector(director: string): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByDirector(director);
+  }
+
+  public GetMoviesByMainActor(mainActor: string): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByMainActor(mainActor);
+  }
+
+  public GetMoviesByLanguage(language: string): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByLanguage(language);
+  }
+
+  public GetMoviesByImdbRating(lowerBound: number, upperBound: number): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByImdbRating(lowerBound, upperBound);
+  }
+
+  public GetMoviesByImdbVotes(votes: number): Observable<Array<IMovieDetails>>{
+    return this.moviesService.GetMoviesByImdbVotes(votes);
+  }
 }

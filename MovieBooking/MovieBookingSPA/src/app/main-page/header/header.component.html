@@ -1,18 +1,34 @@
 <div style="background-color: rgb(50, 159, 209)">
     <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(50, 159, 209)">
-        <div class="navbar-brand mx-auto" style="color:rgb(152, 207, 232);">
-            <h3 style="margin-left: 140px"><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
+        <div class="mx-auto" style="color:rgb(152, 207, 232);">
+            <h3><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
         </div>
             
-        <div class="form-group" *ngIf="isMainPage()" style="margin-right:5px">
+        <div class="form-group wide" *ngIf="isMainPage()" style="margin-right:5px">
             <input 
-            id="query" 
+            id="searchBarWide" 
             type="text" 
             class="form-control" 
             placeholder="{{ searchCriteriaPlaceholderText}}"
             size="20"
             style="background-color: white;color: rgb(50, 159, 209);"
-            (keyup.enter)="getMovie()">
+            autocomplete="off"
+            #searchBarWide
+            (keyup.enter)="search(searchBarWide.value)">
+            <a class="nav-link" (click)="advancedSearch()" style="font-size: 10px; color:rgb(152, 207, 232); float: right;">Advanced search</a>
+        </div>
+
+        <div class="form-group narrow" *ngIf="isMainPage()" style="margin-right:5px">
+            <input 
+            id="searchBarNarrow" 
+            type="text" 
+            class="form-control" 
+            placeholder="Search"
+            size="20"
+            style="background-color: white;color: rgb(50, 159, 209);"
+            autocomplete="off"
+            #searchBarNarrow
+            (keyup.enter)="search(searchBarNarrow.value)">
             <a class="nav-link" (click)="advancedSearch()" style="font-size: 10px; color:rgb(152, 207, 232); float: right;">Advanced search</a>
         </div>
 
