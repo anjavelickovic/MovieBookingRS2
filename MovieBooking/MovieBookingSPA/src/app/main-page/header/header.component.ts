@@ -43,12 +43,12 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/identity', 'profile']);
   }
 
-  public getMovie(): void {
-    this.router.navigate(['/search', this.searchCriteria]);
+  public search(userSearch: string): void {
+    this.router.navigate(['/movies', 'search', this.searchCriteria, userSearch]);
   }
-
+  
   public advancedSearch(): void{
-    this.router.navigate(['/search', 'advanced-search']);
+    this.router.navigate(['/movies', 'search', 'advanced-search']);
   }
 
   public isMainPage(): boolean{

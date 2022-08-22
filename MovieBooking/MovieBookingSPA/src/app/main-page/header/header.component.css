@@ -8,14 +8,16 @@ select {
     margin-bottom: 15px;
 }
 
-.wide { display: none; }
-.narrow { display: inline; }
+.wide { display: inline; }
+.narrow { display: none; }
 
 @media screen and (min-width: 1050px) {
     h3 {
         margin-left: 190px
     }
-    .wide { display: inline; }
-    .narrow { display: none; }
   }
 
+@media screen and (max-width: 1050px) {
+    .wide { display: none; }
+    .narrow { display: inline; }
+  }
