@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,6 +21,7 @@ export class LoginFormComponent implements OnInit {
   public loginForm: UntypedFormGroup;
   public showFormErrors: boolean;
   public showServerError: boolean;
+  private internalServerError: boolean;
 
   constructor(private authenticationService: AuthenticationFacadeService, 
               private formBuilder: UntypedFormBuilder,
@@ -27,6 +29,7 @@ export class LoginFormComponent implements OnInit {
 
     this.showFormErrors = false;
     this.showServerError = false;
+    this.internalServerError = false;
 
     this.loginForm = this.formBuilder.group({
       usernameOrEmail: ['', [Validators.required]],
@@ -42,6 +45,8 @@ export class LoginFormComponent implements OnInit {
 
     this.showFormErrors = false;
     this.showServerError = false;
+    this.internalServerError = false
+
     
     if (this.loginForm.invalid) {
       this.showFormErrors = true;
@@ -51,8 +56,22 @@ export class LoginFormComponent implements OnInit {
     const data: ILoginFormData = this.loginForm.value as ILoginFormData;
 
     forkJoin([
-      this.authenticationService.login(data.usernameOrEmail, data.password, Role.Customer).pipe(catchError(error => of(error))),
-      this.authenticationService.login(data.usernameOrEmail, data.password, Role.Admin).pipe(catchError(error => of(error)))
+      this.authenticationService.login(data.usernameOrEmail, data.password, Role.Customer).pipe(
+        catchError((err: HttpErrorResponse) => {
+          if(err.status !== 401){
+            this.internalServerError = true;
+          }
+          return of(false);
+        })
+      ),
+      this.authenticationService.login(data.usernameOrEmail, data.password, Role.Admin).pipe(
+        catchError((err: HttpErrorResponse) => {
+          if(err.status !== 401){
+            this.internalServerError = true;
+          }
+          return of(false);
+        })
+      )
     ])
     .subscribe(
       result => {
@@ -60,7 +79,11 @@ export class LoginFormComponent implements OnInit {
           this.router.navigate((['/main']));
         }
         else{
-          this.showServerError = true;
+          if(this.internalServerError){
+            window.alert("Internal server error");
+          }
+          else{
+            this.showServerError = true;}
         }
       }
     )
