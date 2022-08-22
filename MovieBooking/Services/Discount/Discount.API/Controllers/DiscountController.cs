@@ -1,4 +1,5 @@
 ﻿using Discount.Common.DTOs;
+using Discount.Common.Entities;
 using Discount.Common.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,19 @@ namespace Discount.API.Controllers
     [Route("api/v1/[controller]")]
     public class DiscountController : ControllerBase
     {
+    
         private readonly ICouponRepository _repository;
 
         public DiscountController(ICouponRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+
+        [HttpGet()]
+        [ProducesResponseType(typeof(CouponDTO), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CouponDTO>>> GetDiscounts(){
+            var discounts = await _repository.GetDiscounts();
+            return Ok(discounts);
         }
 
         [HttpGet("{movieName}")]
@@ -49,11 +58,11 @@ namespace Discount.API.Controllers
             return Ok(await _repository.UpdateDiscount(coupon));
         }
 
-        [HttpDelete("{movieName}", Name = "DeleteDiscount")]
+        [HttpDelete("{id}", Name = "DeleteDiscount")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> DeleteDiscount(string movieName)
+        public async Task<ActionResult<bool>> DeleteDiscount(string id)
         {
-            return Ok(await _repository.DeleteDiscount(movieName));
+            return Ok(await _repository.DeleteDiscount(id));
         }
     }
 }

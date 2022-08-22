@@ -1,15 +1,14 @@
 
-<nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(50, 159, 209)">
+<nav class="navbar navbar-expand">
         
-    <div class="navbar-brand mx-auto" style="color:rgb(152, 207, 232);">
-        <h3><b><i>Theater Hall Details</i></b></h3>
+    <div class="navbar-brand">
+        <h3 style="color: grey; margin-top:10px; margin-left: 10px;"><b><i>Theater Hall Details</i></b></h3>
     </div>
 
     <!--Back button--> 
-    <button class="btn btn-primary" style="margin-right: 15px;" [routerLink]="['/theater-hall']">Back</button>
-
+    <button class="btn btn-primary pos" [routerLink]="['/theater-hall']">Back</button>
 </nav>
-
+<hr>
 <!--Theater Hall Info-->
 <div *ngIf="theaterHall; else elseBlock" class="marg">
     <h4>Name: {{ theaterHall.name }}</h4>
@@ -30,7 +29,7 @@
     <!--Delete button--> 
     <button 
         class="btn" 
-        style="background-color: red; color: aliceblue; margin-right: 10px;"
+        style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px;"
         (click)="open(deleteModal)">
             Delete
     </button>

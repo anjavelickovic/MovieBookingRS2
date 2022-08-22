@@ -1,0 +1,100 @@
+<button class="btn btn-primary" 
+        (click)="open(mymodal)">
+        Add new Projection
+</button>
+   
+<ng-template #mymodal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">New Projection</h4>            
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="projectionForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+            <div class="form-group flex-column">
+                <label for="movieId">Select movie</label>
+                <select
+                    style="width: 200px;"
+                    class="custom-select mb-3"
+                    (change)="changeMovie($event)"
+                    id="movieId"
+                    formControlName="movieId">
+                        <option *ngFor="let movie of movies" [ngValue]="movie.id">
+                            {{ movie.title }}
+                        </option>
+                </select>
+                <span *ngIf="showFormErrors && movieId?.errors?.['required']" class="error">
+                    Movie is required
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="projectionDate">Date</label>
+                <input type="text" id="projectionDate" class="form-control form-control-sm"
+                    formControlName="projectionDate" />
+
+                <span *ngIf="showFormErrors && projectionDate?.errors?.['required']" class="error">
+                    Date is required
+                </span>
+                <span *ngIf="showFormErrors && projectionDate?.errors?.['pattern']" class="error">
+                    Date is not in the correct format (YYYY-MM-DD)
+                </span>
+            </div>
+            
+            <div class="form-group flex-column" style="margin-top: 10px;">
+                <label for="theaterHallId">Select theater hall</label>
+                <select
+                    style="width: 200px;"
+                    class="custom-select mb-3"
+                    (change)="changeTheaterHall($event)"
+                    id="theaterHallId"
+                    formControlName="theaterHallId">
+                    <option *ngFor="let theaterHall of theaterHalls" [ngValue]="theaterHall.id">
+                        {{ theaterHall.name }}
+                    </option>
+                </select>
+                <span *ngIf="showFormErrors && theaterHallId?.errors?.['required']" class="error">
+                    Theater Hall is required
+                </span>
+            </div>
+            
+            <div *ngIf="theaterHallFromForm" class="form-group flex-column">
+                <label for="theaterHallTerm">Select time</label>
+                <select
+                    style="width: 200px;"
+                    class="custom-select mb-3"
+                    (change)="changeTheaterHallTerm($event)"
+                    id="theaterHallTerm"
+                    formControlName="theaterHallTerm">
+                    <option *ngFor="let theaterHallTerm of theaterHallFromForm.terms" [ngValue]="theaterHallTerm">
+                        {{ theaterHallTerm }}
+                    </option>
+                </select>
+                <span *ngIf="showFormErrors && theaterHallTerm?.errors?.['required']" class="error">
+                    Theater Hall Term is required
+                </span>
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="text" id="price" class="form-control form-control-sm"
+                    formControlName="price" />
+
+                <span *ngIf="showFormErrors && price?.errors?.['required']" class="error">
+                    Price is required
+                </span>
+                <span *ngIf="showFormErrors && price?.errors?.['pattern']" class="error">
+                    Price must be number
+                </span>
+            </div>
+    
+            <div class="form-group">
+                    <span *ngIf="showServerError" class="error">Theater Hall with that date and term is taken</span>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-outline-dark" (click)="onProjectionFormSubmit()">Save</button>
+    </div>
+</ng-template>

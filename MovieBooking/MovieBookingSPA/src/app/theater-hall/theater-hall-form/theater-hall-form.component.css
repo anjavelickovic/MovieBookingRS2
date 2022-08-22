@@ -6,3 +6,8 @@ span.error {
     display: flex;
     flex-direction: row;
 }
+.pos{
+    position: absolute; 
+    top:0; 
+    right:0
+}
