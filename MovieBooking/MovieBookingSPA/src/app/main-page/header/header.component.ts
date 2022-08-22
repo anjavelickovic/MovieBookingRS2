@@ -88,7 +88,7 @@ export class HeaderComponent implements OnInit {
   private correctFormat(userSearch: string): boolean{
     
     const integerIntervalRegex = new RegExp('^[1-9][0-9]*, *[1-9][0-9]*$');
-    const ratingIntervalRegex = new RegExp('^[1-9]([.][0-9])?, ?[1-9]([.][0-9])?$|10([.]0)?');
+    const ratingIntervalRegex = new RegExp('^([1-9]([.][0-9])|10([.]0)?), ?([1-9]([.][0-9])|10([.]0)?)$');
     const genresRegex = new RegExp('^[-a-zA-Z]+(, *[-a-zA-Z]+(, *[-a-zA-Z]+)?)?$');
 
     switch(this.searchCriteria){
@@ -103,6 +103,7 @@ export class HeaderComponent implements OnInit {
         if(!result)
           window.alert("Wrong input format!\nCorrect format is (lower bound, upper bound), where both bounds are positive floats smaller or equal to 10 with one digit after the decimal point.\nFor instance: (3.4, 6.2) for movies with IMDb rating between 3.4 and 6.2 (both inclusive)).")
         return result;
+
       case "genres":
         var result = genresRegex.test(userSearch);
         if(!result)
