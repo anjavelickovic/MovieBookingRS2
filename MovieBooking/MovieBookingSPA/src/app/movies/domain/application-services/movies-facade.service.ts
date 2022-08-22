@@ -26,7 +26,7 @@ export class MoviesFacadeService {
     return this.moviesService.GetRandomUpcomingMovies(numberOfMovies);
   }
 
-  public GetMovieById(id: string): Observable<Array<IMovieDetails>>{
+  public GetMovieById(id: string): Observable<IMovieDetails>{
     return this.moviesService.GetMovieById(id);
   }
 
@@ -62,7 +62,7 @@ export class MoviesFacadeService {
     return this.moviesService.GetMoviesByImdbRating(lowerBound, upperBound);
   }
 
-  public GetMoviesByImdbVotes(votes: string): Observable<Array<IMovieDetails>>{
+  public GetMoviesByImdbVotes(votes: number): Observable<Array<IMovieDetails>>{
     return this.moviesService.GetMoviesByImdbVotes(votes);
   }
 }

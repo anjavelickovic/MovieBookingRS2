@@ -33,8 +33,8 @@ export class MoviesService {
     return this.httpClient.get<Array<IMovieDetails>>(`${this.url}/GetRandomUpcomingMovies/${numberOfMovies}`);
   }
 
-  public GetMovieById(id: string): Observable<Array<IMovieDetails>> {
-    return this.httpClient.get<Array<IMovieDetails>>(`${this.url}/${id}`);
+  public GetMovieById(id: string): Observable<IMovieDetails> {
+    return this.httpClient.get<IMovieDetails>(`${this.url}/${id}`);
   }
 
   public GetMoviesByTitle(title: string): Observable<Array<IMovieDetails>> {
@@ -50,7 +50,7 @@ export class MoviesService {
   }
 
   public GetMoviesByGenres(genres: string): Observable<Array<IMovieDetails>> {
-    return this.httpClient.get<Array<IMovieDetails>>(`${this.url}/GetMoviesByGenres/${genres}`);
+    return this.httpClient.get<Array<IMovieDetails>>(`${this.url}/GetMoviesByGenres/${genres}/true`);
   }
 
   public GetMoviesByDirector(director: string): Observable<Array<IMovieDetails>> {
@@ -69,7 +69,7 @@ export class MoviesService {
     return this.httpClient.get<Array<IMovieDetails>>(`${this.url}/GetMoviesByImdbRating/${lowerBound}/${upperBound}`);
   }
 
-  public GetMoviesByImdbVotes(votes: string): Observable<Array<IMovieDetails>> {
+  public GetMoviesByImdbVotes(votes: number): Observable<Array<IMovieDetails>> {
     return this.httpClient.get<Array<IMovieDetails>>(`${this.url}/GetMoviesByImdbVotes/${votes}`);
   }
 }
