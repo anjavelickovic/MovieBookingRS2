@@ -86,10 +86,17 @@ export class HeaderComponent implements OnInit {
   }
 
   private correctFormat(userSearch: string): boolean{
+
+    if(userSearch.length === 0){
+      window.alert("String is empty");
+      return false;
+    }
     
     const integerIntervalRegex = new RegExp('^[1-9][0-9]*, *[1-9][0-9]*$');
     const ratingIntervalRegex = new RegExp('^([1-9]([.][0-9])|10([.]0)?), ?([1-9]([.][0-9])|10([.]0)?)$');
     const genresRegex = new RegExp('^[-a-zA-Z]+(, *[-a-zA-Z]+(, *[-a-zA-Z]+)?)?$');
+    const yearRegex = new RegExp('^[12][0-9]{3}$');
+    const votesRegex = new RegExp('^[1-9][0-9]*$');
 
     switch(this.searchCriteria){
       case "runtime":
@@ -109,6 +116,19 @@ export class HeaderComponent implements OnInit {
         if(!result)
           window.alert("Wrong input format!\nCorrect format is (genre1, genre2, genre3), where genre1 is mandatory, and genre2 and genre3 are optional.\nFor instance: (action) for action movies or (comedy, drama) for movies with comedy and drama genres")
         return result;
+
+      case "year":
+        var result = yearRegex.test(userSearch);
+        if(!result)
+          window.alert("Year are number with 4 digits!");
+        return result;
+
+      case "imdbVotes":
+        var result = votesRegex.test(userSearch);
+        if(!result)
+          window.alert("Votes are number!");
+        return result;
+
       default:
         return true;
     }
