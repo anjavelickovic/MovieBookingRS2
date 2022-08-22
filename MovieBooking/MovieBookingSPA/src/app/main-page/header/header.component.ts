@@ -23,9 +23,7 @@ export class HeaderComponent implements OnInit {
       }
     );
 
-    this.searchCriteria = "title";
-    this.searchCriteriaPlaceholderText = "Search for movie";
-
+    this.resetSearchParameters();
   }
 
   ngOnInit(): void {
@@ -33,6 +31,7 @@ export class HeaderComponent implements OnInit {
 
   public logout(): void {
     this.router.navigate(['/identity', 'logout']);
+    this.resetSearchParameters();
   }
 
   public mainPage(): void {
@@ -41,14 +40,19 @@ export class HeaderComponent implements OnInit {
 
   public profile(): void {
     this.router.navigate(['/identity', 'profile']);
+    this.resetSearchParameters();
   }
 
   public search(userSearch: string): void {
-    this.router.navigate(['/movies', 'search', this.searchCriteria, userSearch]);
+    if(this.correctFormat(userSearch)){
+      this.router.navigate(['/movies', 'search', this.searchCriteria, userSearch]);
+      this.resetSearchParameters();
+    }
   }
   
   public advancedSearch(): void{
     this.router.navigate(['/movies', 'search', 'advanced-search']);
+    this.resetSearchParameters();
   }
 
   public isMainPage(): boolean{
@@ -79,5 +83,38 @@ export class HeaderComponent implements OnInit {
         this.searchCriteriaPlaceholderText = "Format: lower bound";
         return;
     }
+  }
+
+  private correctFormat(userSearch: string): boolean{
+    
+    const integerIntervalRegex = new RegExp('^[1-9][0-9]*, *[1-9][0-9]*$');
+    const ratingIntervalRegex = new RegExp('^[1-9]([.][0-9])?, ?[1-9]([.][0-9])?$|10([.]0)?');
+    const genresRegex = new RegExp('^[-a-zA-Z]+(, *[-a-zA-Z]+(, *[-a-zA-Z]+)?)?$');
+
+    switch(this.searchCriteria){
+      case "runtime":
+        var result = integerIntervalRegex.test(userSearch);
+        if(!result)
+          window.alert("Wrong input format!\nCorrect format is (lower bound, upper bound), where both bounds are positive integers (minutes).\nFor instance: (120, 150) for movies with length between 120 and 150 minutes.")
+        return result;
+
+      case "imdbRating":
+        var result = ratingIntervalRegex.test(userSearch);
+        if(!result)
+          window.alert("Wrong input format!\nCorrect format is (lower bound, upper bound), where both bounds are positive floats smaller or equal to 10 with one digit after the decimal point.\nFor instance: (3.4, 6.2) for movies with IMDb rating between 3.4 and 6.2 (both inclusive)).")
+        return result;
+      case "genres":
+        var result = genresRegex.test(userSearch);
+        if(!result)
+          window.alert("Wrong input format!\nCorrect format is (genre1, genre2, genre3), where genre1 is mandatory, and genre2 and genre3 are optional.\nFor instance: (action) for action movies or (comedy, drama) for movies with comedy and drama genres")
+        return result;
+      default:
+        return true;
+    }
+  }
+
+  private resetSearchParameters(): void{
+    this.searchCriteria = 'title';
+    this.searchCriteriaPlaceholderText = "Search for movie";
   }
 }
