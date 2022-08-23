@@ -62,7 +62,7 @@ export class ProjectionInfoComponent implements OnInit {
   public resetForm(){
     this.projectionForm = this.formBuilder.group({
       movieId: [this.projection.movieId, [Validators.required]],
-      projectionDate: [this.projection.projectionDate, [Validators.required, Validators.pattern('([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')]],
+      projectionDate: [this.projection.projectionDate, [Validators.required]],
       theaterHallId: [this.projection.theaterHallId, [Validators.required]],
       theaterHallTerm: [this.projection.projectionTerm, [Validators.required]],
       price: [this.projection.price, [Validators.required, Validators.pattern('[0-9]+')]]

@@ -8,13 +8,15 @@ import { TheaterHallFormComponent } from './theater-hall-form/theater-hall-form.
 import { TheaterHallInfoComponent } from './theater-hall-info/theater-hall-info.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SortByTheaterHallNamePipe } from './pipes/sort-by-theater-hall-name.pipe';
 
 @NgModule({
   declarations: [
     TheaterHallComponent,
     TheaterHallListComponent,
     TheaterHallFormComponent,
-    TheaterHallInfoComponent
+    TheaterHallInfoComponent,
+    SortByTheaterHallNamePipe
   ],
   imports: [
     CommonModule,

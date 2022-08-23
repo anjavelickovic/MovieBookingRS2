@@ -69,7 +69,6 @@
                 <div class="form-group flex-column">
                     <label for="movieId">Select movie</label>
                     <select
-                        style="width: 200px;"
                         class="custom-select mb-3"
                         (change)="changeMovie($event)"
                         id="movieId"
@@ -87,21 +86,17 @@
     
                 <div class="form-group">
                     <label for="projectionDate">Date</label>
-                    <input type="text" id="projectionDate" class="form-control form-control-sm"
+                    <input type="date" id="projectionDate" class="form-control form-control-sm"
                         formControlName="projectionDate" />
     
                     <span *ngIf="showFormErrors && projectionDate?.errors?.['required']" class="error">
                         Date is required
-                    </span>
-                    <span *ngIf="showFormErrors && projectionDate?.errors?.['pattern']" class="error">
-                        Date is not in the correct format (YYYY-MM-DD)
                     </span>
                 </div>
                 
                 <div class="form-group flex-column" style="margin-top: 10px;">
                     <label for="theaterHallId">Select theater hall</label>
                     <select
-                        style="width: 200px;"
                         class="custom-select mb-3"
                         (change)="changeTheaterHall($event)"
                         id="theaterHallId"
@@ -120,7 +115,6 @@
                 <div *ngIf="theaterHallFromForm" class="form-group flex-column">
                     <label for="theaterHallTerm">Select time</label>
                     <select
-                        style="width: 200px;"
                         class="custom-select mb-3"
                         (change)="changeTheaterHallTerm($event)"
                         id="theaterHallTerm"

@@ -48,7 +48,7 @@ export class ProjectionFormComponent implements OnInit {
     });
     this.projectionForm = this.formBuilder.group({
       movieId: ['', [Validators.required]],
-      projectionDate: ['', [Validators.required, Validators.pattern('([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])')]],
+      projectionDate: ['', [Validators.required]],
       theaterHallId: ['', [Validators.required]],
       theaterHallTerm: ['', [Validators.required]],
       price: ['', [Validators.required, Validators.pattern('[0-9]+')]]

@@ -1,4 +1,4 @@
-<div *ngFor="let projection of projections" style="padding-left:15px; padding-top: 15px;">
+<div *ngFor="let projection of projections | sortByMovieName" style="padding-left:15px; padding-top: 15px;">
     <h4>{{projection.movieTitle}}</h4>
     <h4>{{projection.projectionDate}} {{projection.projectionTerm}}</h4>
     <h6>{{projection.theaterHallName}}</h6>
