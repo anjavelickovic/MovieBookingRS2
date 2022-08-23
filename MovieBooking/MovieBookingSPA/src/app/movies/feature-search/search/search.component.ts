@@ -12,6 +12,8 @@ export class SearchComponent implements OnInit {
   public searchCriteria: string;
   public userSearch: string;
   public movies: Array<IMovieDetails>;
+  public arrowUpVisible: boolean;
+  public sortCriteria: string;
 
   constructor(private movieService: MoviesFacadeService,
               private router: Router,
@@ -24,6 +26,9 @@ export class SearchComponent implements OnInit {
         this.searchCriteria = "advanced-search";
       this.userSearch = params.get('userSearch');
     });
+
+    this.arrowUpVisible = false;
+    this.sortCriteria = "title";
   }
 
   ngOnInit(): void {
@@ -79,6 +84,7 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMoviesByTitle(this.userSearch).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
+        this.sortMovies();
         console.log(this.movies);
       }
     )
@@ -89,6 +95,7 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMoviesByYear(year).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
+        this.sortMovies();
         console.log(this.movies);
       }
     )
@@ -101,6 +108,7 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMoviesByRuntime(lowerBound, upperBound).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
+        this.sortMovies();
         console.log(this.movies);
       }
     )
@@ -116,6 +124,7 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMoviesByGenres(genresString).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
+        this.sortMovies();
         console.log(this.movies);
       }
     )
@@ -125,6 +134,7 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMoviesByDirector(this.userSearch).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
+        this.sortMovies();
         console.log(this.movies);
       }
     )
@@ -134,6 +144,7 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMoviesByMainActor(this.userSearch).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
+        this.sortMovies();
         console.log(this.movies);
       }
     )
@@ -146,6 +157,7 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMoviesByImdbRating(lowerBound, upperBound).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
+        this.sortMovies();
         console.log(this.movies);
       }
     )
@@ -156,9 +168,65 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMoviesByImdbVotes(votes).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
+        this.sortMovies();
         console.log(this.movies);
       }
     )
+  }
+
+  public moviePage(movieId: string): void {
+    this.router.navigate((['/movies', movieId]));;
+  }
+
+  public toggleArrow(): void{
+    this.arrowUpVisible = !this.arrowUpVisible;
+    this.sortMovies();
+    console.log(this.movies);
+  }
+
+  public onSelectChange(): void{
+    this.arrowUpVisible = true;
+    this.sortMovies();
+  }
+
+  public sortMovies(): void{
+    if(!this.arrowUpVisible)
+      this.movies = this.movies.sort( (movie1, movie2) => this.sort(movie1, movie2));
+    else
+      this.movies = this.movies.sort( (movie1, movie2) => this.sort(movie2, movie1));
+  }
+
+  private sort(movie1: IMovieDetails, movie2: IMovieDetails): number{
+
+    switch (this.sortCriteria){
+
+      case "title":
+        return Number(movie1.title.localeCompare(movie2.title));
+      case "year":
+        return movie1.year - movie2.year;
+      case "runtime":
+        if (movie1.imdbRating == null)
+          return this.arrowUpVisible ? -1 : 1;
+        else if(movie2.imdbRating == null)
+          return this.arrowUpVisible ? 1 : -1;
+        return Number(movie1.runtime.localeCompare(movie2.runtime));
+      case "imdbRating":
+        if (movie1.imdbRating == null)
+          return this.arrowUpVisible ? -1 : 1;
+        else if(movie2.imdbRating == null)
+          return this.arrowUpVisible ? 1 : -1;
+        return Number(movie1.imdbRating - movie2.imdbRating);
+      case "imdbVotes":
+        if (movie1.imdbVotes == null)
+          return this.arrowUpVisible ? -1 : 1;
+        else if(movie2.imdbVotes == null)
+          return this.arrowUpVisible ? 1 : -1;
+        return Number(movie1.imdbVotes - movie2.imdbVotes);
+      default:
+        return 1;
+    }
+
+    
   }
 
 }

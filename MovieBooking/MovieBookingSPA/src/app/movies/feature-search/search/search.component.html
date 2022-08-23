@@ -1,1 +1,26 @@
-<p>search works!</p>
+<div>
+
+    <div style="text-align: left; margin: 10px;">
+        <span style="margin-right: 10px;">Sort by:</span>
+        <select name="criteria" id="criteria" class="form-select" style="width:auto; display: inline"
+            [(ngModel)]="sortCriteria" (change)="onSelectChange()" [value] = "sortCriteria">
+            <option value="title">Title</option>
+            <option value="year">Year</option>
+            <option value="runtime">Runtime</option>
+            <option value="imdbRating">IMDb Rating</option>
+            <option value="imdbVotes">IMDb Votes</option>
+        </select>
+        <span *ngIf="arrowUpVisible" class="arrow" style="font-size: 30px; margin-left: 5px;" title="Sort ascending" (click)="toggleArrow()">&uarr;</span>
+        <span *ngIf="!arrowUpVisible" class="arrow" style="font-size: 30px; margin-left: 5px;" title="Sort descending" (click)="toggleArrow()">&darr;</span>
+    </div>
+
+    <div id="imagesDIV" style="margin-top: 10px;">
+      <div class="item" *ngFor="let movie of movies">
+        <div>
+            <img [src]="movie.poster" (click)="moviePage(movie.id)"/>
+            <span class="caption">{{ movie.title }}</span>
+        </div>
+      </div>
+    </div>
+  
+  </div>
