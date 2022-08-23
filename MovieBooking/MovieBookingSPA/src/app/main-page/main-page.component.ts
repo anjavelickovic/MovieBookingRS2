@@ -34,10 +34,7 @@ export class MainPageComponent implements OnInit {
     this.projectionsObservable = this.projectionService.getProjections().pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
-        if(err.status === 404)
-          window.alert("No projections in database");
-        else
-          window.alert("Internal server error");
+        window.alert("Internal server error");
         return of(false);
     }));
 
@@ -54,7 +51,12 @@ export class MainPageComponent implements OnInit {
     this.randomAiringMoviesObservable = this.projectionsObservable.pipe(
       switchMap( (result: boolean | Array<IProjection>) => {
         if (result !== false){
-          var feasibleMovies: string[]  = (result as Array<IProjection>).map(projection => projection.movieId);
+          var projections = result as Array<IProjection>;
+          if(projections.length === 0){
+            window.alert("No projections in database");
+            return of(false);
+          }
+          var feasibleMovies: string[] = projections.map(projection => projection.movieId);
           return this.movieService.GetRandomAiringMovies(this.NUMBER_OF_MOVIES, feasibleMovies)
         }
         return of(false);
