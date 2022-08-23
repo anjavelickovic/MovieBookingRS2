@@ -16,7 +16,7 @@ namespace Administration.Domain.Entities
         public string TheaterHallId { get; set; }
         public string TheaterHallName { get; set; }
         public decimal Price { get; set; }
-        public int NumberOfTickets { get; set; } = 0;
+        public int NumberOfTickets { get; set; }
 
 
         public TicketReservation(string projectionId, string movieTitle, string movieId, decimal price, string theaterHallId, string theaterHallName, int numberOfTickets)
@@ -27,18 +27,7 @@ namespace Administration.Domain.Entities
             TheaterHallId = theaterHallId ?? throw new ArgumentNullException(nameof(theaterHallId));
             TheaterHallName = theaterHallName ?? throw new ArgumentNullException(nameof(theaterHallName));
             Price = price;
-            AddTickets(numberOfTickets);
-        }
-
-        public void AddTickets(int numberOfTickets)
-        {
-            var newNumber = numberOfTickets + NumberOfTickets;
-
-            if(newNumber <= 0) {
-                throw new AdministrationDomainException("Invalid number of tickets");   
-            }
-
-            NumberOfTickets = newNumber;
+            NumberOfTickets = numberOfTickets;
         }
     }
 }
