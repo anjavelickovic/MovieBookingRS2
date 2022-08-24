@@ -11,6 +11,8 @@ namespace Administration.Domain.Entities
     public class TicketReservation : EntityBase
     {
         public string ProjectionId { get; set; }
+        public string ProjectionDate { get; set; }
+        public string ProjectionTerm { get; set; }
         public string MovieId { get; set; }
         public string MovieTitle { get; set; }
         public string TheaterHallId { get; set; }
@@ -19,9 +21,11 @@ namespace Administration.Domain.Entities
         public int NumberOfTickets { get; set; }
 
 
-        public TicketReservation(string projectionId, string movieTitle, string movieId, decimal price, string theaterHallId, string theaterHallName, int numberOfTickets)
+        public TicketReservation(string projectionId, string projectionDate, string projectionTerm, string movieTitle, string movieId, decimal price, string theaterHallId, string theaterHallName, int numberOfTickets)
         {
             ProjectionId = projectionId ?? throw new ArgumentNullException(nameof(projectionId));
+            ProjectionDate = projectionDate ?? throw new ArgumentNullException(nameof(projectionDate));
+            ProjectionTerm = projectionTerm ?? throw new ArgumentNullException(nameof(projectionTerm));
             MovieTitle = movieTitle ?? throw new ArgumentNullException(nameof(movieTitle));
             MovieId = movieId ?? throw new ArgumentNullException(nameof(movieId));
             TheaterHallId = theaterHallId ?? throw new ArgumentNullException(nameof(theaterHallId));

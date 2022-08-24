@@ -24,6 +24,8 @@ namespace Administration.Infrastructure.Factories
                 var ticketVM = new TicketViewModel();
                 ticketVM.Id = ticket.Id;
                 ticketVM.ProjectionId = ticket.ProjectionId;
+                ticketVM.ProjectionDate = ticket.ProjectionDate;
+                ticketVM.ProjectionTerm = ticket.ProjectionTerm;
                 ticketVM.MovieTitle = ticket.MovieTitle;
                 ticketVM.MovieId = ticket.MovieId;
                 ticketVM.Price = ticket.Price;

@@ -40,10 +40,10 @@ namespace Administration.Domain.Aggregates
             Id = id;
         }
 
-        public void AddTicketReservation(string projectionId, string movieName, string movieId, string theaterHallId, string theaterHallName, decimal price, int numberOfTickets)
+        public void AddTicketReservation(string projectionId, string projectionDate, string projectionTerm,  string movieName, string movieId, string theaterHallId, string theaterHallName, decimal price, int numberOfTickets)
         {
             
-            var ticketReservation = new TicketReservation(projectionId, movieName, movieId, price, theaterHallId, theaterHallName, numberOfTickets);
+            var ticketReservation = new TicketReservation(projectionId, projectionDate, projectionTerm, movieName, movieId, price, theaterHallId, theaterHallName, numberOfTickets);
             _ticketReservations.Add(ticketReservation);
             
         }
