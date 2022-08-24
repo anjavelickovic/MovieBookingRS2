@@ -5,6 +5,8 @@
         public int Id { get; set; }
 
         public string ProjectionId { get; set; }
+        public string ProjectionDate { get; set; }
+        public string ProjectionTerm { get; set; }
         public string MovieId { get; set; }
         public string MovieTitle { get; set; }
         public string TheaterHallId { get; set; }
