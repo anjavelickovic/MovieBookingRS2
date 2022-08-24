@@ -37,7 +37,7 @@
                     <form [formGroup]="reservationForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
                         <div class="form-group">
                             <label for="numberOfTickets">Number of tickets</label>
-                            <input type="text" id="numberOfTickets" class="form-control form-control-sm"
+                            <input type="number" id="numberOfTickets" class="form-control form-control-sm"
                                 formControlName="numberOfTickets" />
             
                             <span *ngIf="numberOfTickets?.errors?.['required']" class="error">
