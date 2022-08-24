@@ -16,6 +16,7 @@ import { IReservation } from '../domain/models/reservation.model';
 export class ReservationsListComponent implements OnInit {
 
   public reservations: { [movieiId: string]: {[projectionId: string] :  IReservation} };
+  public totalPrice: number;
   public appState: IAppState;
   public modalReference: NgbModalRef;
   public reservationForm: UntypedFormGroup;
@@ -35,6 +36,7 @@ export class ReservationsListComponent implements OnInit {
     this.reservationFacadeService.getReservations()
       .subscribe(reservationBasket => {
         this.reservations = reservationBasket.reservations;
+        this.totalPrice = reservationBasket.totalPrice;
         console.log(this.reservations);
     });
 
