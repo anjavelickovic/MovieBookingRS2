@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -73,17 +74,22 @@ export class RegisterFormComponent implements OnInit {
           // poziv login metode
           return this.authenticationService.login(data.email, data.password, Role.Customer);
         }),
-      catchError((err) => {
-        this.showServerError = true;
-        console.log(err);
-        return of(false);
+      catchError((err: HttpErrorResponse) => {
+          if(err.status !== 400){
+            window.alert("Internal server error");
+          }
+          else{
+            this.showServerError = true;
+          }
+          return of(false);
     }))
     .subscribe(
       success => {
         if (success){
           this.router.navigate((['/main']));
-    }})
-  }
+        }
+      })
+    }
 
   public get firstName(){
     return this.registerForm.get('firstName');

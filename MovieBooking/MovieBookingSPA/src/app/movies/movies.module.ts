@@ -5,11 +5,12 @@ import { MoviesRoutingModule } from './movies-routing.module';
 import { MoviesComponent } from './movies.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { SearchComponent } from './feature-search/search/search.component';
 
 @NgModule({
   declarations: [
-    MoviesComponent
+    MoviesComponent,
+    SearchComponent
   ],
   imports: [
     CommonModule,
