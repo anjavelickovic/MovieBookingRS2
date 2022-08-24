@@ -64,6 +64,7 @@ namespace Reservations.API
                     cfg.Host(Configuration["EventBusSettings:HostAddress"]);
                 });
             });
+
             services.AddMassTransitHostedService();
 
             //CORS policy

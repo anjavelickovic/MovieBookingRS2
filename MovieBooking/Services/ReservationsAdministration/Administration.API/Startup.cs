@@ -48,7 +48,7 @@ namespace Administration.API
                     {
                         c.ConfigureConsumer<ReservationBasketCheckoutConsumer>(ctx);
                     });
-                });
+                }); 
             });
             services.AddMassTransitHostedService();
 
