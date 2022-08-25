@@ -74,7 +74,7 @@ export class ReservationsComponent implements OnInit {
       complete: () => {
         window.alert("Reservations confirmed");
         this.modalReference.close();
-        this.router.navigate((['/reservations-administration']));
+        this.router.navigate((['/administration']));
       }
     });
 
