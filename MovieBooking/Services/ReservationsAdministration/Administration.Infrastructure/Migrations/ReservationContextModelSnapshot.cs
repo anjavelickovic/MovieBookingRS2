@@ -93,9 +93,15 @@ namespace Administration.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("DECIMAL(20,2)");
+
+                    b.Property<string>("ProjectionDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectionTerm")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ReservationId")

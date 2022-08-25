@@ -19,7 +19,7 @@ namespace Administration.Infrastructure.Factories
             reservationVM.BuyerUsername = reservation.BuyerUsername;
 
             var tickets = new List<TicketViewModel>();
-            foreach (var ticket in tickets)
+            foreach (var ticket in reservation.TicketReservations)
             {
                 var ticketVM = new TicketViewModel();
                 ticketVM.Id = ticket.Id;
