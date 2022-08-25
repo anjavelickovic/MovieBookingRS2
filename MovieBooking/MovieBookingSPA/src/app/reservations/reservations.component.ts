@@ -3,8 +3,6 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
-import { IAppState } from '../shared/app-state/app-state';
-import { AppStateService } from '../shared/app-state/app-state.service';
 import { ReservationFacadeService } from './domain/application-services/reservation-facade.service';
 import { IPhoneForm } from './domain/models/phone-form.model';
 import { IReservationCheckout } from './domain/models/reservation-checkout.model';
@@ -21,18 +19,11 @@ export class ReservationsComponent implements OnInit {
   public reservationsList: IReservation[] = [];
   public modalReference: NgbModalRef;
   public checkoutForm: UntypedFormGroup;
-  public appState: IAppState;
 
   constructor(private reservationFacadeService: ReservationFacadeService,
               private modalService: NgbModal,
               private formBuilder: UntypedFormBuilder,
-              private appStateService: AppStateService,
-              private router: Router,) { 
-    
-    this.appStateService.getAppState().subscribe(
-      (appState: IAppState) => {
-      this.appState = appState;
-    });
+              private router: Router) { 
     this.reservationFacadeService.getReservations()
       .subscribe(reservationBasket => {
         this.reservations = reservationBasket.reservations;
