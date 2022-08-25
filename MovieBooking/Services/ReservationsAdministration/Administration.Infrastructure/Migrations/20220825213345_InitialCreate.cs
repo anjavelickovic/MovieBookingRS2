@@ -20,7 +20,6 @@ namespace Administration.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
-                    BuyerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BuyerUsername = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReservationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PhoneNumber_AreaCode = table.Column<string>(type: "nvarchar(max)", nullable: true),

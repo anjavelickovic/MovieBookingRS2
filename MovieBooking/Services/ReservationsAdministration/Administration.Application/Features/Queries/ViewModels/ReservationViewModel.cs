@@ -9,7 +9,6 @@ namespace Administration.Application.Features.Queries.ViewModels
     public class ReservationViewModel
     {
         public int Id { get; set; }
-        public string BuyerId { get; set; }
         public string BuyerUsername { get; set; }
         public int TotalPrice { get; set; }
 

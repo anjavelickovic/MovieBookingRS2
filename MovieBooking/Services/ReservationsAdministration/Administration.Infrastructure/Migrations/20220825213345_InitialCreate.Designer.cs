@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Administration.Infrastructure.Migrations
 {
     [DbContext(typeof(ReservationContext))]
-    [Migration("20220825132517_InitialCreate")]
+    [Migration("20220825213345_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,9 +34,6 @@ namespace Administration.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:HiLoSequenceName", "reservationsequence")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
-
-                    b.Property<string>("BuyerId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BuyerUsername")
                         .HasColumnType("nvarchar(max)");

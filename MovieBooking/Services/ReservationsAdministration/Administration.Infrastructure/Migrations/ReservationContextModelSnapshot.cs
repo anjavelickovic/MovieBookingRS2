@@ -33,9 +33,6 @@ namespace Administration.Infrastructure.Migrations
                         .HasAnnotation("SqlServer:HiLoSequenceName", "reservationsequence")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
-                    b.Property<string>("BuyerId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("BuyerUsername")
                         .HasColumnType("nvarchar(max)");
 

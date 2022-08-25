@@ -6,4 +6,7 @@ export interface IReservations {
     buyerUserName : string, 
     totalPrice : number,
     tickets : IReservation[]
+
+    areaCode : string,
+    number : string
 }
