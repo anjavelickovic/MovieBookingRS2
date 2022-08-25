@@ -92,10 +92,16 @@ namespace Administration.Infrastructure.Migrations
                     b.Property<int>("NumberOfTickets")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProjectionDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectionTerm")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ReservationId")

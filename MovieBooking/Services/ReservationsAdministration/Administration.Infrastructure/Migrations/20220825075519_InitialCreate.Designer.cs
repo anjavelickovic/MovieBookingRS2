@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Administration.Infrastructure.Migrations
 {
     [DbContext(typeof(ReservationContext))]
-    [Migration("20220531104548_InitialCreate")]
+    [Migration("20220825075519_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,10 +94,16 @@ namespace Administration.Infrastructure.Migrations
                     b.Property<int>("NumberOfTickets")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProjectionDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectionTerm")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ReservationId")

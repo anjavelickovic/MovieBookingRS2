@@ -20,10 +20,6 @@ namespace Administration.Infrastructure.Persistence.EnittyConfigurations
             builder.Property<string>("MovieId")
                 .HasColumnType("VARCHAR(24)")
                 .IsRequired();
-
-            builder.Property<decimal>("Price")
-                .HasColumnType("DECIMAL(20, 2)");
-
         }
     }
 }

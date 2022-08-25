@@ -17,7 +17,7 @@ namespace Administration.Domain.Aggregates
         public PhoneNumber PhoneNumber { get;private set; }
         public string Email { get; private set; }
 
-        private readonly List<TicketReservation> _ticketReservations = new();
+        private readonly List<TicketReservation> _ticketReservations = new List<TicketReservation>();
         public IReadOnlyCollection<TicketReservation> TicketReservations => _ticketReservations;
 
         public Reservation(string buyerId, string buyerUsername, PhoneNumber phoneNumber, string email)
@@ -40,15 +40,16 @@ namespace Administration.Domain.Aggregates
             Id = id;
         }
 
-        public void AddTicketReservation(string projectionId, string projectionDate, string projectionTerm,  string movieName, string movieId, string theaterHallId, string theaterHallName, decimal price, int numberOfTickets)
+        public void AddTicketReservation(string projectionId, string projectionDate, string projectionTerm,  string movieName, string movieId, string theaterHallId, string theaterHallName, int price, int numberOfTickets)
         {
-            
-            var ticketReservation = new TicketReservation(projectionId, projectionDate, projectionTerm, movieName, movieId, price, theaterHallId, theaterHallName, numberOfTickets);
+            //var ticketReservation = new TicketReservation(projectionId, projectionDate, projectionTerm, movieName, movieId, price, theaterHallId, theaterHallName, numberOfTickets);
+            var ticketReservation = new TicketReservation("id", "id", "id", "id", "id", 10, "id", "id", 10);
+            Console.WriteLine("HELLO!!!");
             _ticketReservations.Add(ticketReservation);
-            
+            Console.WriteLine(_ticketReservations.Count);
         }
 
-        public decimal GetTotal()
+        public int GetTotal()
         {
             return TicketReservations.Sum(r => r.Price);
         }
