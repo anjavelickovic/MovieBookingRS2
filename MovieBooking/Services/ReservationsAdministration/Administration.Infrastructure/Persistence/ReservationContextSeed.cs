@@ -23,7 +23,7 @@ namespace Administration.Infrastructure.Persistence
 
         private static IEnumerable<Reservation> GetPreconfiguredReservations()
         {
-            var reservation1 = new Reservation("BuyerId", "buyerUserName",
+            var reservation1 = new Reservation("buyerUserName",
                 new PhoneNumber("+381", "629876543"), "rs2@gmail.com");
             reservation1.AddTicketReservation("projectionId", "movieName", "movieId", "HallId", "HallName", 100, 2);
             reservation1.AddTicketReservation("projectionId2", "movieName2", "movieId2", "HallId2", "HallName2", 100, 5);

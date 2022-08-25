@@ -9,7 +9,7 @@ namespace Reservations.API.Entities
         public string MovieTitle { get; set; }
         public string TheaterHallId { get; set; }
         public string TheaterHallName { get; set; }
-        public decimal Price { get; set; }
+        public int Price { get; set; }
         public int NumberOfTickets { get; set; }
     }
 }

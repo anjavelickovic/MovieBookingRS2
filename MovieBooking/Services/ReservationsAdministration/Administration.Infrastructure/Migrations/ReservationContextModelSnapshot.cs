@@ -33,9 +33,6 @@ namespace Administration.Infrastructure.Migrations
                         .HasAnnotation("SqlServer:HiLoSequenceName", "reservationsequence")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
-                    b.Property<string>("BuyerId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("BuyerUsername")
                         .HasColumnType("nvarchar(max)");
 
@@ -92,8 +89,8 @@ namespace Administration.Infrastructure.Migrations
                     b.Property<int>("NumberOfTickets")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProjectionId")
                         .HasColumnType("nvarchar(max)");

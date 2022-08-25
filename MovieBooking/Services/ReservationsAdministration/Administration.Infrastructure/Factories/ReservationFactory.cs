@@ -14,7 +14,7 @@ namespace Administration.Infrastructure.Factories
     {
         public Reservation Create(CreateReservationCommand command)
         {
-            var reservation = new Reservation(command.BuyerId, command.BuyerUsername, new PhoneNumber(command.AreaCode, command.Number), command.Email);
+            var reservation = new Reservation(command.BuyerUsername, new PhoneNumber(command.AreaCode, command.Number), command.Email);
 
             foreach(var ticket in command.Tickets)
             {
