@@ -5,6 +5,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
 import { ProjectionFacadeService } from '../domain/application-services/projection-facade.service';
 import { IDeleteForm } from '../domain/models/delete-form.model';
+import { IProjection } from '../domain/models/projection.model';
 
 @Component({
   selector: 'app-projection-delete-button',
@@ -19,16 +20,31 @@ export class ProjectionDeleteButtonComponent implements OnInit {
   public showServerError: boolean;
   public paramName: string = "all";
   public errMsg: string;
+  public moviesInProjections: Set<string> = new Set<string>();
   
   constructor(private modalService: NgbModal,
               private formBuilder: UntypedFormBuilder,
               private router: Router,
               private projectionFacadeService: ProjectionFacadeService) {
+
+    this.projectionFacadeService.getProjections()
+      .subscribe(projections => {
+        for(let projection of projections){
+          this.moviesInProjections.add(projection.movieTitle);
+        }
+    });
+
     this.showFormErrors = true;
     this.showServerError = false;
-
+    
    
     this.resetForm();
+  }
+
+  public changeMovieTitle(e: any) {
+    this.param?.setValue(e.target.value, {
+      onlySelf: true,
+    });
   }
 
   public changeOption(e: any) {

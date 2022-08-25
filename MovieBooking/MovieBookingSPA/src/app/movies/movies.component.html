@@ -109,6 +109,9 @@
                     <span *ngIf="showServerErrors" class="error">
                         {{errMsg}}
                     </span>
+                    <span *ngIf="processing" class="error" class="msg">
+                        Your request is being processed
+                    </span>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-outline-dark" (click)="onProjectionReserveFormSubmit()">Reserve</button>
