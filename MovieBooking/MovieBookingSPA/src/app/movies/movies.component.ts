@@ -29,6 +29,7 @@ export class MoviesComponent implements OnInit {
   public projection: IProjection;
   public showServerErrors = false;
   public errMsg: string;
+  public processing: boolean = false;
 
   constructor(private movieService: MoviesFacadeService,
               private appStateService: AppStateService,
@@ -92,9 +93,11 @@ export class MoviesComponent implements OnInit {
     this.projectionReserveForm.reset();
     this.showServerErrors = false;
     this.errMsg = "";
+    this.processing = false;
   }
 
   public onProjectionReserveFormSubmit(){
+    this.processing = true;
     const data: IReservationForm = this.projectionReserveForm.value as IReservationForm;
     console.log(data);
 
@@ -104,6 +107,7 @@ export class MoviesComponent implements OnInit {
       this.projection.theaterHallName, this.projection.theaterHallId, this.projection.price, data.numberOfTickets)
      .subscribe({
       error: (err) => {
+        this.processing = false;
         this.showServerErrors = true;
         console.log(err);
         if(err.status == 400){
@@ -114,6 +118,7 @@ export class MoviesComponent implements OnInit {
         return of(false);
       },
       complete: () => {
+        this.processing = false;
         window.alert("Projection for " + this.projection.movieTitle + " reserved");
         this.projectionReserveForm.reset();
         this.modalReference.close();
@@ -123,6 +128,7 @@ export class MoviesComponent implements OnInit {
       }
     });
   }
+  
   public trailerConfiguration(){
     return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieDetails.trailer + "?autoplay=false&width=520");
   }

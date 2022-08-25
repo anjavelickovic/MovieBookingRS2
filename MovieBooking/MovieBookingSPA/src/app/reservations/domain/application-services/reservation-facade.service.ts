@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReservationService } from '../infrastructure/reservation.service';
 import { IReservationBasket } from '../models/reservation-basket.model';
+import { IReservationCheckout } from '../models/reservation-checkout.model';
 import { IReservation } from '../models/reservation.model';
 
 @Injectable({
@@ -58,5 +59,14 @@ export class ReservationFacadeService {
         return this.reservationService.deleteReservation(request);
     }
 
+    public deleteReservations(): Observable<any> {
+      return this.reservationService.deleteReservations();
+    }
+
+    public checkout(tickets: IReservation[],
+                    areaCode: string,
+                    number: string): Observable<any>{
+      return this.reservationService.checkout(tickets, areaCode, number);
+    }
 
 }

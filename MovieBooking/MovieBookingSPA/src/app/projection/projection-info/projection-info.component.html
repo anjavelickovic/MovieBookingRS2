@@ -27,32 +27,9 @@
 
 
 <div class="flex; marg" > 
-    <!--Delete button--> 
-    <button 
-        class="btn" 
-        style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px;"
-        (click)="open(deleteModal)">
-            Delete
-    </button>
-    <ng-template #deleteModal let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
-            <button type="button" class="close" aria-label="Close" (click)="close()">
-                <span aria-hidden="true">×</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <p>Are you sure you want to delete this projection?</p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline-dark" (click)="deleteProjection()">Yes</button>
-            <button class="btn btn-outline-dark" (click)="close()">No</button>
-        </div>
-    </ng-template>
-    
     <!--Update button--> 
     <button class="btn" 
-            style="background-color: blue; color: aliceblue" 
+            style="background-color: blue; color: aliceblue;  margin-right: 10px;" 
         (click)="open(updateModal)">
             Update
     </button>
@@ -132,7 +109,7 @@
             
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="text" id="price" class="form-control form-control-sm"
+                    <input type="number" id="price" class="form-control form-control-sm"
                         formControlName="price" />
     
                     <span *ngIf="showFormErrors && price?.errors?.['required']" class="error">
@@ -150,6 +127,29 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-outline-dark" (click)="onProjectionFormSubmit()">Update</button>
+        </div>
+    </ng-template>
+
+    <!--Delete button--> 
+    <button 
+        class="btn" 
+        style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue;"
+        (click)="open(deleteModal)">
+            Delete
+    </button>
+    <ng-template #deleteModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete this projection?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="deleteProjection()">Yes</button>
+            <button class="btn btn-outline-dark" (click)="close()">No</button>
         </div>
     </ng-template>
 </div>

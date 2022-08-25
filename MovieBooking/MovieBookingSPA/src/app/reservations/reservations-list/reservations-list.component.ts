@@ -22,6 +22,7 @@ export class ReservationsListComponent implements OnInit {
   public reservationForm: UntypedFormGroup;
   public showServerErrors = false;
   public errMsg: string;
+  public processing: boolean = false;
 
   constructor(private reservationFacadeService: ReservationFacadeService,
              private appStateService: AppStateService,
@@ -58,9 +59,11 @@ export class ReservationsListComponent implements OnInit {
     this.reservationForm.reset();
     this.showServerErrors = false;
     this.errMsg = "";
+    this.processing = false;
   }
 
   public onProjectionReserveFormSubmit(projection){
+    this.processing = true;
     const data: IReservationForm = this.reservationForm.value as IReservationForm;
     console.log(data.numberOfTickets);
     console.log(projection)
@@ -71,6 +74,7 @@ export class ReservationsListComponent implements OnInit {
      .subscribe({
       error: (err) => {
         this.showServerErrors = true;
+        this.processing = false;
         console.log(err);
         if(err.status == 400){
           this.errMsg = "You can not reserve more seats for same projection. Go into reservations and updated it."
@@ -78,7 +82,8 @@ export class ReservationsListComponent implements OnInit {
         return of(false);
       },
       complete: () => {
-        window.alert("Reservations updated");
+        this.processing = false;
+        window.alert("Reservation updated");
         this.reservationForm.reset();
         this.modalReference.close();
         this.showServerErrors = false;
