@@ -31,7 +31,8 @@ namespace Administration.Domain.Entities
             TheaterHallId = theaterHallId ?? throw new ArgumentNullException(nameof(theaterHallId));
             TheaterHallName = theaterHallName ?? throw new ArgumentNullException(nameof(theaterHallName));
             Price = price;
-            AddTickets(numberOfTickets);
+            NumberOfTickets = numberOfTickets;
+            //AddTickets(numberOfTickets);
         }
 
         public void AddTickets(int numberOfTickets)
