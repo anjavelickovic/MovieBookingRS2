@@ -120,7 +120,7 @@ services:
   administrationdb:
     container_name: administrationdb
     environment:
-      - MSSQL_SA_PASSWORD=RS12345678
+      - MSSQL_SA_PASSWORD=RSf1234_.5678
       - ACCEPT_EULA=1
     restart: always
     ports:
@@ -139,7 +139,7 @@ services:
     container_name: administration.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=sa;Password=RS12345678;"
+      - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=sa;Password=RSf1234_.5678;"
       - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
     depends_on: 
       - administrationdb

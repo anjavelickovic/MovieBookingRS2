@@ -32,6 +32,18 @@ namespace Administration.Domain.Entities
             TheaterHallName = theaterHallName ?? throw new ArgumentNullException(nameof(theaterHallName));
             Price = price;
             NumberOfTickets = numberOfTickets;
+            //AddTickets(numberOfTickets);
+        }
+
+        public void AddTickets(int numberOfTickets)
+        {
+            var newNumber = numberOfTickets + NumberOfTickets;
+
+            if(newNumber <= 0) {
+                throw new AdministrationDomainException("Invalid number of tickets");   
+            }
+
+            NumberOfTickets = numberOfTickets;
         }
     }
 }
