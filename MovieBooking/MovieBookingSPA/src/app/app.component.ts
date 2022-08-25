@@ -13,4 +13,15 @@ export class AppComponent {
   constructor(router: Router){
     this.router = router;
   }
+
+  public isAuthenticated() {
+
+    const value = this.router.url === '/identity/login' ||
+                        this.router.url === '/identity/register' ||
+                        this.router.url === '/identity/logout';
+
+    return {
+      'main-content-authenticated': !value
+    }
+  }
 }

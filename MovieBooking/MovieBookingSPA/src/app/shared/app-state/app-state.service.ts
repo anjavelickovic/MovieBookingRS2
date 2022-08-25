@@ -79,6 +79,8 @@ export class AppStateService {
 
   public clearAppState(): void {
     this.localStorageService.clear(LocalStorageKeys.AppState);
+    this.localStorageService.clear(LocalStorageKeys.RandomAiringMovies);
+    this.localStorageService.clear(LocalStorageKeys.RandomUpcomingMovies);
     this.appState = new AppState();
     this.appStateSubject.next(this.appState);
   }

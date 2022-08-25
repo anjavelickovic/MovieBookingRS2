@@ -1,0 +1,155 @@
+<nav class="navbar navbar-expand">
+        
+    <div class="navbar-brand">
+        <h3 style="color: grey; margin-top:10px; margin-left: 10px;"><b><i>Projection Details</i></b></h3>
+    </div>
+
+    <!--Back button--> 
+    <button class="btn btn-primary pos" [routerLink]="['/projection']">Back</button>
+</nav>
+<hr>
+
+<!--Projection Info-->
+<div *ngIf="projection; else elseBlock" class="marg">
+    <h4>Movie: {{ projection.movieTitle }}</h4>
+    <h4>Runtime: {{projection.runtime}}</h4>
+    <h4>Date: {{projection.projectionDate}}</h4>
+    <h4>Term: {{projection.projectionTerm}}</h4>
+    <h4>Theater Hall: {{projection.theaterHallName}}</h4>
+    <h4>Number of seats: {{projection.numberOfSeats}}</h4>
+    <h4>Price: {{projection.price}}</h4>
+</div>
+<ng-template #elseBlock>
+    <div *ngIf="!projection" class="marg">
+        <h4>Loading...</h4>
+    </div>
+</ng-template>
+
+
+<div class="flex; marg" > 
+    <!--Delete button--> 
+    <button 
+        class="btn" 
+        style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px;"
+        (click)="open(deleteModal)">
+            Delete
+    </button>
+    <ng-template #deleteModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete this projection?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="deleteProjection()">Yes</button>
+            <button class="btn btn-outline-dark" (click)="close()">No</button>
+        </div>
+    </ng-template>
+    
+    <!--Update button--> 
+    <button class="btn" 
+            style="background-color: blue; color: aliceblue" 
+        (click)="open(updateModal)">
+            Update
+    </button>
+    
+    <ng-template #updateModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Update projection</h4>            
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="projectionForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+                <div class="form-group flex-column">
+                    <label for="movieId">Select movie</label>
+                    <select
+                        class="custom-select mb-3"
+                        (change)="changeMovie($event)"
+                        id="movieId"
+                        formControlName="movieId">
+                            <option *ngFor="let movie of movies" 
+                                    [ngValue]="movie.id"
+                                    [selected]="movie.id == projection.movieId">
+                                {{ movie.title }}
+                            </option>
+                    </select>
+                    <span *ngIf="showFormErrors && movieId?.errors?.['required']" class="error">
+                        Movie is required
+                    </span>
+                </div>
+    
+                <div class="form-group">
+                    <label for="projectionDate">Date</label>
+                    <input type="date" id="projectionDate" class="form-control form-control-sm"
+                        formControlName="projectionDate" />
+    
+                    <span *ngIf="showFormErrors && projectionDate?.errors?.['required']" class="error">
+                        Date is required
+                    </span>
+                </div>
+                
+                <div class="form-group flex-column" style="margin-top: 10px;">
+                    <label for="theaterHallId">Select theater hall</label>
+                    <select
+                        class="custom-select mb-3"
+                        (change)="changeTheaterHall($event)"
+                        id="theaterHallId"
+                        formControlName="theaterHallId">
+                        <option *ngFor="let theaterHall of theaterHalls" 
+                                [ngValue]="theaterHall.id"
+                                [selected]="theaterHall.id == projection.theaterHallId">
+                            {{ theaterHall.name }}
+                        </option>
+                    </select>
+                    <span *ngIf="showFormErrors && theaterHallId?.errors?.['required']" class="error">
+                        Theater Hall is required
+                    </span>
+                </div>
+                
+                <div *ngIf="theaterHallFromForm" class="form-group flex-column">
+                    <label for="theaterHallTerm">Select time</label>
+                    <select
+                        class="custom-select mb-3"
+                        (change)="changeTheaterHallTerm($event)"
+                        id="theaterHallTerm"
+                        formControlName="theaterHallTerm">
+                        <option *ngFor="let theaterHallTerm of theaterHallFromForm.terms" 
+                                [ngValue]="theaterHallTerm"
+                                [selected]="theaterHallTerm == projection.projectionTerm">
+                            {{ theaterHallTerm }}
+                        </option>
+                    </select>
+                    <span *ngIf="showFormErrors && theaterHallTerm?.errors?.['required']" class="error">
+                        Theater Hall Term is required
+                    </span>
+                </div>
+            
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="text" id="price" class="form-control form-control-sm"
+                        formControlName="price" />
+    
+                    <span *ngIf="showFormErrors && price?.errors?.['required']" class="error">
+                        Price is required
+                    </span>
+                    <span *ngIf="showFormErrors && price?.errors?.['pattern']" class="error">
+                        Price must be number
+                    </span>
+                </div>
+        
+                <div class="form-group">
+                        <span *ngIf="showServerError" class="error">Theater Hall with that date and term is taken</span>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="onProjectionFormSubmit()">Update</button>
+        </div>
+    </ng-template>
+</div>

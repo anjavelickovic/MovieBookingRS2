@@ -1,3 +1,23 @@
 a:hover {
     cursor: pointer;
 }
+
+select {
+    width: auto;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+.wide { display: inline; }
+.narrow { display: none; }
+
+@media screen and (min-width: 1050px) {
+    h3 {
+        margin-left: 190px
+    }
+  }
+
+@media screen and (max-width: 1050px) {
+    .wide { display: none; }
+    .narrow { display: inline; }
+  }

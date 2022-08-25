@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Discount.Common.Extensions
 {
@@ -15,11 +16,22 @@ namespace Discount.Common.Extensions
     {
         public static void AddDiscountCommonServices(this IServiceCollection services)
         {
+   
             services.AddScoped<ICouponContext, CouponContext>();
             services.AddScoped<ICouponRepository, CouponRepository>();
             services.AddAutoMapper(configuration =>
             {
                 configuration.CreateMap<CouponDTO, Coupon>().ReverseMap();
+            });
+            
+
+            // CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
             });
         }
     }

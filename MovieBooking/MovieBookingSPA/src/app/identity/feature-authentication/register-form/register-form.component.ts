@@ -1,5 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, from, of, switchMap } from 'rxjs';
 import { Role } from 'src/app/shared/app-state/role';
@@ -20,12 +21,12 @@ interface IRegisterFormData {
 })
 export class RegisterFormComponent implements OnInit {
 
-  public registerForm: FormGroup;
+  public registerForm: UntypedFormGroup;
   public showFormErrors: boolean;
   public showServerError: boolean;
 
   constructor(private authenticationService: AuthenticationFacadeService, 
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router) {
 
       this.showFormErrors = false;
@@ -73,17 +74,22 @@ export class RegisterFormComponent implements OnInit {
           // poziv login metode
           return this.authenticationService.login(data.email, data.password, Role.Customer);
         }),
-      catchError((err) => {
-        this.showServerError = true;
-        console.log(err);
-        return of(false);
+      catchError((err: HttpErrorResponse) => {
+          if(err.status !== 400){
+            window.alert("Internal server error");
+          }
+          else{
+            this.showServerError = true;
+          }
+          return of(false);
     }))
     .subscribe(
       success => {
         if (success){
           this.router.navigate((['/main']));
-    }})
-  }
+        }
+      })
+    }
 
   public get firstName(){
     return this.registerForm.get('firstName');
