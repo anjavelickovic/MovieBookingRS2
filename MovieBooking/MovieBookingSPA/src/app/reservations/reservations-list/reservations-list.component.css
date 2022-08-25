@@ -1,4 +1,8 @@
 span.error {
     font-size: 11px;
     color: red;
-  }
+}
+span.msg {
+  font-size: 11px;
+  color: blue;
+}

@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { of } from 'rxjs';
+import { IAppState } from '../shared/app-state/app-state';
+import { AppStateService } from '../shared/app-state/app-state.service';
 import { ReservationFacadeService } from './domain/application-services/reservation-facade.service';
+import { IPhoneForm } from './domain/models/phone-form.model';
+import { IReservationCheckout } from './domain/models/reservation-checkout.model';
 import { IReservation } from './domain/models/reservation.model';
 
 @Component({
@@ -11,13 +19,39 @@ export class ReservationsComponent implements OnInit {
 
   public reservations: { [movieiId: string]: {[projectionId: string] :  IReservation} };
   public reservationsList: IReservation[] = [];
+  public modalReference: NgbModalRef;
+  public checkoutForm: UntypedFormGroup;
+  public appState: IAppState;
 
-  constructor(private reservationFacadeService: ReservationFacadeService) { 
+  constructor(private reservationFacadeService: ReservationFacadeService,
+              private modalService: NgbModal,
+              private formBuilder: UntypedFormBuilder,
+              private appStateService: AppStateService,
+              private router: Router,) { 
+    
+    this.appStateService.getAppState().subscribe(
+      (appState: IAppState) => {
+      this.appState = appState;
+    });
     this.reservationFacadeService.getReservations()
       .subscribe(reservationBasket => {
         this.reservations = reservationBasket.reservations;
+
+        this.checkoutForm = this.formBuilder.group({
+          areaCode: ['', [Validators.required]],
+          phoneNumber: ['', [Validators.required]]
+        });
+
         console.log(this.reservations);
     });
+  }
+
+  public get areaCode(){
+    return this.checkoutForm.get('areaCode');
+  }
+
+  public get phoneNumber(){
+    return this.checkoutForm.get('phoneNumber');
   }
 
   public onCheckout(){
@@ -27,8 +61,48 @@ export class ReservationsComponent implements OnInit {
       }
     }
 
-    console.log("checkout");
+    const data: IPhoneForm = this.checkoutForm.value as IPhoneForm;
+    console.log(data);
     console.log(this.reservationsList);
+
+    this.reservationFacadeService.checkout(this.reservationsList, data.areaCode, data.number)
+    .subscribe({
+      error: (err) => {
+        console.log(err);
+        return of(false);
+      },
+      complete: () => {
+        window.alert("Reservations confirmed");
+        this.modalReference.close();
+        this.router.navigate((['/reservations-administration']));
+      }
+    });
+
+
+  }
+
+  public deleteAll(){
+    this.reservationFacadeService.deleteReservations()
+    .subscribe({
+      error: (err) => {
+        console.log(err);
+        return of(false);
+      },
+      complete: () => {
+        window.alert("Deleted all reservations");
+        this.modalReference.close();
+        window.location.reload();
+      }
+    });
+  }
+
+  public open(content) {
+    this.modalReference = this.modalService.open(content, {ariaLabelledBy: 'modal'});
+  }
+
+  public close() {
+    this.modalReference.close();
+    this.checkoutForm.reset();
   }
 
   ngOnInit(): void {

@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'movies', loadChildren: () => import('./movies/movies.module').then(m => m.MoviesModule), canActivate: [NotAuthenticatedGuard]},
   { path: 'discount', loadChildren: () => import('./discount/discount.module').then(m => m.DiscountModule) , canActivate: [AdminGuard]},
   { path: 'reservations', loadChildren: () => import('./reservations/reservations.module').then(m => m.ReservationsModule), canActivate: [NotAuthenticatedGuard] },
+  { path: 'reservations-administration', loadChildren: () => import('./reservations-administration/reservations-administration.module').then(m => m.ReservationsAdministrationModule) , canActivate: [NotAuthenticatedGuard]},
   { path: '**', redirectTo: '/main', pathMatch: 'full' }
 ];
 
