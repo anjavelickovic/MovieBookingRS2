@@ -8,8 +8,8 @@ namespace Reservations.API.Entities
     {
         public string Username { get; set; }
         public Dictionary<string, Dictionary<string, Reservation>> Reservations { get; set; } = new Dictionary<string, Dictionary<string, Reservation>>();
-        public decimal TotalPrice{ get {
-                                        decimal totalPrice = 0;
+        public int TotalPrice{ get {
+                                        int totalPrice = 0;
                                         foreach (var reservations in Reservations){
                                             foreach (var reservation in reservations.Value){
                                                 totalPrice += reservation.Value.Price * reservation.Value.NumberOfTickets;

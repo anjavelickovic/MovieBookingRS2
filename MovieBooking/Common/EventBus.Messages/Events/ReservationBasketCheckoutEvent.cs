@@ -6,6 +6,8 @@ namespace EventBus.Messages.Events
     public class ReservationItem
     {
         public string ProjectionId { get; set; }
+        public string ProjectionDate { get; set; }
+        public string ProjectionTerm { get; set; }
         public string MovieId { get; set; }
         public string MovieTitle { get; set; }
         public string TheaterHallId { get; set; }
@@ -16,7 +18,6 @@ namespace EventBus.Messages.Events
 
     public class ReservationBasketCheckoutEvent: IntegrationBaseEvent
     {
-        public string BuyerId { get; set; }
         public string BuyerUsername { get; set; }
         public string Email { get; set; }
         public IEnumerable<ReservationItem> Tickets { get; set; }

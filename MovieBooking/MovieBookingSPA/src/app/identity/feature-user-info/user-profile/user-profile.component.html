@@ -1,0 +1,32 @@
+<div style="margin: 20px">
+    <h3 style="color: rgb(50, 159, 209)">{{ appState.username }}'s profile
+        <span class="h6">
+            <a [routerLink]="['changeuserinfo']">Edit profile</a>
+        </span>
+    </h3>
+    <table class="table table-bordered" style="border-color:rgb(152, 207, 232);width: 80%;">
+    <tbody>
+        <tr>
+            <td class="first-column">First name</td>
+            <td class="second-column">{{ appState.firstName }}</td>
+        </tr>
+        <tr>
+            <td class="first-column">Last name</td>
+            <td class="second-column">{{ appState.lastName }}</td>
+        </tr>
+        <tr>
+            <td class="first-column">Username</td>
+            <td class="second-column">{{ appState.username }}</td>
+        </tr>
+        <tr>
+            <td class="first-column">Email</td>
+            <td class="second-column">{{ appState.email }}</td>
+        </tr>
+        <tr>
+            <td class="first-column">Role</td>
+            <td class="second-column">{{ appState.role }}</td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+

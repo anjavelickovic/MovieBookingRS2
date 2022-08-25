@@ -1,0 +1,8 @@
+<div *ngFor="let projection of projections | sortByMovieName" style="padding-left:15px; padding-top: 15px;">
+    <h4>{{projection.movieTitle}}</h4>
+    <h4>{{projection.projectionDate}} {{projection.projectionTerm}}</h4>
+    <h6>{{projection.theaterHallName}}</h6>
+    <a [routerLink]="['/projection', projection.id]" class="btn btn-primary">See more</a>
+    <hr>
+</div>
+

@@ -9,7 +9,8 @@ import { AuthenticationFacadeService } from '../../domain/application-services/a
 export class LogoutComponent implements OnInit {
   
 
-  constructor() {
+  constructor(private authenticationService: AuthenticationFacadeService) {
+    this.authenticationService.logout().subscribe(value => {});
   }
 
   ngOnInit(): void {}

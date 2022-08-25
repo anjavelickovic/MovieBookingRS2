@@ -22,7 +22,15 @@ namespace Administration.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ReservationContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("AdministrationConnectionString")));
+                options.UseSqlServer(configuration.GetConnectionString("AdministrationConnectionString"),
+                sqlServerOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 10,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+                }));
+
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
             services.AddScoped<IReservationRepository, ReservationRepository>();

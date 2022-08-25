@@ -32,6 +32,20 @@ namespace Identity.Repositories
             return result.Succeeded;
         }
 
+        public async Task<bool> ChangeFirstName(User user, string newFirstName)
+        {
+            user.FirstName = newFirstName;
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
+        public async Task<bool> ChangeLastName(User user, string newLastName)
+        {
+            user.LastName = newLastName;
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
         public async Task<bool> ChangeUserName(User user, string newUserName) 
         {
             user.UserName = newUserName;
@@ -66,16 +80,6 @@ namespace Identity.Repositories
         public async Task<User> GetUserByUsername(string username)
         {
             return await _userManager.FindByNameAsync(username);
-        }
-
-        public async Task<bool> ConfirmEmail(User user)
-        {
-            if (await _userManager.IsEmailConfirmedAsync(user))
-                return true;
-
-            var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var result = await _userManager.ConfirmEmailAsync(user, emailToken);
-            return result.Succeeded;
         }
 
         public async Task<IEnumerable<User>> GetAllUsers()

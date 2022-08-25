@@ -1,0 +1,64 @@
+<button class="btn"
+        style="background-color: rgba(161, 0, 0, 0.862); color: white;"
+        (click)="open(mymodal)">
+        Delete Projections
+</button>
+   
+<ng-template #mymodal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Delete Projections</h4>            
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="deleteForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+            <div class="form-group">
+                <label for="deleteBy">Delete</label>
+                <select
+                autocomplete="off"
+                    style="width: 100px; margin-left: 10px;"
+                    class="custom-select mb-3"
+                    (change)="changeOption($event)"
+                    id="deleteBy"
+                    formControlName="deleteBy">
+                        <option>all</option>
+                        <option>by movie</option>
+                        <option>by date</option>
+                </select>
+            </div>
+
+
+            <div *ngIf="paramName != 'all'" class="form-group">
+                <div *ngIf="paramName == 'Date'; else elseBlock"> 
+                    <label for="param">{{paramName}}</label>
+                    <input type="date" id="param" class="form-control form-control-sm"
+                    formControlName="param" />
+                </div>
+                <ng-template #elseBlock>
+                    <div class="form-group flex-column">
+                        <label for="param">Select movie</label>
+                        <select
+                            class="custom-select mb-3"
+                            (change)="changeMovieTitle($event)"
+                            id="param"
+                            formControlName="param">
+                                <option *ngFor="let movieTitle of moviesInProjections" [ngValue]="movieTitle">
+                                    {{ movieTitle }}
+                                </option>
+                        </select>
+                    </div>
+                </ng-template>
+                <span *ngIf="showFormErrors && param?.errors?.['required']" class="error">
+                    {{paramName}} is required
+                </span>
+                <span *ngIf="paramName == 'Date' && showFormErrors && param?.errors?.['pattern']" class="error">
+                    {{paramName}} is not in the correct format (YYYY-MM-DD)
+                </span>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-outline-dark" (click)="onDeleteFormSubmit()">Delete</button>
+    </div>
+</ng-template>

@@ -120,7 +120,7 @@ services:
   administrationdb:
     container_name: administrationdb
     environment:
-      - MSSQL_SA_PASSWORD=RS12345678
+      - MSSQL_SA_PASSWORD=RSf1234_.5678
       - ACCEPT_EULA=1
     restart: always
     ports:
@@ -139,7 +139,7 @@ services:
     container_name: administration.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=sa;Password=RS12345678;"
+      - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=sa;Password=RSf1234_.5678;"
       - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
     depends_on: 
       - administrationdb
@@ -154,6 +154,7 @@ services:
       - MYSQL_DATABASE=IdentityDb
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_HOST=%
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - '3306:3306'
@@ -164,9 +165,10 @@ services:
  
   identity:
     container_name: identity
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings:IdentityConnectionString=server=identitydb;user=user;password=1234;database=IdentityDb;
+      - ConnectionStrings:IdentityConnectionString=server=identitydb;user=${MYSQL_USER};password=${MYSQL_PASSWORD};database=IdentityDb;
     depends_on:
       - identitydb
     ports:

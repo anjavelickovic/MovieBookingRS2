@@ -1,0 +1,71 @@
+<button class="btn btn-primary pos" 
+        (click)="open(mymodal)"
+        style="margin-top: 20px; margin-right: 20px">
+        Add new Theater Hall
+</button>
+   
+<ng-template #mymodal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">New Theater Hall</h4>            
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="theaterHallForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+                <div class="form-group">
+                    <label for="name" >Name</label>
+                    <input type="text" id="name" class="form-control form-control-sm"
+                        formControlName="name" />
+
+                    <span *ngIf="showFormErrors && name?.errors?.['required']" class="error">
+                        Name is required
+                    </span>
+                </div>
+
+                <div class="form-group" style="margin-top: 10px;">
+                    <label for="numberOfSeats">Number Of Seats</label>
+                    <input type="number" id="numberOfSeats" class="form-control form-control-sm"
+                        formControlName="numberOfSeats" />
+
+                    <span *ngIf="showFormErrors && numberOfSeats?.errors?.['required']" class="error">
+                        Number of seats is required
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group">
+                        <p style="margin-top: 10px ;">
+                            Terms: [ <code>{{ terms.value }}</code> ]
+                        </p>
+                        <span *ngIf="showFormErrors && terms?.errors?.['required']" class="error">
+                            One term is required
+                        </span>
+                    </div>
+                    <button style="margin-top: 10px;" class="btn btn-outline-dark" (click)="addTerm()">Add term</button>
+                    <div *ngFor="let control of terms.controls; index as i">
+                        <label for="term" style="margin-top: 5px;">Term</label>
+                        <div class="flex">
+                            <input class="form-control form-control-sm" [formControl]="$any(terms.controls[i])" style="margin-right: 5px;"/>
+                            <button class="btn btn-outline-dark" (click)="removeTerm(i)">Remove</button>
+                        </div>
+                        <span *ngIf="showFormErrors && terms.controls[i]?.errors?.['pattern']" class="error">
+                            Term is not in the correct format (hh:mm AM/PM)
+                        </span>
+                        <span *ngIf="showFormErrors && terms.controls[i]?.errors?.['required']" class="error">
+                            Term is required
+                        </span>
+                    </div>
+                </div>  
+                
+                <div class="form-group">
+                    <span *ngIf="showServerError" class="error">Server Error</span>
+                </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-outline-dark" (click)="onTheaterHallFormSubmit()">Save</button>
+    </div>
+</ng-template>
+
+

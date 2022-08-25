@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "2da69fe7-64ca-44da-b96e-5facd3440cb7"
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -126,5 +129,7 @@
       }
     }
   },
-  "defaultProject": "MovieBookingSPA"
+  "cli": {
+    "analytics": false
+  }
 }
