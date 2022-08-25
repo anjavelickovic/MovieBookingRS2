@@ -21,7 +21,7 @@ namespace Administration.Domain.Entities
         public int NumberOfTickets { get; set; }
 
 
-        public TicketReservation(string projectionId, string movieTitle, string movieId, decimal price, string theaterHallId, string theaterHallName, int numberOfTickets)
+        public TicketReservation(string projectionId, string projectionDate, string projectionTerm, string movieTitle, string movieId, int price, string theaterHallId, string theaterHallName, int numberOfTickets)
         {
             ProjectionId = projectionId ?? throw new ArgumentNullException(nameof(projectionId));
             ProjectionDate = projectionDate ?? throw new ArgumentNullException(nameof(projectionDate));
@@ -31,7 +31,7 @@ namespace Administration.Domain.Entities
             TheaterHallId = theaterHallId ?? throw new ArgumentNullException(nameof(theaterHallId));
             TheaterHallName = theaterHallName ?? throw new ArgumentNullException(nameof(theaterHallName));
             Price = price;
-            //AddTickets(numberOfTickets);
+            AddTickets(numberOfTickets);
         }
 
         public void AddTickets(int numberOfTickets)
