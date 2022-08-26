@@ -14,6 +14,8 @@ export class SearchComponent implements OnInit {
   public movies: Array<IMovieDetails>;
   public arrowUpVisible: boolean;
   public sortCriteria: string;
+  
+  public listViewActive: boolean;
 
   constructor(private movieService: MoviesFacadeService,
               private router: Router,
@@ -28,6 +30,7 @@ export class SearchComponent implements OnInit {
     });
 
     this.arrowUpVisible = false;
+    this.listViewActive = true;
     this.sortCriteria = "title";
   }
 
@@ -225,8 +228,28 @@ export class SearchComponent implements OnInit {
       default:
         return 1;
     }
+  }
 
-    
+  public listView(): void{
+    this.listViewActive = true;
+  }
+
+  public gridView(): void{
+    this.listViewActive = false;
+  }
+
+  public activeButtonClass(button: string){
+
+    if(button==='list')
+      return {
+        'btn': true,
+        'active': (this.listViewActive === true) ? true : false
+      }
+    else
+      return {
+        'btn': true,
+        'active': (this.listViewActive === true) ? false : true
+      }
   }
 
 }
