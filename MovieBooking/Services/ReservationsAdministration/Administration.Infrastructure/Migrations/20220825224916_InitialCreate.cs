@@ -20,7 +20,6 @@ namespace Administration.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
-                    BuyerId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BuyerUsername = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReservationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PhoneNumber_AreaCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -48,7 +47,7 @@ namespace Administration.Infrastructure.Migrations
                     MovieTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TheaterHallId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TheaterHallName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<decimal>(type: "DECIMAL(20,2)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     NumberOfTickets = table.Column<int>(type: "int", nullable: false),
                     ReservationId = table.Column<int>(type: "int", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
