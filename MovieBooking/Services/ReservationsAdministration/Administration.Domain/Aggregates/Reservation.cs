@@ -11,7 +11,6 @@ namespace Administration.Domain.Aggregates
 {
     public class Reservation : AggregateRoot
     {
-        public string BuyerId { get; private set; }
         public string BuyerUsername { get; private set; }
         public DateTime ReservationDate { get; private set; }
         public PhoneNumber PhoneNumber { get;private set; }
@@ -20,17 +19,16 @@ namespace Administration.Domain.Aggregates
         private readonly List<TicketReservation> _ticketReservations = new();
         public IReadOnlyCollection<TicketReservation> TicketReservations => _ticketReservations;
 
-        public Reservation(string buyerId, string buyerUsername, PhoneNumber phoneNumber, string email)
+        public Reservation(string buyerUsername, PhoneNumber phoneNumber, string email)
         {
-            BuyerId = buyerId;
             BuyerUsername = buyerUsername;
             PhoneNumber = phoneNumber;
             Email = email;
         }
 
         // za porudzbine koje vec postoje u bazi
-        public Reservation(int id, string buyerId, string buyerUsername, PhoneNumber phoneNumer, string email)
-            :this(buyerId, buyerUsername, phoneNumer, email)
+        public Reservation(int id, string buyerUsername, PhoneNumber phoneNumer, string email)
+            :this(buyerUsername, phoneNumer, email)
         {
             Id = id;
         }
@@ -40,7 +38,7 @@ namespace Administration.Domain.Aggregates
             Id = id;
         }
 
-        public void AddTicketReservation(string projectionId, string projectionDate, string projectionTerm,  string movieName, string movieId, string theaterHallId, string theaterHallName, decimal price, int numberOfTickets)
+        public void AddTicketReservation(string projectionId, string projectionDate, string projectionTerm,  string movieName, string movieId, string theaterHallId, string theaterHallName, int price, int numberOfTickets)
         {
             
             var ticketReservation = new TicketReservation(projectionId, projectionDate, projectionTerm, movieName, movieId, price, theaterHallId, theaterHallName, numberOfTickets);
@@ -48,7 +46,7 @@ namespace Administration.Domain.Aggregates
             
         }
 
-        public decimal GetTotal()
+        public int GetTotal()
         {
             return TicketReservations.Sum(r => r.Price);
         }
