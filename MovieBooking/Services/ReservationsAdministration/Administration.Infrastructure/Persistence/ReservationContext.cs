@@ -1,5 +1,6 @@
 ﻿using Administration.Domain.Aggregates;
 using Administration.Domain.Common;
+using Administration.Domain.Entities;
 using Administration.Infrastructure.Persistence.EnittyConfigurations;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -43,6 +44,7 @@ namespace Administration.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+         
             modelBuilder.ApplyConfiguration(new ReservationEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TicketEntityTypeConfiguration());
 

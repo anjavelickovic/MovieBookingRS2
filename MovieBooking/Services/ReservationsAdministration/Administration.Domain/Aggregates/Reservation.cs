@@ -16,7 +16,7 @@ namespace Administration.Domain.Aggregates
         public PhoneNumber PhoneNumber { get;private set; }
         public string Email { get; private set; }
 
-        private readonly List<TicketReservation> _ticketReservations = new();
+        private readonly List<TicketReservation> _ticketReservations = new List<TicketReservation>();
         public IReadOnlyCollection<TicketReservation> TicketReservations => _ticketReservations;
 
         public Reservation(string buyerUsername, PhoneNumber phoneNumber, string email)
@@ -40,10 +40,8 @@ namespace Administration.Domain.Aggregates
 
         public void AddTicketReservation(string projectionId, string projectionDate, string projectionTerm,  string movieName, string movieId, string theaterHallId, string theaterHallName, int price, int numberOfTickets)
         {
-            
             var ticketReservation = new TicketReservation(projectionId, projectionDate, projectionTerm, movieName, movieId, price, theaterHallId, theaterHallName, numberOfTickets);
             _ticketReservations.Add(ticketReservation);
-            
         }
 
         public int GetTotal()

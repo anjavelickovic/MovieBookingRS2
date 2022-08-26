@@ -227,7 +227,7 @@ namespace Reservations.API.Controllers
             // Remove the basket
             await _repository.DeleteReservations(basketCheckout.BuyerUsername);
 
-            return Accepted();
+            return Accepted(); 
         }
 
     }
