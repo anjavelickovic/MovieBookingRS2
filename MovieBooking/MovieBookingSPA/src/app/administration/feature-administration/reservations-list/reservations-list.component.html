@@ -1,1 +1,26 @@
-<p>reservations-list works!</p>
+<div class="form-group">
+    <br><br>
+     <div class="mx-auto" style="width: 98%;">
+         <table class="table table-hover">
+         <thead>
+             <tr>
+               <th scope="col">id</th>
+               <th scope="col">movie name</th>
+               <th scope="col">amount</th>
+             </tr>
+           </thead>
+       
+         <tbody>
+             <tr *ngFor="let reservation of reservations" style="padding-left:15px; padding-top: 15px;">
+                 <td> {{reservation.id}} </td>
+                 <td> {{reservation.buyerUserName}} </td>
+                 <td> {{reservation.totalPrice}} </td>
+                <td *ngFor="let ticket of reservation.tickets" style="padding-left:15px; padding-top: 15px;">
+                    <td> ticket.id </td>
+             </tr>       
+         </tbody>
+
+     </table>
+     </div>
+
+ </div>
