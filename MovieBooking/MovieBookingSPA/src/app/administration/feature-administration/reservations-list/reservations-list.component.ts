@@ -18,7 +18,7 @@ export class ReservationsListComponent implements OnInit {
 
     // dohvatanje username-a
     appStateService.getAppState().subscribe(appState => {
-      console.log(appState.username);
+      //console.log(appState.username);
       this.administrationFacadeService.getReservationByUsername(appState.username).subscribe(reservations => {
         this.reservations = reservations;
       })
