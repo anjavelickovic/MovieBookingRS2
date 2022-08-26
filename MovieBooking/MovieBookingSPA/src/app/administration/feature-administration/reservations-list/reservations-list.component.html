@@ -3,26 +3,27 @@
      <div class="mx-auto" style="width: 98%;">
          <table class="table table-hover">
        
-        <tbody *ngFor="let reservation of reservations">
-            <tr> Id: {{reservation.id}} </tr>
-            <tr> TotalPrice: {{reservation.totalPrice}} </tr>
+        <div *ngFor="let reservation of reservations">
+            <h3> Reservation ID: {{reservation.id}} </h3>
+            <h3> TotalPrice: {{reservation.totalPrice}} </h3>
             
-            <ul *ngFor="let ticket of reservation.tickets">
-                <li> {{ticket.id}} </li> 
-                <li> {{ticket.projectionId}} </li> 
-                <li> {{ticket.projectionDate}} </li> 
-                <li> {{ticket.projectionTerm}} </li> 
-                <li> {{ticket.movieId}} </li> 
-                <li> {{ticket.movieTitle}} </li> 
-                <li> {{ticket.theaterHallId}} </li> 
-                <li> {{ticket.theaterHallName}} </li>      
-                <li> {{ticket.price}} </li>    
-                <li> {{ticket.numberOfTickets} </li>   
-            </ul>
-        </tbody>
+            <h2> Tickets : </h2>
 
-
+            <div *ngFor="let ticket of reservation.tickets">
+                <h6> Ticket ID : {{ticket.id}} </h6> 
+                <!--<h6> {{ticket.projectionId}} </h6> -->
+                <h6> Title : {{ticket.movieTitle}} </h6> 
+                <h6> Date : {{ticket.projectionDate}} </h6> 
+                <h6> Term : {{ticket.projectionTerm}} </h6> 
+                <h6> Movie ID : {{ticket.movieId}} </h6> 
+                <!-- <h6> {{ticket.theaterHalh6d}} </h6> --> 
+                <h6> Hall name : {{ticket.theaterHallName}} </h6>      
+                <h6> Price : {{ticket.price}} </h6>    
+                <h6> Number of tickets : {{ticket.numberOfTickets}} </h6>   
+            </div>
+        </div>
      </table>
      </div>
-
  </div>
+
+
