@@ -12,11 +12,11 @@ export class SearchComponent implements OnInit {
   public searchCriteria: string;
   public userSearch: string;
   public movies: Array<IMovieDetails>;
-  public arrowUpVisible: boolean;
-  public sortCriteria: string;
-  
+
+  public sortBy: string;
+  public sortedAscending: boolean;
   public listViewActive: boolean;
-  public showUpcomingMovies: boolean;
+  public includeUpcomingMovies: boolean;
 
   constructor(private movieService: MoviesFacadeService,
               private router: Router,
@@ -31,10 +31,22 @@ export class SearchComponent implements OnInit {
       this.showMovies();
     });
 
-    this.arrowUpVisible = true;
-    this.sortCriteria = "imdbRating";
     this.listViewActive = true;
-    this.showUpcomingMovies = true;
+
+    this.activatedRouter.queryParams.subscribe(queryParams => {
+      this.sortBy = queryParams['sortBy'];
+      this.sortedAscending = queryParams['sortAscending'] == "true";
+      this.listViewActive = queryParams['listView'] == "true";
+      this.includeUpcomingMovies = queryParams['includeUpcomingMovies'] == "true";
+
+      console.log(this.sortBy);
+      console.log(this.sortedAscending === true);
+      console.log(this.sortedAscending === false);
+      console.log(this.sortedAscending);
+
+      console.log(this.listViewActive === true);
+      console.log(this.includeUpcomingMovies=== true);
+    });
   }
 
   ngOnInit(): void {
@@ -83,7 +95,6 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMovieById(this.userSearch).subscribe(
       (movie: IMovieDetails) => {
         this.movies = [movie];
-        console.log(this.movies);
       }
     )
   }
@@ -93,7 +104,6 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
-        console.log(this.movies);
       }
     )
   }
@@ -104,7 +114,6 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
-        console.log(this.movies);
       }
     )
   }
@@ -117,7 +126,6 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
-        console.log(this.movies);
       }
     )
   }
@@ -143,7 +151,6 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
-        console.log(this.movies);
       }
     )
   }
@@ -153,7 +160,6 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
-        console.log(this.movies);
       }
     )
   }
@@ -166,7 +172,6 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
-        console.log(this.movies);
       }
     )
   }
@@ -177,7 +182,6 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
-        console.log(this.movies);
       }
     )
   }
@@ -186,19 +190,20 @@ export class SearchComponent implements OnInit {
     this.router.navigate((['/movies', movieId]));;
   }
 
-  public toggleArrow(): void{
-    this.arrowUpVisible = !this.arrowUpVisible;
+  public toggleSort(): void{
+    this.sortedAscending = !this.sortedAscending;
     this.sortMovies();
-    console.log(this.movies);
+    this.updateUrl();
+    //console.log(this.movies);
   }
 
   public onSelectChange(): void{
-    this.arrowUpVisible = true;
     this.sortMovies();
+    this.updateUrl();
   }
 
   public sortMovies(): void{
-    if(!this.arrowUpVisible)
+    if(this.sortedAscending)
       this.movies = this.movies.sort( (movie1, movie2) => this.sort(movie1, movie2));
     else
       this.movies = this.movies.sort( (movie1, movie2) => this.sort(movie2, movie1));
@@ -206,7 +211,7 @@ export class SearchComponent implements OnInit {
 
   private sort(movie1: IMovieDetails, movie2: IMovieDetails): number{
 
-    switch (this.sortCriteria){
+    switch (this.sortBy){
 
       case "title":
         return Number(movie1.title.localeCompare(movie2.title));
@@ -214,21 +219,21 @@ export class SearchComponent implements OnInit {
         return movie1.year - movie2.year;
       case "runtime":
         if (movie1.imdbRating == null)
-          return this.arrowUpVisible ? -1 : 1;
+          return this.sortedAscending ? 1 : -1;
         else if(movie2.imdbRating == null)
-          return this.arrowUpVisible ? 1 : -1;
+          return this.sortedAscending ? -1 : 1;
         return Number(movie1.runtime.localeCompare(movie2.runtime));
       case "imdbRating":
         if (movie1.imdbRating == null)
-          return this.arrowUpVisible ? -1 : 1;
+          return this.sortedAscending ? 1 : -1;
         else if(movie2.imdbRating == null)
-          return this.arrowUpVisible ? 1 : -1;
+          return this.sortedAscending ? -1 : 1;
         return Number(movie1.imdbRating - movie2.imdbRating);
       case "imdbVotes":
         if (movie1.imdbVotes == null)
-          return this.arrowUpVisible ? -1 : 1;
+          return this.sortedAscending ? 1 : -1;
         else if(movie2.imdbVotes == null)
-          return this.arrowUpVisible ? 1 : -1;
+          return this.sortedAscending ? -1 : 1;
         return Number(movie1.imdbVotes - movie2.imdbVotes);
       default:
         return 1;
@@ -237,24 +242,41 @@ export class SearchComponent implements OnInit {
 
   public listView(): void{
     this.listViewActive = true;
+    this.updateUrl();
   }
 
   public gridView(): void{
     this.listViewActive = false;
+    this.updateUrl();
+  }
+
+  public onCheckboxChange(): void{
+    this.includeUpcomingMovies = !this.includeUpcomingMovies;
+    this.updateUrl();
   }
 
   public activeButtonClass(button: string){
 
-    if(button==='list')
-      return {
-        'btn': true,
-        'active': (this.listViewActive === true) ? true : false
-      }
-    else
-      return {
-        'btn': true,
-        'active': (this.listViewActive === true) ? false : true
-      }
+    return {
+      'btn': true,
+      'active': (this.listViewActive === true) ? button==='list' : !(button==='list')
+    }
+
   }
 
+  public updateUrl(){
+    this.router.navigate([], {
+      relativeTo: this.activatedRouter,
+      queryParams: this.getQueryParameters()
+    });
+  }
+
+  public getQueryParameters(){
+    return {
+      sortBy: this.sortBy,
+      sortAscending: this.sortedAscending,
+      listView: this.listViewActive,
+      includeUpcomingMovies: this.includeUpcomingMovies
+    };
+  }
 }
