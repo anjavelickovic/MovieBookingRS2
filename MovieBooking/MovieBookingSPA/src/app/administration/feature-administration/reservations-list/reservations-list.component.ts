@@ -12,6 +12,7 @@ import { IReservations } from '../../domain/models/reservations';
 export class ReservationsListComponent implements OnInit {
 
   public reservations : IReservations[]
+  public show : boolean[]
   
   constructor(private administrationFacadeService : AdministrationFacadeService, 
     private appStateService: AppStateService) { 
@@ -21,11 +22,16 @@ export class ReservationsListComponent implements OnInit {
       //console.log(appState.username);
       this.administrationFacadeService.getReservationByUsername(appState.username).subscribe(reservations => {
         this.reservations = reservations;
+        this.show = new Array(reservations.length);
       })
-    });
+    }); 
   }
 
   ngOnInit(): void {
+  }
+
+  public onBtnClick(i){
+    this.show[i] = true;
   }
 
 }
