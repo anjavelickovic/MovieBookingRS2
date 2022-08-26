@@ -21,6 +21,7 @@ namespace Administration.Infrastructure.Persistence.EnittyConfigurations
                 .HasColumnType("VARCHAR(24)")
                 .IsRequired();
 
+
         }
     }
 }
