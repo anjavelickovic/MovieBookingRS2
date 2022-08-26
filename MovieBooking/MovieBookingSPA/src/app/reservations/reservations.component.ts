@@ -27,13 +27,12 @@ export class ReservationsComponent implements OnInit {
     this.reservationFacadeService.getReservations()
       .subscribe(reservationBasket => {
         this.reservations = reservationBasket.reservations;
-
-        this.checkoutForm = this.formBuilder.group({
-          areaCode: ['', [Validators.required]],
-          phoneNumber: ['', [Validators.required]]
-        });
-
         console.log(this.reservations);
+    });
+    
+    this.checkoutForm = this.formBuilder.group({
+      areaCode: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required]]
     });
   }
 
