@@ -20,6 +20,8 @@ namespace Administration.Infrastructure.Persistence.EnittyConfigurations
             builder.Property<string>("MovieId")
                 .HasColumnType("VARCHAR(24)")
                 .IsRequired();
+
+
         }
     }
 }

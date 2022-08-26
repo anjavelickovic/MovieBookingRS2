@@ -49,6 +49,6 @@ namespace Administration.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new TicketEntityTypeConfiguration());
 
             base.OnModelCreating(modelBuilder);
-        }
+        }   
     }
 }
