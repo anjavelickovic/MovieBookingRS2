@@ -31,7 +31,6 @@
             (keyup.enter)="search(searchBarNarrow.value)">
             <a class="nav-link" (click)="advancedSearch()" style="font-size: 10px; color:rgb(152, 207, 232); float: right;">Advanced search</a>
         </div>
-
        
         <select *ngIf="isMainPage()" name="criteria" id="criteria" class="form-select"
                 [(ngModel)]="searchCriteria" (change)="changeSearchCriteriaPlaceholderText()" [value] = "searchCriteria">
@@ -48,7 +47,8 @@
 
         <div style="text-align: center;  margin-right: 55px;"  *ngIf="!appState?.isEmpty()">
             <span (click)="profile()" type="button"  style="color:rgb(152, 207, 232); ">
-                {{ appState?.username }}
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    {{ appState?.username }}
             </span>
         </div>
     </nav>

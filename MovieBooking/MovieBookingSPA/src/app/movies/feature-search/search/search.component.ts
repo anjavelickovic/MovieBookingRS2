@@ -16,6 +16,7 @@ export class SearchComponent implements OnInit {
   public sortCriteria: string;
   
   public listViewActive: boolean;
+  public showUpcomingMovies: boolean;
 
   constructor(private movieService: MoviesFacadeService,
               private router: Router,
@@ -27,15 +28,19 @@ export class SearchComponent implements OnInit {
       if(this.searchCriteria == null)
         this.searchCriteria = "advanced-search";
       this.userSearch = params.get('userSearch');
+      this.showMovies();
     });
 
-    this.arrowUpVisible = false;
+    this.arrowUpVisible = true;
+    this.sortCriteria = "imdbRating";
     this.listViewActive = true;
-    this.sortCriteria = "title";
+    this.showUpcomingMovies = true;
   }
 
   ngOnInit(): void {
+  }
 
+  public showMovies(): void{
     switch(this.searchCriteria){
 
       case "id":
