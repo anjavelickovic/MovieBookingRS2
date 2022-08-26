@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table" style=" text-align: left;">
     <thead>
         <tr>
         <th scope="col">Title</th>
@@ -13,7 +13,7 @@
     </thead>
     <tbody *ngFor="let reservationsByMovie of reservations | keyvalue">
         <tr *ngFor="let reservationByProjection of reservationsByMovie.value | keyvalue">
-        <td>{{reservationByProjection.value.movieTitle}}</td>
+        <td >{{reservationByProjection.value.movieTitle}}</td>
         <td>{{reservationByProjection.value.projectionDate}}</td>
         <td>{{reservationByProjection.value.projectionTerm}}</td>
         <td>{{reservationByProjection.value.theaterHallName}}</td>
@@ -37,7 +37,7 @@
                     <form [formGroup]="reservationForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
                         <div class="form-group">
                             <label for="numberOfTickets">Number of tickets</label>
-                            <input type="text" id="numberOfTickets" class="form-control form-control-sm"
+                            <input type="number" id="numberOfTickets" class="form-control form-control-sm"
                                 formControlName="numberOfTickets" />
             
                             <span *ngIf="numberOfTickets?.errors?.['required']" class="error">
@@ -50,6 +50,9 @@
                     </div>
                     <span *ngIf="showServerErrors" class="error">
                         {{errMsg}}
+                    </span>
+                    <span *ngIf="processing" class="error" class="msg">
+                        Your request is being processed
                     </span>
                 </div>
                 <div class="modal-footer">
@@ -86,5 +89,5 @@
 </table>
 
 <div class="container">
-    <h6>Total price: {{totalPrice}}</h6>
+    <h6><b>TOTAL PRICE: {{totalPrice}}</b></h6>
 </div>

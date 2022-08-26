@@ -25,33 +25,10 @@
 </ng-template>
 
 
-<div class="flex; marg" > 
-    <!--Delete button--> 
-    <button 
-        class="btn" 
-        style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px;"
-        (click)="open(deleteModal)">
-            Delete
-    </button>
-    <ng-template #deleteModal let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
-            <button type="button" class="close" aria-label="Close" (click)="close()">
-                <span aria-hidden="true">×</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <p>Are you sure you want to delete {{theaterHall.name}}?</p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline-dark" (click)="deleteTheaterHall()">Yes</button>
-            <button class="btn btn-outline-dark" (click)="close()">No</button>
-        </div>
-    </ng-template>
-    
+<div class="flex; marg" >  
     <!--Update button--> 
     <button class="btn" 
-            style="background-color: blue; color: aliceblue" 
+            style="background-color: blue; color: aliceblue; margin-right: 10px;" 
         (click)="open(updateModal)">
             Update
     </button>
@@ -117,6 +94,28 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-outline-dark" (click)="onTheaterHallFormSubmit()">Update</button>
+        </div>
+    </ng-template>
+    <!--Delete button--> 
+    <button 
+     class="btn" 
+     style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue"
+     (click)="open(deleteModal)">
+         Delete
+    </button>
+    <ng-template #deleteModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete {{theaterHall.name}}?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="deleteTheaterHall()">Yes</button>
+            <button class="btn btn-outline-dark" (click)="close()">No</button>
         </div>
     </ng-template>
 </div>

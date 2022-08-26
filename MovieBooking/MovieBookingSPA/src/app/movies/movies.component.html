@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="movieDetails; else elseBlock">
 
     <h2 style="margin-top: 20px; margin-bottom: 20px;">{{ movieDetails.title }}</h2>
 
@@ -65,8 +65,64 @@
                 <iframe [src]="trailerConfiguration()" width="520" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
             </div>
             
-            
-        </div>       
+        </div>
+        
+        
 
     </div>
+
+    <h4 style="margin-top: 20px; margin-bottom: 20px">Projections</h4>
+    <div  style="display: inline-block; margin-left: 40px; margin-bottom: 40px" *ngFor="let projection of projections" >
+        <div class="flex-column">
+            <h6>{{projection.projectionDate}} {{projection.projectionTerm}}</h6>
+            <h6>Price: {{projection.price}}</h6>
+            <h6>Seats left: {{projection.numberOfSeats - projection.numberOfReservedSeats}}</h6>
+        
+            <button 
+            class="btn" 
+            style="background-color: darkblue; color: aliceblue; margin-right: 10px; margin-top: 10px;"
+            (click)="open(reserveModal, projection)">
+                Reserve
+            </button>
+            <ng-template #reserveModal let-modal>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
+                    <button type="button" class="close" aria-label="Close" (click)="close()">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="projectionReserveForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+                        <div class="form-group">
+                            <label for="numberOfTickets">Number of tickets</label>
+                            <input type="number" id="numberOfTickets" class="form-control form-control-sm"
+                                formControlName="numberOfTickets" />
+            
+                            <span *ngIf="numberOfTickets?.errors?.['required']" class="error">
+                                Number of tickets is required
+                            </span>
+                        </div>
+                    </form>
+                    <div>
+                        <p>Total price: {{projection.price * numberOfTickets.value}}</p>
+                    </div>
+                    <span *ngIf="showServerErrors" class="error">
+                        {{errMsg}}
+                    </span>
+                    <span *ngIf="processing" class="error" class="msg">
+                        Your request is being processed
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-dark" (click)="onProjectionReserveFormSubmit()">Reserve</button>
+                </div>
+            </ng-template>
+            
+        </div>
+    </div>
+
 </div>
+
+<ng-template #elseBlock>
+    <h2 style="margin-top: 20px; margin-bottom: 20px;">Loading...</h2>
+</ng-template>
