@@ -12,6 +12,7 @@
     <None Remove="Swashbuckle.AspNetCore" />
     <None Remove="Repositories\" />
     <None Remove="Controllers\" />
+    <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
@@ -23,5 +24,6 @@
     <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.16" />
   </ItemGroup>
 </Project>
