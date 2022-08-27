@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MoviesFacadeService } from '../../domain/application-services/movies-facade.service';
 import { IMovieDetails } from '../../domain/models/movie-details';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -11,42 +12,43 @@ import { IMovieDetails } from '../../domain/models/movie-details';
 export class SearchComponent implements OnInit {
   public searchCriteria: string;
   public userSearch: string;
-  public movies: Array<IMovieDetails>;
+  public movies: Array<IMovieDetails> = null;
 
   public sortBy: string;
   public sortedAscending: boolean;
   public listViewActive: boolean;
   public includeUpcomingMovies: boolean;
+  public page: number;
+
+  public NUMBER_OF_MOVIES_PER_PAGE_LIST_VIEW = 10;
+  public NUMBER_OF_MOVIES_PER_PAGE_GRID_VIEW = 24;
 
   constructor(private movieService: MoviesFacadeService,
               private router: Router,
               private activatedRouter: ActivatedRoute  
             )
   {
-    this.activatedRouter.paramMap.subscribe((params) => {
+
+  this.activatedRouter.paramMap.pipe( 
+    switchMap((params) => {
       this.searchCriteria = params.get('searchCriteria');
       if(this.searchCriteria == null)
         this.searchCriteria = "advanced-search";
       this.userSearch = params.get('userSearch');
       this.showMovies();
+      return this.activatedRouter.queryParams;
+    })
+    ).subscribe(queryParams => {
+        this.sortBy = queryParams['sortBy'];
+        this.sortedAscending = queryParams['sortAscending'] == "true";
+        this.listViewActive = queryParams['listView'] == "true";
+        this.includeUpcomingMovies = queryParams['includeUpcomingMovies'] == "true";
+        this.page = parseInt(queryParams['page']) || -1;
+        if(this.page === -1){
+          this.firstPage();
+        }
     });
-
-    this.listViewActive = true;
-
-    this.activatedRouter.queryParams.subscribe(queryParams => {
-      this.sortBy = queryParams['sortBy'];
-      this.sortedAscending = queryParams['sortAscending'] == "true";
-      this.listViewActive = queryParams['listView'] == "true";
-      this.includeUpcomingMovies = queryParams['includeUpcomingMovies'] == "true";
-
-      console.log(this.sortBy);
-      console.log(this.sortedAscending === true);
-      console.log(this.sortedAscending === false);
-      console.log(this.sortedAscending);
-
-      console.log(this.listViewActive === true);
-      console.log(this.includeUpcomingMovies=== true);
-    });
+    
   }
 
   ngOnInit(): void {
@@ -86,8 +88,8 @@ export class SearchComponent implements OnInit {
         window.alert("advanced search");
         return;
       default:
-        window.alert("error");
-        this.router.navigate(['/main']);
+        window.alert("Error - bad URL");
+        this.router.navigateByUrl('/main');
     }
   }
 
@@ -141,7 +143,6 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
-        console.log(this.movies);
       }
     )
   }
@@ -194,7 +195,6 @@ export class SearchComponent implements OnInit {
     this.sortedAscending = !this.sortedAscending;
     this.sortMovies();
     this.updateUrl();
-    //console.log(this.movies);
   }
 
   public onSelectChange(): void{
@@ -242,17 +242,17 @@ export class SearchComponent implements OnInit {
 
   public listView(): void{
     this.listViewActive = true;
-    this.updateUrl();
+    this.firstPage();
   }
 
   public gridView(): void{
     this.listViewActive = false;
-    this.updateUrl();
+    this.firstPage();
   }
 
   public onCheckboxChange(): void{
     this.includeUpcomingMovies = !this.includeUpcomingMovies;
-    this.updateUrl();
+    this.firstPage();
   }
 
   public activeButtonClass(button: string){
@@ -264,11 +264,35 @@ export class SearchComponent implements OnInit {
 
   }
 
+  public firstPage(){
+    this.page = 1;
+    this.updateUrl();
+  }
+  public previousPage(){
+    this.page -= 1;
+    this.updateUrl();
+  }
+  public nextPage(){
+    this.page += 1;
+    this.updateUrl();
+  }
+  public lastPage(){
+    this.page = this.numberOfPages();
+    this.updateUrl();
+  }
+
   public updateUrl(){
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'smooth' 
+    });
+
     this.router.navigate([], {
       relativeTo: this.activatedRouter,
       queryParams: this.getQueryParameters()
     });
+    
   }
 
   public getQueryParameters(){
@@ -276,7 +300,20 @@ export class SearchComponent implements OnInit {
       sortBy: this.sortBy,
       sortAscending: this.sortedAscending,
       listView: this.listViewActive,
-      includeUpcomingMovies: this.includeUpcomingMovies
+      includeUpcomingMovies: this.includeUpcomingMovies,
+      page: this.page
     };
+  }
+
+  public numberOfPages(): number{
+    var numberOfUpcomingMovies = 0;
+    if(!this.includeUpcomingMovies){
+      numberOfUpcomingMovies = this.movies.filter(movie => movie.imdbVotes === null).length;
+    }
+
+    var totalNumberOfMovies = this.movies.length - numberOfUpcomingMovies;
+    var numberOfMoviesPerPage = this.listViewActive ? this.NUMBER_OF_MOVIES_PER_PAGE_LIST_VIEW : this.NUMBER_OF_MOVIES_PER_PAGE_GRID_VIEW;
+    
+    return Math.ceil(totalNumberOfMovies / numberOfMoviesPerPage);
   }
 }

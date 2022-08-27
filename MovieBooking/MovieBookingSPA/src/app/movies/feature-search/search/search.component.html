@@ -41,16 +41,16 @@
     </div>
 
     <ng-container *ngIf="listViewActive" >
-      <div class="flex-container" style="height: auto; width: auto; background-color: rgb(240, 240, 240); border-color:white" *ngFor="let movie of movies">
+      <div class="flex-container" style="height: auto; width: auto; background-color: rgb(240, 240, 240); border-color:white" *ngFor="let movie of movies; let i = index">
 
-        <ng-container *ngIf="includeUpcomingMovies || movie.imdbVotes !== null" style="margin: 10px;">
+        <ng-container *ngIf="(includeUpcomingMovies || movie.imdbVotes !== null) && (page - 1)*NUMBER_OF_MOVIES_PER_PAGE_LIST_VIEW <= i && i < page * NUMBER_OF_MOVIES_PER_PAGE_LIST_VIEW" style="margin: 10px;">
             <div>
               <img [src]="movie.poster" (click)="moviePage(movie.id)" style="height: 200px; width: 140px"/>
             </div>
             <div>
               <div>
-                <a routerLink="/movies/{{movie.id}}" [queryParams]="getQueryParameters()"><b class="title" style="font-size: 20px">{{ movie.title }} ({{movie.year}})</b></a>&nbsp;
-                <i>{{movie.imdbRating !== null ? movie.imdbRating + "/10" : "Upcoming"}}</i>
+                <a routerLink="/movies/{{movie.id}}" [queryParams]="getQueryParameters()"><b class="title" style="font-size: 20px;">{{ movie.title }} ({{movie.year}})</b></a>&nbsp;
+                <i style="color: gray;">{{movie.imdbRating !== null ? movie.imdbRating + "/10" : "Upcoming"}}</i>
               </div>
 
               <div style="font-size: 13px; color: gray; margin-bottom: 10px">
@@ -89,13 +89,29 @@
 
     <ng-container *ngIf="!listViewActive" >
       <div id="imagesDIV" style="margin-top: 10px;">
-        <div class="item" *ngFor="let movie of movies">
-          <div *ngIf="includeUpcomingMovies || movie.imdbVotes !== null">
+        <div class="item" *ngFor="let movie of movies; let i = index">
+          <div *ngIf="(includeUpcomingMovies || movie.imdbVotes !== null) && (page - 1)*NUMBER_OF_MOVIES_PER_PAGE_GRID_VIEW <= i && i < page * NUMBER_OF_MOVIES_PER_PAGE_GRID_VIEW">
             <img [src]="movie.poster" (click)="moviePage(movie.id)"/>
             <span class="caption">{{ movie.title }}</span>
           </div>
         </div>
       </div>
     </ng-container>
+
+    <nav *ngIf="movies !== null" style="margin-top: 10px">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" (click)="firstPage()">First page</a>
+        </li>
+        <li *ngIf="page !== 1" class="page-item"><a class="page-link" (click)="previousPage()">{{page-1}}</a></li>
+        <li class="page-item"><a class="page-link active">{{page}}</a></li>
+        <li *ngIf="page !== numberOfPages()" class="page-item"><a class="page-link" (click)="nextPage()">{{page+1}}</a></li>
+        <li class="page-item">
+          <a class="page-link" (click)="lastPage()">Last page</a>
+        </li>
+      </ul>
+    </nav>
+    
+    
   
 </div>

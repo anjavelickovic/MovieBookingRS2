@@ -49,7 +49,8 @@ export class HeaderComponent implements OnInit {
           sortBy: "imdbRating",
           sortAscending: false,
           listView: true,
-          includeUpcomingMovies: true
+          includeUpcomingMovies: true,
+          page: 1
         },
       });
       this.resetSearchParameters();
