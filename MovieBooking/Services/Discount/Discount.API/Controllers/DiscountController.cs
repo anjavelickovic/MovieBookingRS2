@@ -58,11 +58,11 @@ namespace Discount.API.Controllers
             return Ok(await _repository.UpdateDiscount(coupon));
         }
 
-        [HttpDelete("{id}", Name = "DeleteDiscount")]
+        [HttpDelete("{movieName}", Name = "DeleteDiscount")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> DeleteDiscount(string id)
+        public async Task<ActionResult<bool>> DeleteDiscount(string movieName)
         {
-            return Ok(await _repository.DeleteDiscount(id));
+            return Ok(await _repository.DeleteDiscount(movieName));
         }
     }
 }

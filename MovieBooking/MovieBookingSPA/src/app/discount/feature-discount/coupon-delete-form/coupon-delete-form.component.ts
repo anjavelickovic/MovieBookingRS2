@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
+import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
 
 interface ICouponFormData {
-  id : string, 
+  movieName : string, 
 }
 
 @Component({
@@ -18,22 +20,31 @@ export class CouponDeleteFormComponent implements OnInit {
   public modalReference: NgbModalRef;
   public showFormErrors: boolean;
   public showServerError: boolean;
+  public movie: IMovieDetails;
+  public movies: IMovieDetails[] = [];
 
   constructor(private modalService: NgbModal,
-              private discountService : DiscountFacadeService) { 
+              private discountService : DiscountFacadeService,
+              private formBuilder: UntypedFormBuilder,
+              private moviesFacadeService: MoviesFacadeService) { 
       this.showFormErrors = false;
       this.showServerError = false;
-            
-      this.couponForm = new FormGroup({
-        id : new FormControl("", [Validators.required]),
+      
+    this.moviesFacadeService.getMoviesDetails()
+      .subscribe(movies => {
+        this.movies = movies;
+      });       
+
+      this.couponForm = this.formBuilder.group({
+        movieName: ['', [Validators.required]],
       });
     }
 
   ngOnInit(): void {
   }
 
-  public get id() {
-    return this.couponForm.get('id');
+  public get movieName() {
+    return this.couponForm.get('movieName');
   }
 
   public onCouponDelete() : void{
@@ -47,21 +58,22 @@ export class CouponDeleteFormComponent implements OnInit {
     }
 
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
-    
-    this.discountService.deleteDiscount(data.id)
-    .subscribe({
-      error: (check : boolean) => {
-      if(!check)
-        window.alert('There was a problem with deleting coupon, please try again!');
-    },
-    complete: () => {
-      window.alert("Coupon deleted successfully!");
-      this.couponForm.reset();
-      this.modalReference.close();
-      window.location.reload();
-    }
-  });
+
+      this.discountService.deleteDiscount(data.movieName)
+        .subscribe({
+          error: (check : boolean) => {
+          if(!check)
+            window.alert('There was a problem with deleting coupon, please try again!');
+        },
+        complete: () => {
+          window.alert("Coupon deleted successfully!");
+          this.couponForm.reset();
+          this.modalReference.close();
+          window.location.reload();
+          }
+        });
 } 
+
 
   public open(content) {
     this.modalReference = this.modalService
@@ -73,3 +85,4 @@ export class CouponDeleteFormComponent implements OnInit {
     this.couponForm.reset();
   }
 }
+
