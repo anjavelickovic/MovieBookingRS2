@@ -3,6 +3,7 @@ import { catchError, Observable, of } from 'rxjs';
 import { DiscountService } from '../infrastructure/discount.service';
 import { ICoupon } from '../models/coupon';
 import { ICreateCoupon } from '../models/create-coupon';
+import { IUpdateCoupon } from '../models/update-coupon';
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +32,8 @@ export class DiscountFacadeService {
     return this.discountService.deleteDiscount(id);
   }
 
-  public updateDiscount(movieId : string, movieName : string, amount : number) : Observable<boolean> {
-    const coupon : ICreateCoupon = {movieId, movieName, amount};
+  public updateDiscount(movieId : string, amount : number) : Observable<boolean> {
+    const coupon : IUpdateCoupon = {movieId, amount};
 
     return this.discountService.updateDiscount(coupon).pipe(
       catchError((err) => {

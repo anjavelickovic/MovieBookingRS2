@@ -68,12 +68,8 @@ export class CouponFormComponent implements OnInit {
     this.moviesFacadeService.getMovieDetails(data.movieId.split(" ")[1])
     .subscribe(movieDetails => {
       this.movie = movieDetails;
-      console.log(this.movie.title);
-    
       data.movieId = movieDetails.id;
-
-      console.log(this.movie.id )
-
+      
         this.discountService.createDiscount(this.movie.id, movieDetails.title, data.amount)
         .subscribe({
           error: (coupon : ICreateCoupon) => {
