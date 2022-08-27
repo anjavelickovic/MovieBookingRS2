@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { of } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
 import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { TheaterHallFacadeService } from 'src/app/theater-hall/domain/application-services/theater-hall-facade.service';
@@ -110,35 +110,37 @@ export class ProjectionFormComponent implements OnInit {
     }
 
     const data: IFormProjection = this.projectionForm.value as IFormProjection;
+    console.log(data)
     
-    
-    this.theaterHallFacadeService.getTheaterHall(data.theaterHallId.split(" ")[1])
-      .subscribe(thaterhall => {
+    this.theaterHallFacadeService.getTheaterHall(data.theaterHallId.split(" ")[1]).pipe(
+      switchMap((thaterhall) => 
+      {
         this.theaterHall = thaterhall;
         console.log(this.theaterHall.name);
-        this.moviesFacadeService.getMovieDetails(data.movieId.split(" ")[1])
-          .subscribe(movieDetails => {
-            this.movie = movieDetails;
-            console.log(this.movie.title);
-            this.projectionFacadeService.createProjection(this.movie.id, this.movie.title, this.movie.runtime, 
-              this.theaterHall.id, this.theaterHall.name, data.projectionDate, 
-              data.theaterHallTerm.split(" ")[1] + " " + data.theaterHallTerm.split(" ")[2],
-              this.theaterHall.numberOfSeats, 0, data.price)
-             .subscribe({
-                error: (err) => {
-                  this.showServerError = true;
-                  console.log(err);
-                  return of(false);
-                },
-                complete: () => {
-                  window.alert("Projection saved");
-                  this.projectionForm.reset();
-                  this.modalReference.close();
-                  window.location.reload();
-                }
-              });
-        });
+        return this.moviesFacadeService.getMovieDetails(data.movieId.split(" ")[1]);
+      }),
+      switchMap((movieDetails) => {
+        this.movie = movieDetails;
+        console.log(this.movie.title);
+        return this.projectionFacadeService.createProjection(this.movie.id, this.movie.title, this.movie.runtime, 
+          this.theaterHall.id, this.theaterHall.name, data.projectionDate, 
+          data.theaterHallTerm.split(" ")[1] + " " + data.theaterHallTerm.split(" ")[2],
+          this.theaterHall.numberOfSeats, 0, data.price)
+      })
+    ).subscribe({
+        error: (err) => {
+          this.showServerError = true;
+          console.log(err);
+          return of(false);
+        },
+        complete: () => {
+          window.alert("Projection saved");
+          this.projectionForm.reset();
+          this.modalReference.close();
+          window.location.reload();
+        }
     });
+        
   }
 
   
