@@ -29,10 +29,26 @@
             </div>
 
 
-            <div *ngIf="paramName != 'all'; else elseBlock" class="form-group">
-                <label for="param">{{paramName}}</label>
-                <input type="text" id="param" class="form-control form-control-sm"
+            <div *ngIf="paramName != 'all'" class="form-group">
+                <div *ngIf="paramName == 'Date'; else elseBlock"> 
+                    <label for="param">{{paramName}}</label>
+                    <input type="date" id="param" class="form-control form-control-sm"
                     formControlName="param" />
+                </div>
+                <ng-template #elseBlock>
+                    <div class="form-group flex-column">
+                        <label for="param">Select movie</label>
+                        <select
+                            class="custom-select mb-3"
+                            (change)="changeMovieTitle($event)"
+                            id="param"
+                            formControlName="param">
+                                <option *ngFor="let movieTitle of moviesInProjections" [ngValue]="movieTitle">
+                                    {{ movieTitle }}
+                                </option>
+                        </select>
+                    </div>
+                </ng-template>
                 <span *ngIf="showFormErrors && param?.errors?.['required']" class="error">
                     {{paramName}} is required
                 </span>
@@ -40,9 +56,6 @@
                     {{paramName}} is not in the correct format (YYYY-MM-DD)
                 </span>
             </div>
-            <ng-template #elseBlock>
-
-            </ng-template>
         </form>
     </div>
     <div class="modal-footer">

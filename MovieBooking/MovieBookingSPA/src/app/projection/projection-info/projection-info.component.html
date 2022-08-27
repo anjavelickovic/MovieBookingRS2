@@ -27,32 +27,9 @@
 
 
 <div class="flex; marg" > 
-    <!--Delete button--> 
-    <button 
-        class="btn" 
-        style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px;"
-        (click)="open(deleteModal)">
-            Delete
-    </button>
-    <ng-template #deleteModal let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
-            <button type="button" class="close" aria-label="Close" (click)="close()">
-                <span aria-hidden="true">×</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <p>Are you sure you want to delete this projection?</p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline-dark" (click)="deleteProjection()">Yes</button>
-            <button class="btn btn-outline-dark" (click)="close()">No</button>
-        </div>
-    </ng-template>
-    
     <!--Update button--> 
     <button class="btn" 
-            style="background-color: blue; color: aliceblue" 
+            style="background-color: blue; color: aliceblue;  margin-right: 10px;" 
         (click)="open(updateModal)">
             Update
     </button>
@@ -69,7 +46,6 @@
                 <div class="form-group flex-column">
                     <label for="movieId">Select movie</label>
                     <select
-                        style="width: 200px;"
                         class="custom-select mb-3"
                         (change)="changeMovie($event)"
                         id="movieId"
@@ -87,21 +63,17 @@
     
                 <div class="form-group">
                     <label for="projectionDate">Date</label>
-                    <input type="text" id="projectionDate" class="form-control form-control-sm"
+                    <input type="date" id="projectionDate" class="form-control form-control-sm"
                         formControlName="projectionDate" />
     
                     <span *ngIf="showFormErrors && projectionDate?.errors?.['required']" class="error">
                         Date is required
-                    </span>
-                    <span *ngIf="showFormErrors && projectionDate?.errors?.['pattern']" class="error">
-                        Date is not in the correct format (YYYY-MM-DD)
                     </span>
                 </div>
                 
                 <div class="form-group flex-column" style="margin-top: 10px;">
                     <label for="theaterHallId">Select theater hall</label>
                     <select
-                        style="width: 200px;"
                         class="custom-select mb-3"
                         (change)="changeTheaterHall($event)"
                         id="theaterHallId"
@@ -120,7 +92,6 @@
                 <div *ngIf="theaterHallFromForm" class="form-group flex-column">
                     <label for="theaterHallTerm">Select time</label>
                     <select
-                        style="width: 200px;"
                         class="custom-select mb-3"
                         (change)="changeTheaterHallTerm($event)"
                         id="theaterHallTerm"
@@ -138,7 +109,7 @@
             
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="text" id="price" class="form-control form-control-sm"
+                    <input type="number" id="price" class="form-control form-control-sm"
                         formControlName="price" />
     
                     <span *ngIf="showFormErrors && price?.errors?.['required']" class="error">
@@ -156,6 +127,29 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-outline-dark" (click)="onProjectionFormSubmit()">Update</button>
+        </div>
+    </ng-template>
+
+    <!--Delete button--> 
+    <button 
+        class="btn" 
+        style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue;"
+        (click)="open(deleteModal)">
+            Delete
+    </button>
+    <ng-template #deleteModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete this projection?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="deleteProjection()">Yes</button>
+            <button class="btn btn-outline-dark" (click)="close()">No</button>
         </div>
     </ng-template>
 </div>

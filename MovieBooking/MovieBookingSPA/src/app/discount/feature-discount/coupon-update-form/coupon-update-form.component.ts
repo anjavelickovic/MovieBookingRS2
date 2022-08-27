@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
+import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
 
 interface ICouponFormData {
-  id : string, 
-  movieName : string, 
+  movieId : string, 
   amount : number
 }
 
@@ -20,26 +21,30 @@ export class CouponUpdateFormComponent implements OnInit {
   public modalReference: NgbModalRef;
   public showFormErrors: boolean;
   public showServerError: boolean;
+  public movie: IMovieDetails;
+  public movies: IMovieDetails[] = [];
 
   constructor(private modalService: NgbModal,
-            private discountService : DiscountFacadeService) { 
+            private discountService : DiscountFacadeService,            
+            private formBuilder: UntypedFormBuilder,
+            private moviesFacadeService: MoviesFacadeService) { 
     this.showFormErrors = false;
     this.showServerError = false;
-          
+           
+    this.moviesFacadeService.getMoviesDetails()
+    .subscribe(movies => {
+      this.movies = movies;
+    });
+
     this.couponForm = new FormGroup({
-      id : new FormControl("", [Validators.required]),
-      movieName : new FormControl("", [Validators.required]),
-      amount : new FormControl("", [Validators.required, Validators.min(1)])
+      movieId : new FormControl("", [Validators.required]),
+      amount : new FormControl("", [Validators.required, Validators.min(1), Validators.max(100)])
     });
   }
 
   
-  public get id() {
+  public get movieId() {
     return this.couponForm.get('id');
-  }
-
-  public get movieName() {
-    return this.couponForm.get('movieName');
   }
 
   public get amount() {
@@ -60,21 +65,37 @@ export class CouponUpdateFormComponent implements OnInit {
     }
 
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
+    console.log(data.movieId);
+    this.moviesFacadeService.getMovieDetails(data.movieId)
+    .subscribe(movieDetails => {
+      this.movie = movieDetails;
+      console.log(this.movie.title);
     
-    this.discountService.updateDiscount(data.id, data.movieName, data.amount)
+      data.movieId = movieDetails.id;
+
+      console.log(this.movie.id )
+
+    this.discountService.updateDiscount(this.movie.id, data.amount)
     .subscribe({
       error: (err : boolean) => {
       if(!err)
         window.alert('There was a problem with updating coupon, please try again!');
     }, 
     complete: () => {
-      window.alert("Updated coupon for movie with id: " + this.id);
+      window.alert("Updated coupon for movie with id: " + movieDetails.title);
       this.couponForm.reset();
       this.modalReference.close();
       window.location.reload();
-    }
-  })
+      }
+    });
+  });
 } 
+
+  public changeMovie(e: any) {
+    this.movieId?.setValue(e.target.value, {
+      onlySelf: true,
+    });
+  }
 
   public open(content) {
     this.modalReference = this.modalService

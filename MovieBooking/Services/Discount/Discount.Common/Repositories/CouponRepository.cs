@@ -46,8 +46,8 @@ namespace Discount.Common.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "INSERT INTO Coupon (Id, MovieName, Amount, CreationDate) VALUES (@Id, @MovieName, @Amount, @CreationDate)",
-                new { couponDTO.Id, couponDTO.MovieName, couponDTO.Amount, CreationDate = DateTime.Now });
+                "INSERT INTO Coupon (MovieId, MovieName, Amount, CreationDate) VALUES (@MovieId, @MovieName, @Amount, @CreationDate)",
+                new { couponDTO.MovieId, couponDTO.MovieName, couponDTO.Amount, CreationDate = DateTime.Now });
 
             return affected != 0;
         }
@@ -57,8 +57,8 @@ namespace Discount.Common.Repositories
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "UPDATE Coupon SET Amount = @Amount, ModifiedDate = @ModifiedDate WHERE Id = @Id",
-                new { couponDTO.MovieName, couponDTO.Amount, ModifiedDate = couponDTO.ModifiedDate, couponDTO.Id });
+                "UPDATE Coupon SET Amount = @Amount, ModifiedDate = @ModifiedDate WHERE MovieId = @MovieId",
+                new { couponDTO.Amount, ModifiedDate = DateTime.Now, couponDTO.MovieId });
 
             if (affected == 0)
                 return false;
@@ -66,13 +66,13 @@ namespace Discount.Common.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteDiscount(string id)
+        public async Task<bool> DeleteDiscount(string MovieName)
         {
             using var connection = _context.GetConnection();
 
             var affected = await connection.ExecuteAsync(
-                "DELETE FROM Coupon WHERE Id = @Id",
-                new { Id = id });
+                "DELETE FROM Coupon WHERE MovieName = @MovieName",
+                new { MovieName = MovieName });
 
             if (affected == 0)
                 return false;

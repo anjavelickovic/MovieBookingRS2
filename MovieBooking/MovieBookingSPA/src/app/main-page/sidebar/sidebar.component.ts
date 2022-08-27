@@ -50,4 +50,15 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['/projection']);
   }
 
+  public reservations(): void {
+    this.router.navigate(['/reservations']);
+  }
+
+  public reservationHistory(): void {
+    this.router.navigate(['/administration']);
+  }
+
+  public discount(): void {
+    this.router.navigate(['/discount']);
+  }
 }

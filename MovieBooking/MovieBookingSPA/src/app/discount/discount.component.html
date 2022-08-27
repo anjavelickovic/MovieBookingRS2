@@ -1,14 +1,16 @@
-<div style="background-color: rgb(50, 159, 209)">
-    <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(50, 159, 209)">
-   
-        <div class="navbar-brand mx-auto" style="color:rgb(152, 207, 232);">
-            <h3><b><i>Coupons</i></b></h3>
+<div>
+    <nav class="navbar navbar-expand">
+        <div class="navbar-brand">
+            <h3 style="color: grey; margin-top:10px; margin-left: 10px;"><b><i>Coupons</i></b></h3>
         </div>
-
-        <app-coupon-form style="padding-right: 15px;"></app-coupon-form>
-        <app-coupon-update-form style="padding-right: 15px;"></app-coupon-update-form>
-        <app-coupon-delete-form style="padding-right: 15px;"></app-coupon-delete-form>
+        
+           <div class="pos" >
+                <app-coupon-form style="padding-right: 25px;"></app-coupon-form>
+                <app-coupon-update-form style="padding-right: 25px;"></app-coupon-update-form>
+                <app-coupon-delete-form style="padding-right: 25px;"></app-coupon-delete-form>
+            </div>
     </nav>
+    <hr>
 </div>
 
 <app-coupon-list></app-coupon-list>

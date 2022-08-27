@@ -4,9 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MoviesRoutingModule } from './movies-routing.module';
 import { MoviesComponent } from './movies.component';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchComponent } from './feature-search/search/search.component';
-
 
 @NgModule({
   declarations: [
@@ -16,7 +15,8 @@ import { SearchComponent } from './feature-search/search/search.component';
   imports: [
     CommonModule,
     MoviesRoutingModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class MoviesModule { }

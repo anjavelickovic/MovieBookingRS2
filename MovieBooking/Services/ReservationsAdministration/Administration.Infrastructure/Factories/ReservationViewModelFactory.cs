@@ -15,15 +15,18 @@ namespace Administration.Infrastructure.Factories
         {
             var reservationVM = new ReservationViewModel();
             reservationVM.Id = reservation.Id;
-            reservationVM.BuyerId = reservation.BuyerId;
             reservationVM.BuyerUsername = reservation.BuyerUsername;
 
+            int total = 0;
+
             var tickets = new List<TicketViewModel>();
-            foreach (var ticket in tickets)
+            foreach (var ticket in reservation.TicketReservations)
             {
                 var ticketVM = new TicketViewModel();
                 ticketVM.Id = ticket.Id;
                 ticketVM.ProjectionId = ticket.ProjectionId;
+                ticketVM.ProjectionDate = ticket.ProjectionDate;
+                ticketVM.ProjectionTerm = ticket.ProjectionTerm;
                 ticketVM.MovieTitle = ticket.MovieTitle;
                 ticketVM.MovieId = ticket.MovieId;
                 ticketVM.Price = ticket.Price;
@@ -31,8 +34,12 @@ namespace Administration.Infrastructure.Factories
                 ticketVM.TheaterHallName = ticket.TheaterHallName;
                 ticketVM.NumberOfTickets = ticket.NumberOfTickets;
 
+                total += ticket.Price * ticket.NumberOfTickets;
+
                 tickets.Add(ticketVM);
             }
+
+            reservationVM.TotalPrice = total;
 
             reservationVM.Tickets = tickets;
             return reservationVM;

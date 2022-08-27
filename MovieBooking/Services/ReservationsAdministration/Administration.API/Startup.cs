@@ -31,6 +31,15 @@ namespace Administration.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
+            });
+
             services.AddApplicationServices();
             services.AddInfrastructureServices(Configuration);
 
@@ -48,7 +57,7 @@ namespace Administration.API
                     {
                         c.ConfigureConsumer<ReservationBasketCheckoutConsumer>(ctx);
                     });
-                });
+                }); 
             });
             services.AddMassTransitHostedService();
 
@@ -68,6 +77,9 @@ namespace Administration.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Administration.API v1"));
             }
+
+            // CORS
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TheaterHalls.API.Entities;
 using TheaterHalls.API.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheaterHalls.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class TheaterHallController: ControllerBase

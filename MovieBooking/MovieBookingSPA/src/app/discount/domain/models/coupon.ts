@@ -1,5 +1,6 @@
 export interface ICoupon {
-    id : string
+    id : number,
+    movieId : string,
     movieName : string,
     amount : number,
     creationDate : Date,

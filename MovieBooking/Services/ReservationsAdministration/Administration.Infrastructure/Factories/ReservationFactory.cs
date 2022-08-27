@@ -14,11 +14,11 @@ namespace Administration.Infrastructure.Factories
     {
         public Reservation Create(CreateReservationCommand command)
         {
-            var reservation = new Reservation(command.BuyerId, command.BuyerUsername, new PhoneNumber(command.AreaCode, command.Number), command.Email);
+            var reservation = new Reservation(command.BuyerUsername, new PhoneNumber(command.AreaCode, command.Number), command.Email);
 
             foreach(var ticket in command.Tickets)
             {
-                reservation.AddTicketReservation(ticket.ProjectionId, ticket.MovieTitle, ticket.MovieId, ticket.TheaterHallId, ticket.TheaterHallName, ticket.Price, ticket.NumberOfTickets);
+                reservation.AddTicketReservation(ticket.ProjectionId, ticket.ProjectionDate, ticket.ProjectionTerm, ticket.MovieTitle, ticket.MovieId, ticket.TheaterHallId, ticket.TheaterHallName, ticket.Price, ticket.NumberOfTickets);
             }
 
             return reservation;

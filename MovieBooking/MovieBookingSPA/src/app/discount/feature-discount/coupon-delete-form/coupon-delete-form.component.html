@@ -5,31 +5,34 @@
 
 <ng-template #mymodal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Create new coupon</h4>            
+        <h4 class="modal-title" id="modal-basic-title">Delete coupon</h4>            
 
-        <button type="button" class="close" aria-label="Close" (click)="close()">
+        <button class="btn btn-primary" class="close" aria-label="Close" (click)="close()">
             <span aria-hidden="true">×</span>
         </button>
     </div>
 
     <div class="modal-body">
 
-        <p> Please insert id for movie</p>
-
-        <form [formGroup]="couponForm" class="form">
-            <div class="form-group">
-                <label class="form-label">id</label>
-                <input type="text" formControlName="id" class="form-control">
-
-                <span *ngIf="showFormErrors && id?.errors?.['required']" class="error">
-                    id is required
-                </span>    
-            </div>
+        <form [formGroup]="couponForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+            <div class="form-group flex-column">
+                <label for="movieName">Select movie</label>
+                <select
+                    class="custom-select mb-3"
+                    formControlName="movieName">
+                        <option *ngFor="let movie of movies" [ngValue]="movie.title">
+                            {{ movie.title }}
+                        </option>
+                </select>
+                <span *ngIf="showFormErrors && movieName?.errors?.['required']" class="error">
+                    Movie is required
+                </span>
+           </div>
         </form>
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-outline-dark" (click)="onCouponDelete()">Delete coupon</button>
+        <button class="btn btn-primary" (click)="onCouponDelete()">Delete coupon</button>
     </div>
 
 </ng-template>

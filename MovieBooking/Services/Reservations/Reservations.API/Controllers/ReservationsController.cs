@@ -11,9 +11,12 @@ using Reservations.API.GrpcServices;
 using Reservations.API.Repositories;
 using EventBus.Messages.Events;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reservations.API.Controllers
 {
+
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ReservationsController : ControllerBase
@@ -55,12 +58,34 @@ namespace Reservations.API.Controllers
         [HttpPost("[action]/{username}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ReservationBasket>> AddReservation(string username, [FromBody] Reservation reservation)
         {
-            try
+            var changeProjection = true;
+            var basket = await _repository.GetReservations(username);
+            basket = basket ?? new ReservationBasket(username);
+
+            foreach (var reservationsEntry in basket.Reservations)
+            {
+                foreach (var entry in reservationsEntry.Value)
+                {
+                    if (entry.Key.Equals(reservation.ProjectionId))
+                    {
+                        changeProjection = false;
+                    }
+                }
+            }
+
+            if (!changeProjection)
+            {
+                return BadRequest("You can not reserve more seats for same projection. Go into reservations and updated it.") ;
+            }
+
+                try
             {
                 var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
-                reservation.Price -= coupon.Amount;
+
+                reservation.Price -= reservation.Price * coupon.Amount/100;
 
             }
             catch (RpcException e)
@@ -69,13 +94,14 @@ namespace Reservations.API.Controllers
             }
             try
             {
-                var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
-                var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, reservation.NumberOfTickets);
-                if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
-                {
-                    _logger.LogInformation("There is no enough seats");
-                    return BadRequest(null);
-                }
+                    var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
+                    var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, reservation.NumberOfTickets);
+                    if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
+                    {
+                        _logger.LogInformation("There is no enough seats for this projection");
+                        return NotFound("There is no enough seats for this projection");
+                    }
+                
             }
             catch(RpcException e)
             {
@@ -85,7 +111,7 @@ namespace Reservations.API.Controllers
             return Ok(await _repository.AddReservation(username, reservation));
         }
 
-        [HttpPut("[action]/{username}")]
+        [HttpPut("{username}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ReservationBasket>> UpdateReservations(string username, [FromBody] Reservation reservation)
@@ -93,7 +119,8 @@ namespace Reservations.API.Controllers
             try
             {
                 var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
-                reservation.Price -= coupon.Amount;
+
+                reservation.Price -= reservation.Price * coupon.Amount/100;
 
             }
             catch (RpcException e)
@@ -111,7 +138,7 @@ namespace Reservations.API.Controllers
                 if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
                 {
                     _logger.LogInformation("There is no enough seats");
-                    return BadRequest(null);
+                    return BadRequest();
                 }
             }
             catch (RpcException e)
@@ -205,7 +232,7 @@ namespace Reservations.API.Controllers
             // Remove the basket
             await _repository.DeleteReservations(basketCheckout.BuyerUsername);
 
-            return Accepted();
+            return Accepted(); 
         }
 
     }

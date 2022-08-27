@@ -17,3 +17,18 @@
     padding-right: 20px;
     padding-bottom: 10px;
   }
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+span.error {
+  font-size: 11px;
+  color: red;
+}
+
+span.msg {
+  font-size: 11px;
+  color: blue;
+}
