@@ -32,7 +32,7 @@
         </div>
 
         <div class="form-check" style="display: inline; float:right; margin-top: 10px" title="Include upcoming movies into search">
-          <input class="form-check-input" type="checkbox" value="" id="upcomingMovieCheckout" (click)="onCheckboxChange()" checked>
+          <input class="form-check-input" type="checkbox" value="" id="upcomingMovieCheckout" (click)="onCheckboxChange()" [checked]="includeUpcomingMovies">
           <label class="form-check-label" for="upcomingMovieCheckout">
             Upcoming
           </label>
@@ -98,4 +98,4 @@
       </div>
     </ng-container>
   
-  </div>
+</div>
