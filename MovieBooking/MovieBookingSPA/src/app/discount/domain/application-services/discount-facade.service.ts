@@ -12,8 +12,8 @@ export class DiscountFacadeService {
 
   constructor(private discountService : DiscountService) { }
 
-  public createDiscount(id : string, movieName : string, amount : number) : Observable<ICreateCoupon>{
-    const coupon : ICreateCoupon = {id, movieName, amount};
+  public createDiscount(movieId : string, movieName : string, amount : number) : Observable<ICreateCoupon>{
+    const coupon : ICreateCoupon = {movieId, movieName, amount};
 
     return this.discountService.createDiscount(coupon).pipe(
       catchError((err) => {
@@ -31,8 +31,8 @@ export class DiscountFacadeService {
     return this.discountService.deleteDiscount(id);
   }
 
-  public updateDiscount(id : string, movieName : string, amount : number) : Observable<boolean> {
-    const coupon : ICreateCoupon = {id, movieName, amount};
+  public updateDiscount(movieId : string, movieName : string, amount : number) : Observable<boolean> {
+    const coupon : ICreateCoupon = {movieId, movieName, amount};
 
     return this.discountService.updateDiscount(coupon).pipe(
       catchError((err) => {

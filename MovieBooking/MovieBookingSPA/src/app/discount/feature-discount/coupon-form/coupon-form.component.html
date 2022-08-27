@@ -14,22 +14,20 @@
 
     <div class="modal-body">
         <form [formGroup]="couponForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
-            <div class="form-group">
-                <label class="form-label">id</label>
-                <input type="text" formControlName="id" class="form-control">
-
-            <span *ngIf="showFormErrors && id?.errors?.['required']" class="error">
-                id is required
-            </span>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">movie name</label>
-                <input type="text" formControlName="movieName" class="form-control">
-
-            <span *ngIf="showFormErrors && movieName?.errors?.['required']" class="error">
-                Movie name is required
-            </span>
+            <div class="form-group flex-column">
+                <label for="movieId">Select movie</label>
+                <select
+                    class="custom-select mb-3"
+                    (change)="changeMovie($event)"
+                    id="movieId"
+                    formControlName="movieId">
+                        <option *ngFor="let movie of movies" [ngValue]="movie.id">
+                            {{ movie.title }}
+                        </option>
+                </select>
+                <span *ngIf="showFormErrors && movieId?.errors?.['required']" class="error">
+                    Movie is required
+                </span>
             </div>
 
             <div class="form-group">

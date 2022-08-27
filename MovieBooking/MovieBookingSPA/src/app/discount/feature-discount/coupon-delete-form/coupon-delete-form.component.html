@@ -14,17 +14,20 @@
 
     <div class="modal-body">
 
-        <p> Please insert id for movie</p>
-
-        <form [formGroup]="couponForm" class="form">
-            <div class="form-group">
-                <label class="form-label">id</label>
-                <input type="text" formControlName="id" class="form-control">
-
-                <span *ngIf="showFormErrors && id?.errors?.['required']" class="error">
-                    id is required
-                </span>    
-            </div>
+        <form [formGroup]="couponForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
+            <div class="form-group flex-column">
+                <label for="movieName">Select movie</label>
+                <select
+                    class="custom-select mb-3"
+                    formControlName="movieName">
+                        <option *ngFor="let movie of movies" [ngValue]="movie.title">
+                            {{ movie.title }}
+                        </option>
+                </select>
+                <span *ngIf="showFormErrors && movieName?.errors?.['required']" class="error">
+                    Movie is required
+                </span>
+           </div>
         </form>
     </div>
 
