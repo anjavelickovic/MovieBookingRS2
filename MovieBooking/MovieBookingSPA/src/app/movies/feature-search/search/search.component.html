@@ -69,8 +69,12 @@
 
               <div> {{movie.plot}} </div>
 
-              <div style="font-size: 13px; margin-top: 10px">
-                Director:&nbsp;<a routerLink="/movies/search/director/{{movie.director}}" [queryParams]="getQueryParameters()">{{movie.director}}</a>
+              <div style="font-size: 13px; ">
+                Directed by:
+                <div *ngFor="let director of movie.directors; let i = index" style="display: inline;">
+                  <a routerLink="/movies/search/director/{{director}}" [queryParams]="getQueryParameters()">{{director}}</a>
+                  <span *ngIf="i+1 !== movie.directors.length">,&nbsp;</span>
+                </div>
               </div>
 
               <div style="font-size: 13px; ">
@@ -100,13 +104,13 @@
 
     <nav *ngIf="movies !== null" style="margin-top: 10px">
       <ul class="pagination justify-content-center">
-        <li class="page-item">
+        <li *ngIf="page !== 1" class="page-item">
           <a class="page-link" (click)="firstPage()">First page</a>
         </li>
         <li *ngIf="page !== 1" class="page-item"><a class="page-link" (click)="previousPage()">{{page-1}}</a></li>
         <li class="page-item"><a class="page-link active">{{page}}</a></li>
         <li *ngIf="page !== numberOfPages()" class="page-item"><a class="page-link" (click)="nextPage()">{{page+1}}</a></li>
-        <li class="page-item">
+        <li *ngIf="page !== numberOfPages()" class="page-item">
           <a class="page-link" (click)="lastPage()">Last page</a>
         </li>
       </ul>

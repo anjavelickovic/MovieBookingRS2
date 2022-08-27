@@ -107,14 +107,15 @@ namespace Movies.API.Helpers
 				jo.Add(new JProperty("Genres", genres.Split(", ")));
 			}
 
-			var director = data.Property("Director").ToObject<string>();
-			if (director == "N/A")
+			var directors = data.Property("Director").ToObject<string>();
+			if (directors == "N/A")
 			{
-				jo.Add("Director", null);
+				jo.Add("Directors", null);
 			}
 			else
 			{
-				jo.Add("Director", director);
+				Console.WriteLine(directors);
+				jo.Add(new JProperty("Directors", directors.Split(", ")));
 			}
 
 			var actors = data.Property("Actors").ToObject<string>();

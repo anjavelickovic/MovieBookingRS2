@@ -33,12 +33,12 @@
                     </tr>
 
                     <tr>
-                        <td>Director</td>
-                        <td>{{ movieDetails.director === null ? "unknown" : movieDetails.director }}</td>
+                        <td>Directed by</td>
+                        <td>{{ movieDetails.directors === null ? "unknown" : movieDetails.directors.join(', ') }}</td>
                     </tr>
 
                     <tr>
-                        <td>Main Actors</td>
+                        <td>Main actors</td>
                         <td>{{ movieDetails.mainActors === null ? "unknown" : movieDetails.mainActors.join(', ') }}</td>
                     </tr>
 

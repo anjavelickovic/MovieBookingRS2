@@ -5,7 +5,7 @@ export interface IMovieDetails {
     released: string | null;
     runtime: string | null;
     genres: string[] | null;
-    director: string | null;
+    directors: string[] | null;
     mainActors: string[] | null;
     plot: string | null;
     languages: string[] | null;
