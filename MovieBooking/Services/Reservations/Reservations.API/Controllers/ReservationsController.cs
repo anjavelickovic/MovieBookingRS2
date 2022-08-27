@@ -11,9 +11,12 @@ using Reservations.API.GrpcServices;
 using Reservations.API.Repositories;
 using EventBus.Messages.Events;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reservations.API.Controllers
 {
+
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ReservationsController : ControllerBase
