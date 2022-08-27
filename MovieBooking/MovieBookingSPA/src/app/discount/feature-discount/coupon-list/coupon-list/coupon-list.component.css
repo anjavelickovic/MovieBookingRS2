@@ -1,7 +1,6 @@
 table {
     border-collapse: collapse;
     width: 100%;
-    font-family: 'Helvetica';
     font-size: large;
   }
 
@@ -9,8 +8,6 @@ td {
     width: 30%;
 }
 
-
 thead {
-  background-color:lightskyblue;
   font-size: larger;
 }

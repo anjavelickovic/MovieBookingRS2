@@ -1,11 +1,10 @@
-table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: large;
-    font-family: 'Helvetica';
-  }
-
-td {
-    width: 50%;
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
+  grid-auto-rows: auto;
+  padding: 10px;
 }
 
+table{
+  border:1px solid #000;
+}

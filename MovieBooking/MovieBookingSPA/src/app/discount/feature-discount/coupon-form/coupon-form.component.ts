@@ -38,7 +38,7 @@ export class CouponFormComponent implements OnInit {
     
     this.couponForm = this.formBuilder.group({
       movieId: ['', [Validators.required]],
-      amount: ['', [Validators.required, Validators.min(1)]]
+      amount: ['', [Validators.required, Validators.min(1), Validators.max(100)]]
     });  
   }
 

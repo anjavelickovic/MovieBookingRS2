@@ -1,12 +1,11 @@
     <div class="form-group">
-       <br><br>
         <div class="mx-auto" style="width: 98%;">
-            <table class="table table-hover">
+            <table class="table">
             <thead>
                 <tr>
                   <th scope="col">id</th>
                   <th scope="col">movie name</th>
-                  <th scope="col">amount</th>
+                  <th scope="col">amount(%)</th>
                 </tr>
               </thead>
           
@@ -14,12 +13,11 @@
                 <tr *ngFor="let coupon of coupons" style="padding-left:15px; padding-top: 15px;">
                     <td> {{coupon.id}} </td>
                     <td> {{coupon.movieName}} </td>
-                    <td> {{coupon.amount}} </td>
+                    <td> {{coupon.amount}}% </td>
                 </tr>
 
             </tbody>
 
         </table>
         </div>
-
     </div>

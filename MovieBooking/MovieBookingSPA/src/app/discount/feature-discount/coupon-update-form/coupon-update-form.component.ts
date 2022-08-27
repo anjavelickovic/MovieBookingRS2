@@ -38,7 +38,7 @@ export class CouponUpdateFormComponent implements OnInit {
 
     this.couponForm = new FormGroup({
       movieId : new FormControl("", [Validators.required]),
-      amount : new FormControl("", [Validators.required, Validators.min(1)])
+      amount : new FormControl("", [Validators.required, Validators.min(1), Validators.max(100)])
     });
   }
 
