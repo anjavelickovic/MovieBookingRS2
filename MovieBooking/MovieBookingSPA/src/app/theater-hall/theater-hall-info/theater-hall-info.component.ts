@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { of, Subscription } from 'rxjs';
+import { of, switchMap, Subscription } from 'rxjs';
 import { TheaterHallFacadeService } from '../domain/application-services/theater-hall-facade.service';
 import { ICreateTheaterHallRequest } from '../domain/models/create-theater-hall-request.model';
 import { ITheaterHall } from '../domain/models/theater-hall.model';
@@ -26,15 +26,16 @@ export class TheaterHallInfoComponent implements OnInit {
               private router: Router,
               private modalService: NgbModal,
               private formBuilder: UntypedFormBuilder) { 
-    this.paramMapSub = this.route.paramMap.subscribe(params => {
+    this.paramMapSub = this.route.paramMap.pipe(
+      switchMap((params) => {
       const theaterHallId = params.get('theaterHallId');
-      this.theaterHallFacadeService.getTheaterHall(theaterHallId)
-      .subscribe(theaterHall => {
+      return this.theaterHallFacadeService.getTheaterHall(theaterHallId);
+    })
+    ).subscribe(theaterHall => {
         this.theaterHall = theaterHall;
         this.showFormErrors = true;
         this.showServerError = false;
         this.resetForm();
-      })      
     });
   }
 

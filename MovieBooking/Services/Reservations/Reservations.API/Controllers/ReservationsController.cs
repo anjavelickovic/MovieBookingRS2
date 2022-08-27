@@ -11,9 +11,12 @@ using Reservations.API.GrpcServices;
 using Reservations.API.Repositories;
 using EventBus.Messages.Events;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Reservations.API.Controllers
 {
+
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ReservationsController : ControllerBase
@@ -81,7 +84,7 @@ namespace Reservations.API.Controllers
                 try
             {
                 var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
-                reservation.Price -= coupon.Amount;
+                reservation.Price -= reservation.Price * coupon.Amount/100;
 
             }
             catch (RpcException e)
@@ -115,7 +118,7 @@ namespace Reservations.API.Controllers
             try
             {
                 var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
-                reservation.Price -= coupon.Amount;
+                reservation.Price -= reservation.Price * coupon.Amount/100;
 
             }
             catch (RpcException e)

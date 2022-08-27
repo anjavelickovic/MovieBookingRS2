@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { of, Subscription } from 'rxjs';
+import { of, Subscription, switchMap } from 'rxjs';
 import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
 import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { TheaterHallFacadeService } from 'src/app/theater-hall/domain/application-services/theater-hall-facade.service';
@@ -38,24 +38,25 @@ export class ProjectionInfoComponent implements OnInit {
               private formBuilder: UntypedFormBuilder,
               private theaterHallFacadeService: TheaterHallFacadeService,
               private moviesFacadeService: MoviesFacadeService) { 
-    this.paramMapSub = this.route.paramMap.subscribe(params => {
-      const projectionId = params.get('projectionId');
-      this.projectionFacadeService.getProjection(projectionId)
-      .subscribe(projection => {
+    this.paramMapSub = this.route.paramMap.pipe(
+      switchMap((params) => {
+        const projectionId = params.get('projectionId');
+        return this.projectionFacadeService.getProjection(projectionId);
+      }),
+      switchMap((projection) => {
         this.projection = projection;
         console.log(projection);
         this.showFormErrors = true;
         this.showServerError = false;
-        this.theaterHallFacadeService.getTheaterHalls()
-          .subscribe(theaterHalls => {
-            this.theaterHalls = theaterHalls;
-        });
-        this.moviesFacadeService.getMoviesDetails()
-          .subscribe(movies => {
-            this.movies = movies;
-        });
-        this.resetForm();
-      })      
+        return this.theaterHallFacadeService.getTheaterHalls();
+      }),
+      switchMap((theaterHalls) => {
+        this.theaterHalls = theaterHalls;
+        return this.moviesFacadeService.getMoviesDetails();
+      })
+    ).subscribe(movies => {
+        this.movies = movies;
+        this.resetForm();      
     });
   }
 
@@ -162,32 +163,32 @@ export class ProjectionInfoComponent implements OnInit {
     if(data.theaterHallTerm.split(" ").length > 2){
       term = data.theaterHallTerm.split(" ")[1] + " " + data.theaterHallTerm.split(" ")[2];
     }
-    this.theaterHallFacadeService.getTheaterHall(thId)
-      .subscribe(thaterhall => {
+    this.theaterHallFacadeService.getTheaterHall(thId).pipe(
+      switchMap((thaterhall) => {
         this.theaterHall = thaterhall;
         console.log(this.theaterHall.name);
-        this.moviesFacadeService.getMovieDetails(mId)
-          .subscribe(movieDetails => {
-            this.movie = movieDetails;
-            console.log(this.movie.title);
-            this.projectionFacadeService.updateProjection(this.projection.id, this.movie.id, this.movie.title, this.movie.runtime, 
-              this.theaterHall.id, this.theaterHall.name, data.projectionDate, term, 
-              this.theaterHall.numberOfSeats, 0, data.price)
-             .subscribe({
-                error: (err) => {
-                  this.showServerError = true;
-                  console.log(err);
-                  return of(false);
-                },
-                complete: () => {
-                  window.alert("Projection updated");
-                  this.projectionForm.reset();
-                  this.modalReference.close();
-                  window.location.reload();
-                }
-              });
-        });
+        return this.moviesFacadeService.getMovieDetails(mId);
+      }),
+      switchMap((movieDetails) => {
+        this.movie = movieDetails;
+        console.log(this.movie.title);
+        return this.projectionFacadeService.updateProjection(this.projection.id, this.movie.id, this.movie.title, this.movie.runtime, 
+              this.theaterHall.id, this.theaterHall.name, data.projectionDate, term, this.theaterHall.numberOfSeats, 0, data.price);
+      })
+    ).subscribe({
+        error: (err) => {
+          this.showServerError = true;
+          console.log(err);
+          return of(false);
+        },
+        complete: () => {
+          window.alert("Projection updated");
+          this.projectionForm.reset();
+          this.modalReference.close();
+          window.location.reload();
+        }
     });
+
   }
 
   public open(content) {

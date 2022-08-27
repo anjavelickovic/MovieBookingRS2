@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Projections.Common.Entities;
 using Projections.Common.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Projections.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProjectionController : ControllerBase
@@ -53,6 +55,7 @@ namespace Projections.API.Controllers
             return Ok(projection);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost()]
         [ProducesResponseType(typeof(IEnumerable<Projection>), StatusCodes.Status201Created)]
         public async Task<ActionResult<Projection>> CreateProjection([FromBody] Projection projection)
@@ -62,6 +65,7 @@ namespace Projections.API.Controllers
             return CreatedAtRoute("GetProjection", new { id = projection.Id }, projection);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut()]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateProjection([FromBody] Projection projection)
@@ -69,6 +73,7 @@ namespace Projections.API.Controllers
             return Ok(await _repository.UpdateProjection(projection));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProjection(string id)
@@ -76,6 +81,7 @@ namespace Projections.API.Controllers
             return Ok(await _repository.DeleteProjection(id));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]/{movieTitle}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProjectionsByMovieTitle(string movieTitle)
@@ -83,6 +89,7 @@ namespace Projections.API.Controllers
             return Ok(await _repository.DeleteProjectionsByMovieTitle(movieTitle));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]/{date}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProjectionsByDate(string date)
@@ -90,6 +97,7 @@ namespace Projections.API.Controllers
             return Ok(await _repository.DeleteProjectionsByDate(date));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete()]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProjections()
