@@ -81,7 +81,7 @@ namespace Reservations.API.Controllers
                 try
             {
                 var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
-                reservation.Price -= coupon.Amount;
+                reservation.Price -= reservation.Price*coupon.Amount/100;
 
             }
             catch (RpcException e)
@@ -115,7 +115,7 @@ namespace Reservations.API.Controllers
             try
             {
                 var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
-                reservation.Price -= coupon.Amount;
+                reservation.Price -= reservation.Price*coupon.Amount/100;
 
             }
             catch (RpcException e)
