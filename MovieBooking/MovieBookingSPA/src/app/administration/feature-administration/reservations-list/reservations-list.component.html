@@ -2,7 +2,7 @@
     <br><br>
      <div style="width: 98%; ">
          <div style="padding: 10px;">
-                <table *ngFor="let reservation of reservations.reverse(); let i = index" style="width: 100%;">
+                <table *ngFor="let reservation of reservations.reverse(); let i = index" style="padding:5px; width: 100%;">
                     <td style="padding: 10px;">
                         <h3> Reservation ID: {{reservation.id}} </h3>
                         <h3> TotalPrice: {{reservation.totalPrice}} </h3>
@@ -11,34 +11,30 @@
                             <h2> Tickets : </h2>
 
                             <div class="wrapper" style="gap:5px">
-                                <div class="box" *ngFor="let ticket of reservation.tickets" style="border: 1px gray; box-sizing: border-box;">
-                                    <table style="border-top: 8px solid gray;">
+                                <div class="box" *ngFor="let ticket of reservation.tickets" style="border: 1px gray">
+                                    <table style="border-top: 8px solid gray; width:100%; height: 100%">
                                         <tr>
-                                            <td> Title : </td>
+                                            <td> Title: </td>
                                             <td> {{ticket.movieTitle}} </td>
                                         </tr>
                                         <tr>
-                                            <td> Date :</td>
+                                            <td> Date:</td>
                                             <td> {{ticket.projectionDate}}</td>
                                         </tr>
                                         <tr>
-                                            <td> Term :</td>
+                                            <td> Term:</td>
                                             <td> {{ticket.projectionTerm}}</td>
                                         </tr>
                                         <tr>
-                                            <td> Movie ID :</td>
-                                            <td> {{ticket.movieId}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td> Hall name :</td>
+                                            <td> Hall name:</td>
                                             <td> {{ticket.theaterHallName}}</td>
                                         </tr>
                                         <tr>
-                                            <td> Price :</td>
+                                            <td> Price:</td>
                                             <td> {{ticket.price}}</td>
                                         </tr>
                                         <tr>
-                                            <td> Number of tickets :</td>
+                                            <td> Number of tickets:</td>
                                             <td> {{ticket.numberOfTickets}}</td>
                                         </tr>
                                         
