@@ -1,24 +1,19 @@
-.button {
-  width: 160px;
-  height: 60px;
-  font-family: 'Helvetica';
-  font-size: 17px;
-  text-transform: uppercase;
-  letter-spacing: 2.5px;
-  font-weight: 500;
-  color: #000;
-  background-color: rgb(161, 232, 245);
-  border: none;
-  border-radius: 25px;
-  box-shadow: 0px 8px 15px rgba(7, 118, 209, 0.767);
-  transition: all 0.3s ease 0s;
-  cursor: pointer;  
-  outline: none;
- }
-  
- .button:hover {
-  background-color: rgba(23, 165, 248, 0.918);
-  box-shadow: 0px 15px 20px rgba(64, 140, 255, 0.726);
-  color: #fff;
-  transform: translateY(-7px);
- }
+span.error {
+    font-size: 11px;
+    color: red;
+}
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.pos{
+    position: absolute; 
+    top:0; 
+    right:0;
+    margin-top: 20px; 
+    margin-right: 20px;
+}

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ICoupon } from '../models/coupon';
 import { ICreateCoupon } from '../models/create-coupon';
+import { IUpdateCoupon } from '../models/update-coupon';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class DiscountService {
     return this.httpClient.get<ICoupon[]>(this.discountUrl);
   }
 
-  public updateDiscount(coupon : ICreateCoupon) : Observable<boolean> {
+  public updateDiscount(coupon : IUpdateCoupon) : Observable<boolean> {
+    console.log("evo me");
     return this.httpClient.put<boolean>(this.discountUrl, coupon);
   }
 
