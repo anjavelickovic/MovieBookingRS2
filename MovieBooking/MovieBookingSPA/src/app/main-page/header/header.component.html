@@ -5,7 +5,7 @@
             <h3 *ngIf="isLoginOrRegisterPage()" style="margin-left: 0px"><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
         </div>
             
-        <div class="form-group wide" *ngIf="isMainPage()" style="margin-right:5px">
+        <div class="form-group wide" *ngIf="isMainPage() || isSearchPage()" style="margin-right:5px">
             <input 
             id="searchBarWide" 
             type="text" 
@@ -19,7 +19,7 @@
             <a class="nav-link" (click)="advancedSearch()" style="font-size: 10px; color:rgb(152, 207, 232); float: right;">Advanced search</a>
         </div>
 
-        <div class="form-group narrow" *ngIf="isMainPage()" style="margin-right:5px">
+        <div class="form-group narrow" *ngIf="isMainPage() || isSearchPage()" style="margin-right:5px">
             <input 
             id="searchBarNarrow" 
             type="text" 
@@ -33,7 +33,7 @@
             <a class="nav-link" (click)="advancedSearch()" style="font-size: 10px; color:rgb(152, 207, 232); float: right;">Advanced search</a>
         </div>
        
-        <select *ngIf="isMainPage()" name="criteria" id="criteria" class="form-select"
+        <select *ngIf="isMainPage() || isSearchPage()" name="criteria" id="criteria" class="form-select"
                 [(ngModel)]="searchCriteria" (change)="changeSearchCriteriaPlaceholderText()" [value] = "searchCriteria">
             <option value="id">Id</option>
             <option value="title">Title</option>

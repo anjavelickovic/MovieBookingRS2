@@ -65,6 +65,10 @@ export class HeaderComponent implements OnInit {
     return this.router.url === '/main';
   }
 
+  public isSearchPage(): boolean{
+    return this.router.url.includes("/search");
+  }
+
   public isLoginOrRegisterPage(): boolean{
     return this.router.url === '/identity/login' || this.router.url === '/identity/register';
   }
