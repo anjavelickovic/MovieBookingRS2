@@ -16,7 +16,7 @@ import { IMovieDetails } from './domain/models/movie-details';
 export class MoviesComponent implements OnInit {
   
   public appState: IAppState;
-  public movieDetails: IMovieDetails;
+  public movieDetails: IMovieDetails = null;
 
   constructor(private movieService: MoviesFacadeService,
               private appStateService: AppStateService,
@@ -34,8 +34,10 @@ export class MoviesComponent implements OnInit {
     this.movieService.getMovieDetails(movieId).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
-        if(err.status === 404)
+        if(err.status === 404){
           window.alert("No such movie in database");
+          router.navigateByUrl('/main');
+        }
         else
           window.alert("Internal server error");
         return of(false);
