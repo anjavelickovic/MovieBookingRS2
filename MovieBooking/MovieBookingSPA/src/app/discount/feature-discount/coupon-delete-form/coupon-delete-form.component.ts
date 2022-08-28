@@ -33,6 +33,7 @@ export class CouponDeleteFormComponent implements OnInit {
     this.moviesFacadeService.getMoviesDetails()
       .subscribe(movies => {
         this.movies = movies;
+        this.movies.sort((movie1, movie2) => movie1.title.localeCompare(movie2.title));
       });       
 
       this.couponForm = this.formBuilder.group({
