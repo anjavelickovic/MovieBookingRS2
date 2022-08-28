@@ -32,8 +32,6 @@ export class SearchComponent implements OnInit {
   this.activatedRouter.paramMap.pipe( 
     switchMap((params) => {
       this.searchCriteria = params.get('searchCriteria');
-      if(this.searchCriteria == null)
-        this.searchCriteria = "advanced-search";
       this.userSearch = params.get('userSearch');
       this.showMovies();
       return this.activatedRouter.queryParams;
@@ -83,9 +81,6 @@ export class SearchComponent implements OnInit {
         return;
       case "imdbVotes":
         this.handleSearchByImdbVotes();
-        return;
-      case "advanced-search":
-        window.alert("advanced search");
         return;
       default:
         window.alert("Error - bad URL");

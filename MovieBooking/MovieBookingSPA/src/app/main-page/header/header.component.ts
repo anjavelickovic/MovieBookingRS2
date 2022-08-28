@@ -56,11 +56,6 @@ export class HeaderComponent implements OnInit {
       this.resetSearchParameters();
     }
   }
-  
-  public advancedSearch(): void{
-    this.router.navigate(['/movies', 'search', 'advanced-search']);
-    this.resetSearchParameters();
-  }
 
   public isMainPage(): boolean{
     return this.router.url === '/main';
