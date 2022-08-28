@@ -1,1 +1,121 @@
-<p>search works!</p>
+<div>
+
+    <div style="text-align: left; margin: 10px;">
+      
+        <div style="display: block">
+          Sort by:
+        </div>
+
+        <select name="criteria" id="criteria" class="form-select" style="width:auto; display: inline"
+          [(ngModel)]="sortBy" (change)="onSelectChange()" [value] = "sortBy">
+          <option value="title">Title</option>
+          <option value="year">Year</option>
+          <option value="runtime">Runtime</option>
+          <option value="imdbRating">IMDb Rating</option>
+          <option value="imdbVotes">IMDb Votes</option>
+        </select>
+
+        <span *ngIf="!sortedAscending" class="sort" style="font-size: 30px; margin-left: 5px;" title="Sort ascending" (click)="toggleSort()">
+          <i class="fa fa-sort-asc" aria-hidden="true"></i>
+        </span>
+        <span *ngIf="sortedAscending" class="sort" style="font-size: 30px; margin-left: 5px;" title="Sort descending" (click)="toggleSort()">
+          <i class="fa fa-sort-desc" aria-hidden="true"></i>
+        </span>
+
+        <div id="btnContainer" style="display: inline; margin-left: 20px; float:right;">
+          <button [ngClass] = "activeButtonClass('list')" (click)="listView()" style="border-radius: 0">
+            <i class="fa fa-bars"></i> List
+          </button> 
+          <button [ngClass] = "activeButtonClass('grid')" (click)="gridView()" style="border-radius: 0">
+            <i class="fa fa-th" style="border-radius: 0"></i> Grid
+          </button>
+        </div>
+
+        <div class="form-check" style="display: inline; float:right; margin-top: 10px" title="Include upcoming movies into search">
+          <input class="form-check-input" type="checkbox" value="" id="upcomingMovieCheckout" (click)="onCheckboxChange()" [checked]="includeUpcomingMovies">
+          <label class="form-check-label" for="upcomingMovieCheckout">
+            Upcoming
+          </label>
+        </div>
+        
+    </div>
+
+    <ng-container *ngIf="listViewActive" >
+      <div class="flex-container" style="height: auto; width: auto; background-color: rgb(240, 240, 240); border-color:white" *ngFor="let movie of movies; let i = index">
+
+        <ng-container *ngIf="(includeUpcomingMovies || movie.imdbVotes !== null) && (page - 1)*NUMBER_OF_MOVIES_PER_PAGE_LIST_VIEW <= i && i < page * NUMBER_OF_MOVIES_PER_PAGE_LIST_VIEW" style="margin: 10px;">
+            <div>
+              <img [src]="movie.poster" (click)="moviePage(movie.id)" style="height: 200px; width: 140px"/>
+            </div>
+            <div>
+              <div>
+                <a routerLink="/movies/{{movie.id}}" [queryParams]="getQueryParameters()"><b class="title" style="font-size: 20px;">{{ movie.title }} ({{movie.year}})</b></a>&nbsp;
+                <i style="color: gray;">{{movie.imdbRating !== null ? movie.imdbRating + "/10" : "Upcoming"}}</i>
+              </div>
+
+              <div style="font-size: 13px; color: gray; margin-bottom: 10px">
+                <div *ngFor="let genre of movie.genres; let i = index" style="display: inline;">
+                  <a routerLink="/movies/search/genres/{{genre}}" [queryParams]="getQueryParameters()">{{genre}}</a>
+                  <span *ngIf="i+1 !== movie.genres.length">,&nbsp;</span>
+                </div>
+
+                <div *ngIf="movie.imdbVotes !== null" style="font-size: 13px; margin-top: 10px">
+                  <i class="fa fa-users" style="font-size: 18px;" title="IMDb votes" aria-hidden="true"></i>&nbsp;{{  movie.imdbVotes.toLocaleString('en-GB') }}
+                </div>
+              
+
+              
+              </div>
+
+              <div> {{movie.plot}} </div>
+
+              <div style="font-size: 13px; ">
+                Directed by:
+                <div *ngFor="let director of movie.directors; let i = index" style="display: inline;">
+                  <a routerLink="/movies/search/director/{{director}}" [queryParams]="getQueryParameters()">{{director}}</a>
+                  <span *ngIf="i+1 !== movie.directors.length">,&nbsp;</span>
+                </div>
+              </div>
+
+              <div style="font-size: 13px; ">
+                Starring:
+                <div *ngFor="let actor of movie.mainActors; let i = index" style="display: inline;">
+                  <a routerLink="/movies/search/mainActor/{{actor}}" [queryParams]="getQueryParameters()">{{actor}}</a>
+                  <span *ngIf="i+1 !== movie.mainActors.length">,&nbsp;</span>
+                </div>
+              </div>
+
+            </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+
+    <ng-container *ngIf="!listViewActive" >
+      <div id="imagesDIV" style="margin-top: 10px;">
+        <div class="item" *ngFor="let movie of movies; let i = index">
+          <div *ngIf="(includeUpcomingMovies || movie.imdbVotes !== null) && (page - 1)*NUMBER_OF_MOVIES_PER_PAGE_GRID_VIEW <= i && i < page * NUMBER_OF_MOVIES_PER_PAGE_GRID_VIEW">
+            <img [src]="movie.poster" (click)="moviePage(movie.id)"/>
+            <span class="caption">{{ movie.title }}</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <nav *ngIf="movies !== null" style="margin-top: 10px">
+      <ul class="pagination justify-content-center">
+        <li *ngIf="page !== 1" class="page-item">
+          <a class="page-link" (click)="firstPage()">First page</a>
+        </li>
+        <li *ngIf="page !== 1" class="page-item"><a class="page-link" (click)="previousPage()">{{page-1}}</a></li>
+        <li class="page-item"><a class="page-link active">{{page}}</a></li>
+        <li *ngIf="page !== numberOfPages()" class="page-item"><a class="page-link" (click)="nextPage()">{{page+1}}</a></li>
+        <li *ngIf="page !== numberOfPages()" class="page-item">
+          <a class="page-link" (click)="lastPage()">Last page</a>
+        </li>
+      </ul>
+    </nav>
+    
+    
+  
+</div>

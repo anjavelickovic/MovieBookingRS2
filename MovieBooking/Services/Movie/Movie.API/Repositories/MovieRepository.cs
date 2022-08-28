@@ -111,8 +111,16 @@ namespace Movies.API.Repositories
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByDirector(string director)
         {
-            var movies = await _movieContext.Movies.Find(movie => movie.Director.ToLower().Contains(director.ToLower())).ToListAsync();
-            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
+            var movieDirector = director.ToLower();
+            var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
+
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies.FindAll(movie => {
+                foreach (var director in movie.Directors)
+                    if (director.ToLower().Contains(movieDirector))
+                        return true;
+                return false;
+            }
+            ));
         }
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByMainActor(string mainActor)

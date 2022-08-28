@@ -1,7 +1,9 @@
 <div style="margin: 20px">
     <h3 style="color: rgb(50, 159, 209)">{{ appState.username }}'s profile
         <span class="h6">
-            <a [routerLink]="['changeuserinfo']">Edit profile</a>
+            <a [routerLink]="['changeuserinfo']">
+                <i title="Edit profile" class="fa fa-pencil-square-o" aria-hidden="true" style="font-size: 25px;color: rgb(50, 159, 209);text-decoration: none;"></i>
+            </a>
         </span>
     </h3>
     <table class="table table-bordered" style="border-color:rgb(152, 207, 232);width: 80%;">

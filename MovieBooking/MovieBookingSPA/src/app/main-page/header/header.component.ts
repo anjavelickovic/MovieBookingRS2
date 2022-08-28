@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticationFacadeService } from 'src/app/identity/domain/application-services/authentication-facade.service';
 import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 
@@ -45,7 +44,15 @@ export class HeaderComponent implements OnInit {
 
   public search(userSearch: string): void {
     if(this.correctFormat(userSearch)){
-      this.router.navigate(['/movies', 'search', this.searchCriteria, userSearch]);
+      this.router.navigate(['/movies', 'search', this.searchCriteria, userSearch], {
+        queryParams: {
+          sortBy: "imdbRating",
+          sortAscending: false,
+          listView: true,
+          includeUpcomingMovies: true,
+          page: 1
+        },
+      });
       this.resetSearchParameters();
     }
   }
@@ -57,6 +64,14 @@ export class HeaderComponent implements OnInit {
 
   public isMainPage(): boolean{
     return this.router.url === '/main';
+  }
+
+  public isSearchPage(): boolean{
+    return this.router.url.includes("/search");
+  }
+
+  public isLoginOrRegisterPage(): boolean{
+    return this.router.url === '/identity/login' || this.router.url === '/identity/register';
   }
 
   public changeSearchCriteriaPlaceholderText(): void {

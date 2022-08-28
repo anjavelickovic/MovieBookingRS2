@@ -14,7 +14,7 @@ namespace Movies.API.DTOs
         public string? Released { get; set; }
         public string? Runtime { get; set; }
         public string[]? Genres { get; set; }
-        public string? Director { get; set; }
+        public string[]? Directors { get; set; }
         public string[]? MainActors { get; set; }
         public string? Plot { get; set; }
         public string[]? Languages { get; set; }

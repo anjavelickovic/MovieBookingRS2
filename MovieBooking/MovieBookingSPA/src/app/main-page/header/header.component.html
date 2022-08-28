@@ -1,10 +1,11 @@
 <div style="background-color: rgb(50, 159, 209)">
     <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(50, 159, 209)">
         <div class="mx-auto" style="color:rgb(152, 207, 232);">
-            <h3><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
+            <h3 *ngIf="!isLoginOrRegisterPage()"><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
+            <h3 *ngIf="isLoginOrRegisterPage()" style="margin-left: 0px"><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
         </div>
             
-        <div class="form-group wide" *ngIf="isMainPage()" style="margin-right:5px">
+        <div class="form-group wide" *ngIf="isMainPage() || isSearchPage()" style="margin-right:5px">
             <input 
             id="searchBarWide" 
             type="text" 
@@ -18,7 +19,7 @@
             <a class="nav-link" (click)="advancedSearch()" style="font-size: 10px; color:rgb(152, 207, 232); float: right;">Advanced search</a>
         </div>
 
-        <div class="form-group narrow" *ngIf="isMainPage()" style="margin-right:5px">
+        <div class="form-group narrow" *ngIf="isMainPage() || isSearchPage()" style="margin-right:5px">
             <input 
             id="searchBarNarrow" 
             type="text" 
@@ -31,9 +32,8 @@
             (keyup.enter)="search(searchBarNarrow.value)">
             <a class="nav-link" (click)="advancedSearch()" style="font-size: 10px; color:rgb(152, 207, 232); float: right;">Advanced search</a>
         </div>
-
        
-        <select *ngIf="isMainPage()" name="criteria" id="criteria" class="form-select"
+        <select *ngIf="isMainPage() || isSearchPage()" name="criteria" id="criteria" class="form-select"
                 [(ngModel)]="searchCriteria" (change)="changeSearchCriteriaPlaceholderText()" [value] = "searchCriteria">
             <option value="id">Id</option>
             <option value="title">Title</option>
@@ -48,7 +48,8 @@
 
         <div style="text-align: center;  margin-right: 55px;"  *ngIf="!appState?.isEmpty()">
             <span (click)="profile()" type="button"  style="color:rgb(152, 207, 232); ">
-                {{ appState?.username }}
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    {{ appState?.username }}
             </span>
         </div>
     </nav>
