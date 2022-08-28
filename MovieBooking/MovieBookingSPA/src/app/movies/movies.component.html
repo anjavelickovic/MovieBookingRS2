@@ -10,7 +10,7 @@
             <div>
                 <img [src]="movieDetails.poster" style="width: 300px; height: 420px;">
             </div>
-            <div style="width: 600px">
+            <div class="movie-details">
                 <p style="text-align: justify;text-justify: inter-word">{{ movieDetails.plot }}</p>
                 
                 <table style="border-spacing: 50px 0;">
@@ -62,7 +62,7 @@
             </div>
 
             <div *ngIf = "movieDetails.trailer != null">
-                <iframe [src]="trailerConfiguration()" width="520" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
+                <iframe [src]="trailerConfiguration()" width="465" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
             </div>
             
         </div>

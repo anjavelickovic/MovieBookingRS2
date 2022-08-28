@@ -132,7 +132,7 @@ export class MoviesComponent implements OnInit {
   }
   
   public trailerConfiguration(){
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieDetails.trailer + "?autoplay=false&width=520");
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieDetails.trailer + "?autoplay=false&width=465");
   }
 
 }
