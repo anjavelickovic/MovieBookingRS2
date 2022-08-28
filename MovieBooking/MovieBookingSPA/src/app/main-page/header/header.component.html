@@ -15,7 +15,8 @@
             style="background-color: white;color: rgb(50, 159, 209);"
             autocomplete="off"
             #searchBarWide
-            (keyup.enter)="search(searchBarWide.value)">
+            [(ngModel)]="userSearch"
+            (keyup.enter)="search()">
         </div>
 
         <div class="form-group narrow" *ngIf="isMainPage() || isSearchPage()" style="margin-right:5px">
@@ -28,7 +29,8 @@
             style="background-color: white;color: rgb(50, 159, 209);"
             autocomplete="off"
             #searchBarNarrow
-            (keyup.enter)="search(searchBarNarrow.value)">
+            [(ngModel)]="userSearch"
+            (keyup.enter)="search()">
         </div>
        
         <select *ngIf="isMainPage() || isSearchPage()" name="criteria" id="criteria" class="form-select"

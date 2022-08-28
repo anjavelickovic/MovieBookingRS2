@@ -13,6 +13,7 @@ export class HeaderComponent implements OnInit {
   public appState: IAppState;
   public searchCriteria: string;
   public searchCriteriaPlaceholderText: string;
+  public userSearch: string;
 
   constructor(private appStateService: AppStateService, private router: Router) {
 
@@ -42,9 +43,9 @@ export class HeaderComponent implements OnInit {
     this.resetSearchParameters();
   }
 
-  public search(userSearch: string): void {
-    if(this.correctFormat(userSearch)){
-      this.router.navigate(['/movies', 'search', this.searchCriteria, userSearch], {
+  public search(): void {
+    if(this.correctFormat(this.userSearch)){
+      this.router.navigate(['/movies', 'search', this.searchCriteria, this.userSearch], {
         queryParams: {
           sortBy: "imdbRating",
           sortAscending: false,
@@ -145,7 +146,8 @@ export class HeaderComponent implements OnInit {
   }
 
   private resetSearchParameters(): void{
-    this.searchCriteria = 'title';
+    this.userSearch = "";
+    this.searchCriteria = "title";
     this.searchCriteriaPlaceholderText = "Search for movie";
   }
 }
