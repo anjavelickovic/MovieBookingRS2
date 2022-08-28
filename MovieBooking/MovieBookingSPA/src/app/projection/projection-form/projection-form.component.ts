@@ -41,10 +41,12 @@ export class ProjectionFormComponent implements OnInit {
     this.theaterHallFacadeService.getTheaterHalls()
       .subscribe(theaterHalls => {
         this.theaterHalls = theaterHalls;
+        this.theaterHalls.sort((hall1, hall2) => hall1.name.localeCompare(hall2.name));
     });
     this.moviesFacadeService.getMoviesDetails()
       .subscribe(movies => {
         this.movies = movies;
+        this.movies.sort((movie1, movie2) => movie1.title.localeCompare(movie2.title));
     });
     this.projectionForm = this.formBuilder.group({
       movieId: ['', [Validators.required]],
