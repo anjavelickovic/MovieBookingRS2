@@ -102,7 +102,7 @@
       </div>
     </ng-container>
 
-    <nav *ngIf="movies !== null" style="margin-top: 10px">
+    <nav *ngIf="movies !== null && movies.length !== 0" style="margin-top: 10px">
       <ul class="pagination justify-content-center">
         <li *ngIf="page !== 1" class="page-item">
           <a class="page-link" (click)="firstPage()">First page</a>

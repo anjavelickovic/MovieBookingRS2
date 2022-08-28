@@ -92,6 +92,8 @@ export class SearchComponent implements OnInit {
     this.movieService.GetMovieById(this.userSearch).subscribe(
       (movie: IMovieDetails) => {
         this.movies = [movie];
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -101,6 +103,8 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -111,6 +115,8 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -123,6 +129,8 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -138,6 +146,8 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -147,6 +157,8 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -156,6 +168,8 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -168,6 +182,8 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -178,6 +194,8 @@ export class SearchComponent implements OnInit {
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
+        if(this.checkInvalidPage())
+          this.firstPage();
       }
     )
   }
@@ -310,5 +328,9 @@ export class SearchComponent implements OnInit {
     var numberOfMoviesPerPage = this.listViewActive ? this.NUMBER_OF_MOVIES_PER_PAGE_LIST_VIEW : this.NUMBER_OF_MOVIES_PER_PAGE_GRID_VIEW;
     
     return Math.ceil(totalNumberOfMovies / numberOfMoviesPerPage);
+  }
+
+  public checkInvalidPage(): boolean{
+    return this.page > this.numberOfPages();
   }
 }

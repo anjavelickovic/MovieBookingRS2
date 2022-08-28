@@ -19,7 +19,7 @@ export class MainPageComponent implements OnInit {
   private randomAiringMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private randomUpcomingMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private projectionsObservable: Observable<boolean | IProjection[]>;
-  private NUMBER_OF_MOVIES = 6;
+  private NUMBER_OF_MOVIES = 12;
 
   public randomAiringMovies: Array<IMovieDetails>;
   public randomUpcomingMovies: Array<IMovieDetails>;
