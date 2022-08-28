@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Movies.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class MovieController : ControllerBase
@@ -152,6 +153,7 @@ namespace Movies.API.Controllers
             return CreatedAtRoute("GetMovie", new { id = movie.Id }, movie);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("[action]/{id}")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
