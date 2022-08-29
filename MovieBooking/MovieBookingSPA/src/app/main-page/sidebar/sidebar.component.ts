@@ -66,6 +66,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.router.navigate(['/discount']);
   }
 
+  public addMovie(): void{
+    this.router.navigate(['/movies', 'addmovie']);
+  }
+
   ngOnDestroy() {
     this.activeSubs.forEach((sub: Subscription) => {
       sub.unsubscribe();

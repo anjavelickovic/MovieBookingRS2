@@ -66,6 +66,10 @@ export class MoviesFacadeService {
     return this.moviesService.GetMoviesByImdbVotes(votes);
   }
 
+  public CreateMovie(id: string): Observable<IMovieDetails>{
+    return this.moviesService.CreateMovie(id);
+  }
+
   public DeleteMovie(id: string): Observable<void>{
     return this.moviesService.DeleteMovie(id);
   }
