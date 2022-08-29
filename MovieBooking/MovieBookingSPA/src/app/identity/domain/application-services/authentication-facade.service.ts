@@ -1,5 +1,5 @@
-import { catchError, map, Observable, of, switchMap, take, throwError } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
+import { timeout, catchError, map, Observable, of, Subscription, switchMap, take, throwError } from 'rxjs';
 import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 import { Role } from 'src/app/shared/app-state/role';
@@ -84,12 +84,14 @@ export class AuthenticationFacadeService implements OnDestroy {
         return request;
       }),
       switchMap((request: ILogoutRequest) => this.authenticationService.logout(request, this.appState.role)),
+      timeout(3000),
       map(() => {
         this.appStateService.clearAppState();
         return true;
       }),
       catchError((err) => {
         console.error(err);
+        this.appStateService.clearAppState();
         return of(false);
       })
     );
