@@ -107,7 +107,7 @@
                     <div>
                         <p>Total price: {{projection.price * numberOfTickets.value}}</p>
                     </div>
-                    <span *ngIf="!processing and showServerErrors" class="error">
+                    <span *ngIf="!processing && showServerErrors" class="error">
                         {{errMsg}}
                     </span>
                     <span *ngIf="processing" class="error" class="msg">
