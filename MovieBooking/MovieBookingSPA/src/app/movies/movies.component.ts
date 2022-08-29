@@ -67,7 +67,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
       (result: boolean | IMovieDetails) => {
         if (result !== false){
           this.movieDetails = result as IMovieDetails;
-          console.log(this.movieDetails);
         }
       }
     );
@@ -109,9 +108,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
   public onProjectionReserveFormSubmit(){
     this.processing = true;
     const data: IReservationForm = this.projectionReserveForm.value as IReservationForm;
-    console.log(data);
 
-    console.log(this.projection);
     var addReservationSub = this.reservationFacadeService.addReservation(this.projection.id, this.projection.projectionDate, 
       this.projection.projectionTerm,this.projection.movieId, this.projection.movieTitle,
       this.projection.theaterHallName, this.projection.theaterHallId, this.projection.price, data.numberOfTickets)
