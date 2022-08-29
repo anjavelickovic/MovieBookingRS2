@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { switchMap } from 'rxjs';
 import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
 import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
@@ -65,8 +66,28 @@ export class CouponUpdateFormComponent implements OnInit {
     }
 
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
-    console.log(data.movieId);
-    this.moviesFacadeService.getMovieDetails(data.movieId)
+    
+    this.moviesFacadeService.getMovieDetails(data.movieId).pipe(
+      switchMap((movieDetails => {
+        this.movie = movieDetails;      
+        data.movieId = movieDetails.id;
+  
+        return this.discountService.updateDiscount(this.movie.id, data.amount)
+        })
+      )).subscribe({
+          error: (err : boolean) => {
+          if(!err)
+            window.alert('There was a problem with updating coupon, please try again!');
+          }, 
+          complete: () => {
+            window.alert("Coupon updated");
+            this.couponForm.reset();
+            this.modalReference.close();
+            window.location.reload();
+            }}
+      );
+
+    /*this.moviesFacadeService.getMovieDetails(data.movieId)
     .subscribe(movieDetails => {
       this.movie = movieDetails;
       console.log(this.movie.title);
@@ -88,7 +109,7 @@ export class CouponUpdateFormComponent implements OnInit {
       window.location.reload();
       }
     });
-  });
+  });*/
 } 
 
   public changeMovie(e: any) {
