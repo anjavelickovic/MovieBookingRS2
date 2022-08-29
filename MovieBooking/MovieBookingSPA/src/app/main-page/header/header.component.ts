@@ -29,11 +29,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public logout(): void {
-    this.router.navigate(['/identity', 'logout']);
-    this.resetSearchParameters();
-  }
-
   public mainPage(): void {
     this.router.navigate(['/main']);
   }
@@ -66,8 +61,12 @@ export class HeaderComponent implements OnInit {
     return this.router.url.includes("/search");
   }
 
-  public isLoginOrRegisterPage(): boolean{
-    return this.router.url === '/identity/login' || this.router.url === '/identity/register';
+  public isAuthenticated(): boolean{
+    const value = this.router.url === '/identity/login' ||
+                  this.router.url === '/identity/register' ||
+                  this.router.url === '/identity/logout';
+
+    return !value;
   }
 
   public changeSearchCriteriaPlaceholderText(): void {
