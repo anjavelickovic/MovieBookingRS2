@@ -22,7 +22,7 @@ namespace Movies.API.Repositories
         Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(double lowerBound, double upperBound);
         Task<IEnumerable<MovieDTO>> GetMoviesByImdbVotes(int votes);
         Task<bool> CreateMovie(CreateMovieDTO movie);
-        Task<bool> CreateMovieById(string id);
+        Task<MovieErrorCode> CreateMovieById(string id);
         Task UpdateInformationForAllMovies();
         Task<bool> DeleteMovie(string id);
         Task<bool> DeleteMovies();

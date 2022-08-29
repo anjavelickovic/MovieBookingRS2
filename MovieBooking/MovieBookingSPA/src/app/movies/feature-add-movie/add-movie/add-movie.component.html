@@ -5,7 +5,7 @@
         </div>
     </nav>
     <label style="color: rgb(50, 159, 209);">Enter movie id from IMDb:</label>
-    <input class="form-control" (keyup.enter)="addMovie()" [(ngModel)]="movieId" style="width: 50%" id="input" type="text">
+    <input class="form-control" (keyup.enter)="addMovie()" [(ngModel)]="movieId" style="width: 50%" id="input" type="text" autocomplete="off">
     <button type="button" (click)="addMovie()" class="btn btn-primary" style="margin-top: 10px">Submit</button>
 </div>
 

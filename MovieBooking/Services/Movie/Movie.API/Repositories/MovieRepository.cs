@@ -183,20 +183,20 @@ namespace Movies.API.Repositories
 
         }
 
-        public async Task<bool> CreateMovieById(string id)
+        public async Task<MovieErrorCode> CreateMovieById(string id)
         {
             var movie = await _movieContext.Movies.Find(movie => (movie.Id == id)).FirstOrDefaultAsync();
             if (movie != null)
-                return false;
+                return MovieErrorCode.ALREADY_IN_DATABASE;
 
             var result = await ImdbClient.FetchJsonDataForMovie(id);
 
             if (result == null)
-                return false;
+                return MovieErrorCode.MOVIE_CREATION_ERROR;
 
             await _movieContext.Movies.InsertOneAsync(result.ToObject<Movie>());
 
-            return true;
+            return MovieErrorCode.SUCCESS;
         }
 
         public async Task UpdateInformationForAllMovies() 

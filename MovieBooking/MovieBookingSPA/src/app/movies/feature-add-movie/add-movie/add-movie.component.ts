@@ -9,12 +9,18 @@ import { MoviesFacadeService } from '../../domain/application-services/movies-fa
 })
 export class AddMovieComponent implements OnInit {
 
-  public movieId: string;
+  public movieId: string = "";
 
   constructor(private movieService: MoviesFacadeService,
               private router: Router) { }
           
   public addMovie(){
+
+    if(this.movieId.length === 0){
+      window.alert("String is empty");
+      return;
+    }
+    
     this.movieService.CreateMovie(this.movieId).subscribe({
       next: () => {
         window.alert("Movie successfully added");
@@ -22,11 +28,13 @@ export class AddMovieComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        if(err.status === 500 || err.status === 0){
+        if(err.status === 409)
+          window.alert("Movie already in database");
+        else if(err.status === 500 || err.status === 0){
           window.alert("Internal server error");
         }
         else{
-          window.alert("Movie already in database");
+          window.alert("Movie creation error - not an id for movie");
         }
       }
     }

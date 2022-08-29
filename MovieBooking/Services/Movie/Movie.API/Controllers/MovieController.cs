@@ -157,11 +157,14 @@ namespace Movies.API.Controllers
         [HttpPost("[action]/{id}")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status409Conflict)]
         public async Task<ActionResult<MovieDTO>> CreateMovieById(string id)
         {
             var result = await _repository.CreateMovieById(id);
 
-            if(result == false)
+            if (result == MovieErrorCode.ALREADY_IN_DATABASE)
+                return Conflict();
+            else if (result == MovieErrorCode.MOVIE_CREATION_ERROR)
                 return BadRequest();
 
             var movie = await _repository.GetMovieById(id);
