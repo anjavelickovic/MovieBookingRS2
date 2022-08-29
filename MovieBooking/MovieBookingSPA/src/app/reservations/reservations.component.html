@@ -7,6 +7,7 @@
         <div class="pos">
             <!--Delete button--> 
             <button 
+            *ngIf="reservationsExists"
             class="btn" 
             style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px;"
             (click)="open(deleteModal)">
@@ -28,11 +29,11 @@
                 </div>
             </ng-template>
             
-            <!--Chekout button--> 
-            <button class="btn btn-primary" 
+            <!--Checkout button--> 
+            <button *ngIf="reservationsExists" class="btn btn-primary" 
             style="margin-left: 10px;" 
             (click)="open(chekoutModal)">
-                Chekout
+                Checkout
             </button>
 
             <ng-template #chekoutModal let-modal>
@@ -43,27 +44,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="checkoutForm" style="margin: 0vh 4vh 4.5vh 4vh" autocomplete="off">
-                        <div class="form-group">
-                            <label for="areaCode" >Area Code</label>
-                            <input type="text" id="areaCode" class="form-control form-control-sm"
-                                formControlName="areaCode" />
-
-                            <span *ngIf="areaCode?.errors?.['required']" class="error">
-                                Area Code is required
-                            </span>
-                        </div>
-
-                        <div class="form-group" style="margin-top: 10px;">
-                            <label for="phoneNumber">Phone Number</label>
-                            <input type="text" id="phoneNumber" class="form-control form-control-sm"
-                                formControlName="phoneNumber" />
-
-                            <span *ngIf="phoneNumber?.errors?.['required']" class="error">
-                                Phone Number is required
-                            </span>
-                        </div>
-                </form>
+                Are you sure you want to confirm reservations?
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline-dark" (click)="onCheckout()">Confirm reservations</button>
@@ -72,4 +53,9 @@
         </div>
     </nav>
 </div>
-<app-reservations-list></app-reservations-list>
+
+<app-reservations-list *ngIf="reservationsExists; else text"></app-reservations-list>
+<ng-template #text>
+    <hr>
+    <div style="font-size: 20px; margin-left: 20px;">Reservations are empty</div>
+</ng-template>

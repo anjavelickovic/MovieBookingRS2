@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { of, switchMap } from 'rxjs';
+import { of, Subscription, switchMap } from 'rxjs';
 import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
 import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { TheaterHallFacadeService } from 'src/app/theater-hall/domain/application-services/theater-hall-facade.service';
@@ -16,7 +16,7 @@ import { IFormProjection } from '../domain/models/form-projection.model';
   templateUrl: './projection-form.component.html',
   styleUrls: ['./projection-form.component.css']
 })
-export class ProjectionFormComponent implements OnInit {
+export class ProjectionFormComponent implements OnInit, OnDestroy {
 
   public modalReference: NgbModalRef;
   public projectionForm: UntypedFormGroup;
@@ -28,7 +28,9 @@ export class ProjectionFormComponent implements OnInit {
   public theaterHallFromForm: ITheaterHall;
   public movie: IMovieDetails;
   public movieFields: Object = {text: 'Name', value: 'Id'};
-  
+  private activeSubs: Subscription[] = [];
+
+
   constructor(private modalService: NgbModal,
               private formBuilder: UntypedFormBuilder,
               private router: Router,
@@ -38,14 +40,18 @@ export class ProjectionFormComponent implements OnInit {
     this.showFormErrors = true;
     this.showServerError = false;
 
-    this.theaterHallFacadeService.getTheaterHalls()
+    var thSub = this.theaterHallFacadeService.getTheaterHalls()
       .subscribe(theaterHalls => {
         this.theaterHalls = theaterHalls;
     });
-    this.moviesFacadeService.getMoviesDetails()
+    this.activeSubs.push(thSub);
+
+    var movieSub = this.moviesFacadeService.getMoviesDetails()
       .subscribe(movies => {
         this.movies = movies;
     });
+    this.activeSubs.push(movieSub);
+
     this.projectionForm = this.formBuilder.group({
       movieId: ['', [Validators.required]],
       projectionDate: ['', [Validators.required]],
@@ -66,10 +72,11 @@ export class ProjectionFormComponent implements OnInit {
       onlySelf: true,
     });
     const data: IFormProjection = this.projectionForm.value as IFormProjection;
-    this.theaterHallFacadeService.getTheaterHall(data.theaterHallId)
+    var thGetSub = this.theaterHallFacadeService.getTheaterHall(data.theaterHallId)
       .subscribe(theaterHall => {
         this.theaterHallFromForm = theaterHall;
     });
+    this.activeSubs.push(thGetSub);
   }
 
   public changeTheaterHallTerm(e: any) {
@@ -112,7 +119,7 @@ export class ProjectionFormComponent implements OnInit {
     const data: IFormProjection = this.projectionForm.value as IFormProjection;
     console.log(data)
     
-    this.theaterHallFacadeService.getTheaterHall(data.theaterHallId.split(" ")[1]).pipe(
+    var thMovieSub = this.theaterHallFacadeService.getTheaterHall(data.theaterHallId.split(" ")[1]).pipe(
       switchMap((thaterhall) => 
       {
         this.theaterHall = thaterhall;
@@ -140,6 +147,7 @@ export class ProjectionFormComponent implements OnInit {
           window.location.reload();
         }
     });
+    this.activeSubs.push(thMovieSub);
         
   }
 
@@ -158,4 +166,9 @@ export class ProjectionFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
 }
