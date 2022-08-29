@@ -4,7 +4,9 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, of } from 'rxjs';
+import { catchError, observable, Observable, of, switchMap, throwError } from 'rxjs';
+import { DiscountFacadeService } from '../discount/domain/application-services/discount-facade.service';
+import { ICoupon } from '../discount/domain/models/coupon';
 import { ProjectionFacadeService } from '../projection/domain/application-services/projection-facade.service';
 import { IProjection } from '../projection/domain/models/projection.model';
 import { ReservationFacadeService } from '../reservations/domain/application-services/reservation-facade.service';
@@ -30,6 +32,9 @@ export class MoviesComponent implements OnInit {
   public showServerErrors = false;
   public errMsg: string;
   public processing: boolean = false;
+  public coupon: ICoupon;
+  public couponExists: boolean = false;
+  
 
   constructor(private movieService: MoviesFacadeService,
               private appStateService: AppStateService,
@@ -38,7 +43,8 @@ export class MoviesComponent implements OnInit {
               private projectionFacadeService: ProjectionFacadeService,
               private modalService: NgbModal,
               private formBuilder: UntypedFormBuilder,
-              private reservationFacadeService: ReservationFacadeService) {
+              private reservationFacadeService: ReservationFacadeService,
+              private discountFacadeService: DiscountFacadeService) {
     const path = this.router.url;
     const movieId = path.substring( path.lastIndexOf('/') + 1 );
 
@@ -68,10 +74,32 @@ export class MoviesComponent implements OnInit {
       }
     );
 
-    this.projectionFacadeService.getMovieProjections(movieId)
-     .subscribe((projections) => {
+    this.projectionFacadeService.getMovieProjections(movieId).pipe(
+      switchMap((projections) => {
           this.projections = projections;
-     });
+          return this.discountFacadeService.getDiscount(this.projections[0].movieTitle)
+      }),
+      catchError((err: HttpErrorResponse) => {
+        if(err.status == 404){
+          return  of(1);
+        }
+        else
+          return of(2);
+      })
+    ).subscribe(
+        (result: number | ICoupon) => {
+          if (result !== 1 && result !== 2){
+            this.coupon = result as ICoupon;
+            this.couponExists = true;
+          }
+          else 
+            if(result == 1){
+              console.log("There is no coupon for this movie.")
+            }
+            else{
+              console.log("Server error")
+            }
+      });
 
      this.projectionReserveForm = this.formBuilder.group({
       numberOfTickets: ['', [Validators.required]]
@@ -113,9 +141,9 @@ export class MoviesComponent implements OnInit {
         this.showServerErrors = true;
         console.log(err);
         if(err.status == 400){
-          this.errMsg = "You can not reserve more seats for same projection. Go into reservations and updated it."
+          this.errMsg = "You can't reserve more seats for the projection for which you already reserved seats." + "\n" + "Go into reservations and update it."
         }else{
-          this.errMsg = "There is no enough seats for this projection"
+          this.errMsg = "There are not enough seats for this projection"
         }
         return of(false);
       },

@@ -77,6 +77,7 @@
             <h6>{{projection.projectionDate}} {{projection.projectionTerm}}</h6>
             <h6>Price: {{projection.price}}</h6>
             <h6>Seats left: {{projection.numberOfSeats - projection.numberOfReservedSeats}}</h6>
+            <h6 *ngIf="couponExists">Discount: {{coupon.amount}}%</h6>
         
             <button 
             class="btn" 
@@ -106,7 +107,7 @@
                     <div>
                         <p>Total price: {{projection.price * numberOfTickets.value}}</p>
                     </div>
-                    <span *ngIf="showServerErrors" class="error">
+                    <span *ngIf="!processing and showServerErrors" class="error">
                         {{errMsg}}
                     </span>
                     <span *ngIf="processing" class="error" class="msg">
