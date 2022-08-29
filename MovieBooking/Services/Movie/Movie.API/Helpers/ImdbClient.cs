@@ -114,7 +114,6 @@ namespace Movies.API.Helpers
 			}
 			else
 			{
-				Console.WriteLine(directors);
 				jo.Add(new JProperty("Directors", directors.Split(", ")));
 			}
 
