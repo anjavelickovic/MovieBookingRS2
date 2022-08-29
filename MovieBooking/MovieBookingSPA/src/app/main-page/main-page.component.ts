@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, switchMap, Observable, of } from 'rxjs';
+import { catchError, switchMap, Observable, of, Subscription } from 'rxjs';
 import { MoviesFacadeService } from '../movies/domain/application-services/movies-facade.service'
 import { IMovieDetails } from '../movies/domain/models/movie-details';
 import { ProjectionFacadeService } from '../projection/domain/application-services/projection-facade.service';
@@ -15,7 +15,7 @@ import { IProjection } from '../projection/domain/models/projection.model';
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']
 })
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, OnDestroy {
   private randomAiringMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private randomUpcomingMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private projectionsObservable: Observable<boolean | IProjection[]>;
@@ -25,6 +25,8 @@ export class MainPageComponent implements OnInit {
   public randomUpcomingMovies: Array<IMovieDetails>;
 
   public items: Array<number> = [1,2,3,4];
+
+  private activeSubs: Subscription[] = [];
 
   constructor(private movieService: MoviesFacadeService,
               private projectionService: ProjectionFacadeService,
@@ -93,24 +95,34 @@ export class MainPageComponent implements OnInit {
   }
 
   public fetchRandomAiringMovies(): void{
-    this.randomAiringMoviesObservable.subscribe(
+    var randomAiringMoviesSub = this.randomAiringMoviesObservable.subscribe(
       (result: boolean | Array<IMovieDetails>) => {
         if (result !== false){
           this.randomAiringMovies = result as Array<IMovieDetails>;
           this.localStorageService.set(LocalStorageKeys.RandomAiringMovies, this.randomAiringMovies);
     }});
+
+    this.activeSubs.push(randomAiringMoviesSub);
   }
 
   public fetchRandomUpcomingMovies(): void{
-    this.randomUpcomingMoviesObservable.subscribe(
+    var randomUpcomingMoviesSub = this.randomUpcomingMoviesObservable.subscribe(
       (result: boolean | Array<IMovieDetails>) => {
         if (result !== false){
           this.randomUpcomingMovies = result as Array<IMovieDetails>;
           this.localStorageService.set(LocalStorageKeys.RandomUpcomingMovies, this.randomUpcomingMovies);
     }});
+
+    this.activeSubs.push(randomUpcomingMoviesSub);
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
 }
