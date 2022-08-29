@@ -11,16 +11,16 @@
 <hr>
 <!--Theater Hall Info-->
 <div *ngIf="theaterHall; else elseBlock" class="marg">
-    <h4>Name: {{ theaterHall.name }}</h4>
-    <h4>Number of seats: {{theaterHall.numberOfSeats}}</h4>
-    <h4>Available terms:</h4>
-    <li *ngFor="let term of theaterHall.terms">
-        {{term}}
-    </li>
+    <p class="font-info">Name: {{ theaterHall.name }}</p>
+    <p class="font-info">Number of seats: {{ theaterHall.numberOfSeats }}</p>
+    <p class="font-info">Available terms:</p>
+    <div *ngFor="let term of theaterHall.terms" class="font-info" style="margin-left: 10px">
+       - {{term}}
+    </div>
 </div>
 <ng-template #elseBlock>
     <div *ngIf="!theaterHall" class="marg">
-        <h4>Loading...</h4>
+        <p class="font-info">Loading...</p>
     </div>
 </ng-template>
 
