@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, of } from 'rxjs';
+import { catchError, of, Subscription } from 'rxjs';
 import { ProjectionFacadeService } from '../projection/domain/application-services/projection-facade.service';
 import { IProjection } from '../projection/domain/models/projection.model';
 import { ReservationFacadeService } from '../reservations/domain/application-services/reservation-facade.service';
@@ -19,7 +19,7 @@ import { IMovieDetails } from './domain/models/movie-details';
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css']
 })
-export class MoviesComponent implements OnInit {
+export class MoviesComponent implements OnInit, OnDestroy {
   
   public appState: IAppState;
   public movieDetails: IMovieDetails = null;
@@ -30,6 +30,8 @@ export class MoviesComponent implements OnInit {
   public showServerErrors = false;
   public errMsg: string;
   public processing: boolean = false;
+
+  private activeSubs: Subscription[] = [];
 
   constructor(private movieService: MoviesFacadeService,
               private appStateService: AppStateService,
@@ -42,13 +44,15 @@ export class MoviesComponent implements OnInit {
     const path = this.router.url;
     const movieId = path.substring( path.lastIndexOf('/') + 1 );
 
-    this.appStateService.getAppState().subscribe(
+    var appStateSub = this.appStateService.getAppState().subscribe(
       (appState: IAppState) => {
         this.appState = appState;
       }
     );
 
-    this.movieService.getMovieDetails(movieId).pipe(
+    this.activeSubs.push(appStateSub);
+
+    var movieDetailsSub = this.movieService.getMovieDetails(movieId).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 404){
@@ -68,10 +72,14 @@ export class MoviesComponent implements OnInit {
       }
     );
 
-    this.projectionFacadeService.getMovieProjections(movieId)
+    this.activeSubs.push(movieDetailsSub);
+
+    var movieProjectionsSub = this.projectionFacadeService.getMovieProjections(movieId)
      .subscribe((projections) => {
           this.projections = projections;
      });
+
+     this.activeSubs.push(movieProjectionsSub);
 
      this.projectionReserveForm = this.formBuilder.group({
       numberOfTickets: ['', [Validators.required]]
@@ -104,7 +112,7 @@ export class MoviesComponent implements OnInit {
     console.log(data);
 
     console.log(this.projection);
-    this.reservationFacadeService.addReservation(this.projection.id, this.projection.projectionDate, 
+    var addReservationSub = this.reservationFacadeService.addReservation(this.projection.id, this.projection.projectionDate, 
       this.projection.projectionTerm,this.projection.movieId, this.projection.movieTitle,
       this.projection.theaterHallName, this.projection.theaterHallId, this.projection.price, data.numberOfTickets)
      .subscribe({
@@ -129,10 +137,17 @@ export class MoviesComponent implements OnInit {
         window.location.reload();
       }
     });
+
+    this.activeSubs.push(addReservationSub);
   }
   
   public trailerConfiguration(){
     return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieDetails.trailer + "?autoplay=false&width=465");
   }
 
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
 }

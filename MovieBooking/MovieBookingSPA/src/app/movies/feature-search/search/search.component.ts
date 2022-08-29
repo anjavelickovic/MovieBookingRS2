@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MoviesFacadeService } from '../../domain/application-services/movies-facade.service';
 import { IMovieDetails } from '../../domain/models/movie-details';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   public searchCriteria: string;
   public userSearch: string;
   public movies: Array<IMovieDetails> = null;
@@ -23,13 +23,15 @@ export class SearchComponent implements OnInit {
   public NUMBER_OF_MOVIES_PER_PAGE_LIST_VIEW = 10;
   public NUMBER_OF_MOVIES_PER_PAGE_GRID_VIEW = 24;
 
+  private activeSubs: Subscription[] = [];
+
   constructor(private movieService: MoviesFacadeService,
               private router: Router,
               private activatedRouter: ActivatedRoute  
             )
   {
 
-  this.activatedRouter.paramMap.pipe( 
+  var paramsSub = this.activatedRouter.paramMap.pipe( 
     switchMap((params) => {
       this.searchCriteria = params.get('searchCriteria');
       this.userSearch = params.get('userSearch');
@@ -46,7 +48,8 @@ export class SearchComponent implements OnInit {
           this.firstPage();
         }
     });
-    
+
+    this.activeSubs.push(paramsSub);
   }
 
   ngOnInit(): void {
@@ -89,50 +92,58 @@ export class SearchComponent implements OnInit {
   }
 
   private handleSearchById(): void {
-    this.movieService.GetMovieById(this.userSearch).subscribe(
+    var movieSub = this.movieService.GetMovieById(this.userSearch).subscribe(
       (movie: IMovieDetails) => {
         this.movies = [movie];
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(movieSub);
   }
 
   private handleSearchByTitle(): void {
-    this.movieService.GetMoviesByTitle(this.userSearch).subscribe(
+    var moviesSub = this.movieService.GetMoviesByTitle(this.userSearch).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(moviesSub);
   }
 
   private handleSearchByYear(): void {
     var year = parseInt(this.userSearch);
-    this.movieService.GetMoviesByYear(year).subscribe(
+    var moviesSub = this.movieService.GetMoviesByYear(year).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(moviesSub);
   }
 
   private handleSearchByRuntime(): void {
     var interval = this.userSearch.split(',');
     var lowerBound = parseInt(interval[0]);
     var upperBound =  parseInt(interval[1]);
-    this.movieService.GetMoviesByRuntime(lowerBound, upperBound).subscribe(
+    var moviesSub = this.movieService.GetMoviesByRuntime(lowerBound, upperBound).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(moviesSub);
   }
 
   // example string: Action&Comedy&Drama/True
@@ -142,62 +153,72 @@ export class SearchComponent implements OnInit {
 
     var genresString = genres.join("&");
 
-    this.movieService.GetMoviesByGenres(genresString).subscribe(
+    var moviesSub = this.movieService.GetMoviesByGenres(genresString).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(moviesSub);
   }
 
   private handleSearchByDirector(): void {
-    this.movieService.GetMoviesByDirector(this.userSearch).subscribe(
+    var moviesSub = this.movieService.GetMoviesByDirector(this.userSearch).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(moviesSub);
   }
 
   private handleSearchByMainActor(): void {
-    this.movieService.GetMoviesByMainActor(this.userSearch).subscribe(
+    var moviesSub = this.movieService.GetMoviesByMainActor(this.userSearch).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(moviesSub);
   }
 
   private handleSearchByImdbRating(): void {
     var interval = this.userSearch.split(',');
     var lowerBound = parseFloat(interval[0]);
     var upperBound =  parseFloat(interval[1]);
-    this.movieService.GetMoviesByImdbRating(lowerBound, upperBound).subscribe(
+    var moviesSub = this.movieService.GetMoviesByImdbRating(lowerBound, upperBound).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(moviesSub);
   }
 
   private handleSearchByImdbVotes(): void {
     var votes = parseInt(this.userSearch);
-    this.movieService.GetMoviesByImdbVotes(votes).subscribe(
+    var moviesSub = this.movieService.GetMoviesByImdbVotes(votes).subscribe(
       (movies: Array<IMovieDetails>) => {
         this.movies = movies;
         this.sortMovies();
         if(this.checkInvalidPage())
           this.firstPage();
       }
-    )
+    );
+
+    this.activeSubs.push(moviesSub);
   }
 
   public moviePage(movieId: string): void {
@@ -332,5 +353,11 @@ export class SearchComponent implements OnInit {
 
   public checkInvalidPage(): boolean{
     return this.page > this.numberOfPages();
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 }
