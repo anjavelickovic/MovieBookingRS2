@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { switchMap } from 'rxjs';
 import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
 import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
@@ -65,27 +66,25 @@ export class CouponFormComponent implements OnInit {
 
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
 
-    this.moviesFacadeService.getMovieDetails(data.movieId.split(" ")[1])
-    .subscribe(movieDetails => {
-      this.movie = movieDetails;
-      data.movieId = movieDetails.id;
-      
-        this.discountService.createDiscount(this.movie.id, movieDetails.title, data.amount)
-        .subscribe({
-          error: (coupon : ICreateCoupon) => {
-          if(coupon != null)
-            window.alert('Coupon created!');
-          else
-            window.alert('There was a problem with creating coupon!');
-          },
-          complete: () => {
-            window.alert("Created new discount for movie " + movieDetails.title);
-            this.couponForm.reset();
-            this.modalReference.close();
-            window.location.reload();
-          }
-      });
-    });
+    this.moviesFacadeService.getMovieDetails(data.movieId.split(" ")[1]).pipe(
+      switchMap((movieDetails) => {
+        this.movie = movieDetails;
+        data.movieId = movieDetails.id;
+        
+        return this.discountService.createDiscount(this.movie.id, movieDetails.title, data.amount);
+      })).subscribe({
+        error: (coupon : ICreateCoupon) => {
+        if(coupon != null)
+          window.alert('Coupon created!');
+        else
+          window.alert('There was a problem with creating coupon!');
+        },
+        complete: () => {
+          window.alert("Created new discount");
+          this.couponForm.reset();
+          this.modalReference.close();
+          window.location.reload();
+        }});
 }
 
 
