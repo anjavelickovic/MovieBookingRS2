@@ -19,7 +19,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   private randomAiringMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private randomUpcomingMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private projectionsObservable: Observable<boolean | IProjection[]>;
-  private NUMBER_OF_MOVIES = 12;
+  private NUMBER_OF_AIRING_MOVIES = 12;
+  private NUMBER_OF_UPCOMING_MOVIES = 6;
 
   public randomAiringMovies: Array<IMovieDetails>;
   public randomUpcomingMovies: Array<IMovieDetails>;
@@ -40,7 +41,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
         return of(false);
     }));
 
-    this.randomUpcomingMoviesObservable = this.movieService.GetRandomUpcomingMovies(this.NUMBER_OF_MOVIES).pipe(
+    this.randomUpcomingMoviesObservable = this.movieService.GetRandomUpcomingMovies(this.NUMBER_OF_UPCOMING_MOVIES).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 404)
@@ -59,7 +60,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
             return of(false);
           }
           var feasibleMovies: string[] = projections.map(projection => projection.movieId);
-          return this.movieService.GetRandomAiringMovies(this.NUMBER_OF_MOVIES, feasibleMovies)
+          return this.movieService.GetRandomAiringMovies(this.NUMBER_OF_AIRING_MOVIES, feasibleMovies)
         }
         return of(false);
       }),

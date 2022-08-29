@@ -121,9 +121,9 @@ export class MoviesComponent implements OnInit, OnDestroy {
         this.showServerErrors = true;
         console.log(err);
         if(err.status == 400){
-          this.errMsg = "You can not reserve more seats for same projection. Go into reservations and updated it."
+          this.errMsg = "You can't reserve more seats for same projection. Go into reservations and update it."
         }else{
-          this.errMsg = "There is no enough seats for this projection"
+          this.errMsg = "There are no enough seats for this projection"
         }
         return of(false);
       },
