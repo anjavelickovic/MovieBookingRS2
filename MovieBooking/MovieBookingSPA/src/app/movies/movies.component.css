@@ -39,3 +39,7 @@ span.msg {
   font-size: 11px;
   color: blue;
 }
+
+i:hover {
+  cursor: pointer;
+}

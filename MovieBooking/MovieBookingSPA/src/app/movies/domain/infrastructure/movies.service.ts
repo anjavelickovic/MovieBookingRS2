@@ -72,4 +72,8 @@ export class MoviesService {
   public GetMoviesByImdbVotes(votes: number): Observable<Array<IMovieDetails>> {
     return this.httpClient.get<Array<IMovieDetails>>(`${this.url}/GetMoviesByImdbVotes/${votes}`);
   }
+
+  public DeleteMovie(id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.url}/DeleteMovie/${id}`);
+  }
 }

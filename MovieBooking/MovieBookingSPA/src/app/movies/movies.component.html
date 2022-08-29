@@ -1,6 +1,6 @@
 <div *ngIf="movieDetails !== null; else elseBlock">
 
-    <h2 style="margin-top: 20px; margin-bottom: 20px;">{{ movieDetails.title }}</h2>
+    <h2 style="margin-top: 20px; margin-bottom: 20px;">{{ movieDetails.title }} <i *ngIf="isAdmin()" class="fa fa-times" aria-hidden="true" title="Remove movie" style="color: crimson" (click)="deleteMovie(movieDetails.id)"></i></h2>
 
 
     <div class="content">

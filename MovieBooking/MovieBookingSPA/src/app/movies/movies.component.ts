@@ -11,6 +11,7 @@ import { ReservationFacadeService } from '../reservations/domain/application-ser
 import { IReservationForm } from '../reservations/domain/models/reservation-form.model';
 import { IAppState } from '../shared/app-state/app-state';
 import { AppStateService } from '../shared/app-state/app-state.service';
+import { Role } from '../shared/app-state/role';
 import { MoviesFacadeService } from './domain/application-services/movies-facade.service';
 import { IMovieDetails } from './domain/models/movie-details';
 
@@ -140,6 +141,40 @@ export class MoviesComponent implements OnInit, OnDestroy {
   
   public trailerConfiguration(){
     return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieDetails.trailer + "?autoplay=false&width=465");
+  }
+
+  public isAdmin(){
+    return this.appState.hasRole(Role.Admin);
+  }
+
+  public deleteMovie(movieId: string){
+    
+    if(this.projections.length !== 0){
+      window.alert("Can't delete movies that have projections. Remove projections for this movie first!");
+      return;
+    }
+
+    var deleteMovieSub = this.movieService.DeleteMovie(movieId).pipe(
+      catchError((err: HttpErrorResponse) => {
+        console.log(err);
+        if(err.status === 404){
+          window.alert("No such movie in database");
+          this.router.navigateByUrl('/main');
+        }
+        else
+          window.alert("Internal server error");
+        return of(false);
+    })
+    ).subscribe(
+      (result) => {
+        if(result !== false){
+          window.alert("Successfully deleted movie");
+          this.router.navigateByUrl('/main');
+        }
+      }
+    );
+
+    this.activeSubs.push(deleteMovieSub);
   }
 
   ngOnDestroy() {
