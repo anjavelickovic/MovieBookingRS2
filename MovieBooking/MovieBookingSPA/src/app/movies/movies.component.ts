@@ -78,6 +78,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
       }
     );
 
+    this.activeSubs.push(movieDetailsSub);
+
     var movieProjectionsSub = this.projectionFacadeService.getMovieProjections(movieId).pipe(
       switchMap((projections) => {
           this.projections = projections;
