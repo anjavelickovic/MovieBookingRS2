@@ -56,9 +56,9 @@ namespace Projections.Common.Repositories
             await _context.Projections.InsertOneAsync(projection);
         }
 
-        public async Task<bool> UpdateProjection(Projection projection)
+        public async Task<bool>UpdateProjection(Projection projection)
         {
-            IEnumerable<Projection> projections = _context.Projections.Find(p => p.Id == projection.Id).ToList();
+            IEnumerable<Projection> projections = _context.Projections.Find(p => true).ToList();
             foreach (Projection projectionItem in projections)
             {
                 if (!projectionItem.Id.Equals(projection.Id) &&
@@ -66,7 +66,7 @@ namespace Projections.Common.Repositories
                     projectionItem.ProjectionDate.Equals(projection.ProjectionDate) &&
                     projectionItem.ProjectionTerm.Equals(projection.ProjectionTerm))
                 {
-                    return false;
+                    throw new Exception("This term is not available");
                 }
             }
 
