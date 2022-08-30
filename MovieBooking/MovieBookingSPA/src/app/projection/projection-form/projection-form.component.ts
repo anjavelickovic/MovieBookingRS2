@@ -8,7 +8,6 @@ import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { TheaterHallFacadeService } from 'src/app/theater-hall/domain/application-services/theater-hall-facade.service';
 import { ITheaterHall } from 'src/app/theater-hall/domain/models/theater-hall.model';
 import { ProjectionFacadeService } from '../domain/application-services/projection-facade.service';
-import { ICreateProjectionRequest } from '../domain/models/create-projection-request.model';
 import { IFormProjection } from '../domain/models/form-projection.model';
 
 @Component({
