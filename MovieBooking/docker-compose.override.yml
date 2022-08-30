@@ -89,8 +89,8 @@ services:
   pgadmin:
     container_name: pgadmin
     environment:
-      - PGADMIN_DEFAULT_EMAIL=28anjavelickovic@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=admin1234
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
     restart: always
     ports:
       - "5050:80"
@@ -120,7 +120,7 @@ services:
   administrationdb:
     container_name: administrationdb
     environment:
-      - MSSQL_SA_PASSWORD=RSf1234_.5678
+      - MSSQL_SA_PASSWORD=${ADMINISTRATION_PASSWORD}
       - ACCEPT_EULA=1
     restart: always
     ports:
