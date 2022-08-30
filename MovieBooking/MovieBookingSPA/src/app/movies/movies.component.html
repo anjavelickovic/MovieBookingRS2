@@ -1,6 +1,6 @@
 <div *ngIf="movieDetails !== null; else elseBlock">
 
-    <h2 style="margin-top: 20px; margin-bottom: 20px;">{{ movieDetails.title }}</h2>
+    <h2 style="margin-top: 20px; margin-bottom: 20px;">{{ movieDetails.title }} <i *ngIf="isAdmin()" class="fa fa-times" aria-hidden="true" title="Remove movie" style="color: crimson" (click)="deleteMovie(movieDetails.id)"></i></h2>
 
 
     <div class="content">
@@ -10,7 +10,7 @@
             <div>
                 <img [src]="movieDetails.poster" style="width: 300px; height: 420px;">
             </div>
-            <div style="width: 600px">
+            <div class="movie-details">
                 <p style="text-align: justify;text-justify: inter-word">{{ movieDetails.plot }}</p>
                 
                 <table style="border-spacing: 50px 0;">
@@ -62,7 +62,7 @@
             </div>
 
             <div *ngIf = "movieDetails.trailer != null">
-                <iframe [src]="trailerConfiguration()" width="520" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
+                <iframe [src]="trailerConfiguration()" width="465" height="420" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
             </div>
             
         </div>
@@ -76,6 +76,7 @@
         <div class="flex-column">
             <h6>{{projection.projectionDate}} {{projection.projectionTerm}}</h6>
             <h6>Price: {{projection.price}}</h6>
+            <h6>Hall: {{projection.theaterHallName}}</h6>
             <h6>Seats left: {{projection.numberOfSeats - projection.numberOfReservedSeats}}</h6>
             <h6 *ngIf="couponExists">Discount: {{coupon.amount}}%</h6>
         

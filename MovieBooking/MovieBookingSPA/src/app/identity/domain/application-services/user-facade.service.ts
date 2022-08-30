@@ -44,7 +44,6 @@ export class UserFacadeService {
 
   public changeUserPassword(oldPassword: string, newPassword: string): Observable<boolean> {
     const request: IChangeUserPasswordRequest = {oldPassword, newPassword};
-    console.log(request);
     return this.userService.changeUserPassword(request);
   }
 }

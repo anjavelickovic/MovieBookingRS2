@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, map, of } from 'rxjs';
+import { catchError, map, of, Subscription } from 'rxjs';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 import { UserFacadeService } from '../../domain/application-services/user-facade.service';
 
@@ -11,7 +11,7 @@ import { UserFacadeService } from '../../domain/application-services/user-facade
   templateUrl: './change-user-info.component.html',
   styleUrls: ['./change-user-info.component.css']
 })
-export class ChangeUserInfoComponent implements OnInit {
+export class ChangeUserInfoComponent implements OnInit, OnDestroy {
   
   public passwordChangeForm: UntypedFormGroup;
   public firstNameChangeForm: UntypedFormGroup;
@@ -30,6 +30,8 @@ export class ChangeUserInfoComponent implements OnInit {
   public showLastNameChangeForm: boolean;
   public showUsernameChangeForm: boolean;
   public showEmailChangeForm: boolean;
+
+  private activeSubs: Subscription[] = [];
 
   constructor(private formBuilder: UntypedFormBuilder, private userService: UserFacadeService,
               private appStateService: AppStateService, private router: Router) {
@@ -87,7 +89,7 @@ export class ChangeUserInfoComponent implements OnInit {
     const currentPassword = this.passwordChangeForm.value.passwordChangePassword;
     const newPassword = this.passwordChangeForm.value.newPassword;
     
-    this.userService.changeUserPassword(currentPassword, newPassword).pipe(
+    var changeUserPasswordSub = this.userService.changeUserPassword(currentPassword, newPassword).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 403)
@@ -103,8 +105,9 @@ export class ChangeUserInfoComponent implements OnInit {
           this.router.navigate((['/identity', 'profile']));
         }
       }
-    )
+    );
 
+    this.activeSubs.push(changeUserPasswordSub);
   }
 
   public onFirstNameChangeSubmit(): void{
@@ -119,7 +122,7 @@ export class ChangeUserInfoComponent implements OnInit {
     const firstName = this.firstNameChangeForm.value.firstName;
     const password = this.firstNameChangeForm.value.passwordChangeFirstName;
     
-    this.userService.changeFirstName(firstName, password).pipe(
+    var changeFirstNameSub = this.userService.changeFirstName(firstName, password).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 403)
@@ -136,7 +139,9 @@ export class ChangeUserInfoComponent implements OnInit {
           this.router.navigate((['/identity', 'profile']));
         }
       }
-    )
+    );
+
+    this.activeSubs.push(changeFirstNameSub);
   }
 
   public onLastNameChangeSubmit(): void{
@@ -151,7 +156,7 @@ export class ChangeUserInfoComponent implements OnInit {
     const lastName = this.lastNameChangeForm.value.lastName;
     const password = this.lastNameChangeForm.value.passwordChangeLastName;
     
-    this.userService.changeLastName(lastName, password).pipe(
+    var changeLastNameSub = this.userService.changeLastName(lastName, password).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 403)
@@ -168,7 +173,9 @@ export class ChangeUserInfoComponent implements OnInit {
           this.router.navigate((['/identity', 'profile']));
         }
       }
-    )
+    );
+
+    this.activeSubs.push(changeLastNameSub);
   }
 
   public onUsernameChangeSubmit(): void{
@@ -183,7 +190,7 @@ export class ChangeUserInfoComponent implements OnInit {
     const username = this.usernameChangeForm.value.username;
     const password = this.usernameChangeForm.value.passwordChangeUsername;
     
-    this.userService.changeUsername(username, password).pipe(
+    var changeUsernameSub = this.userService.changeUsername(username, password).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 403)
@@ -200,7 +207,9 @@ export class ChangeUserInfoComponent implements OnInit {
           this.router.navigate((['/identity', 'profile']));
         }
       }
-    )
+    );
+
+    this.activeSubs.push(changeUsernameSub);
   }
 
   public onEmailChangeSubmit(): void{
@@ -215,7 +224,7 @@ export class ChangeUserInfoComponent implements OnInit {
     const email = this.emailChangeForm.value.email;
     const password = this.emailChangeForm.value.passwordChangeEmail;
     
-    this.userService.changeUserEmail(email, password).pipe(
+    var changeUserEmailSub = this.userService.changeUserEmail(email, password).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 403)
@@ -232,8 +241,9 @@ export class ChangeUserInfoComponent implements OnInit {
           this.router.navigate((['/identity', 'profile']));
         }
       }
-    )
+    );
 
+    this.activeSubs.push(changeUserEmailSub);
   }
 
   public get passwordChangePassword(){
@@ -355,5 +365,9 @@ export class ChangeUserInfoComponent implements OnInit {
    }
   }
   
-
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
 }

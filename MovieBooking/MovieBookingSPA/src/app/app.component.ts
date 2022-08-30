@@ -7,11 +7,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  router: Router;
   title = 'MovieBookingSPA';
 
-  constructor(router: Router){
-    this.router = router;
+  constructor(public router: Router){
   }
 
   public isAuthenticated() {

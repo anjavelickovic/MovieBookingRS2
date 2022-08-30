@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, forkJoin, of } from 'rxjs';
+import { catchError, forkJoin, of, Subscription } from 'rxjs';
 import { Role } from 'src/app/shared/app-state/role';
 import { AuthenticationFacadeService } from '../../domain/application-services/authentication-facade.service';
 
@@ -16,12 +16,13 @@ interface ILoginFormData {
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.css']
 })
-export class LoginFormComponent implements OnInit {
+export class LoginFormComponent implements OnInit, OnDestroy {
 
   public loginForm: UntypedFormGroup;
   public showFormErrors: boolean;
   public showServerError: boolean;
   private internalServerError: boolean;
+  private activeSubs: Subscription[] = [];
 
   constructor(private authenticationService: AuthenticationFacadeService, 
               private formBuilder: UntypedFormBuilder,
@@ -55,7 +56,7 @@ export class LoginFormComponent implements OnInit {
 
     const data: ILoginFormData = this.loginForm.value as ILoginFormData;
 
-    forkJoin([
+    var loginSub = forkJoin([
       this.authenticationService.login(data.usernameOrEmail, data.password, Role.Customer).pipe(
         catchError((err: HttpErrorResponse) => {
           if(err.status !== 401){
@@ -88,6 +89,8 @@ export class LoginFormComponent implements OnInit {
         }
       }
     )
+
+    this.activeSubs.push(loginSub);
   }
 
   public registerForm(): void {
@@ -100,6 +103,12 @@ export class LoginFormComponent implements OnInit {
 
   public get password() {
     return this.loginForm.get('password');
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
 }

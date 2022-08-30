@@ -1,8 +1,8 @@
 <div style="background-color: rgb(50, 159, 209)">
     <nav class="navbar navbar-expand navbar-dark" style="background-color: rgb(50, 159, 209)">
         <div class="mx-auto" style="color:rgb(152, 207, 232);">
-            <h3 *ngIf="!isLoginOrRegisterPage()"><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
-            <h3 *ngIf="isLoginOrRegisterPage()" style="margin-left: 0px"><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
+            <h3 *ngIf="isAuthenticated()"><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
+            <h3 *ngIf="!isAuthenticated()" style="margin-left: 0px"><b><i><a (click)="mainPage()">Movie Tickets Booking</a></i></b></h3>
         </div>
             
         <div class="form-group wide" *ngIf="isMainPage() || isSearchPage()" style="margin-right:5px">
@@ -15,7 +15,8 @@
             style="background-color: white;color: rgb(50, 159, 209);"
             autocomplete="off"
             #searchBarWide
-            (keyup.enter)="search(searchBarWide.value)">
+            [(ngModel)]="userSearch"
+            (keyup.enter)="search()">
         </div>
 
         <div class="form-group narrow" *ngIf="isMainPage() || isSearchPage()" style="margin-right:5px">
@@ -28,7 +29,8 @@
             style="background-color: white;color: rgb(50, 159, 209);"
             autocomplete="off"
             #searchBarNarrow
-            (keyup.enter)="search(searchBarNarrow.value)">
+            [(ngModel)]="userSearch"
+            (keyup.enter)="search()">
         </div>
        
         <select *ngIf="isMainPage() || isSearchPage()" name="criteria" id="criteria" class="form-select"

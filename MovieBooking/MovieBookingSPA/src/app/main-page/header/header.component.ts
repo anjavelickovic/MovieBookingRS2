@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 
@@ -8,29 +9,28 @@ import { AppStateService } from 'src/app/shared/app-state/app-state.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   public appState: IAppState;
   public searchCriteria: string;
   public searchCriteriaPlaceholderText: string;
+  public userSearch: string;
+
+  private activeSubs: Subscription[] = [];
 
   constructor(private appStateService: AppStateService, private router: Router) {
 
-    this.appStateService.getAppState().subscribe(
+    var appStateSub = this.appStateService.getAppState().subscribe(
       (appState: IAppState) => {
         this.appState = appState;
       }
     );
 
+    this.activeSubs.push(appStateSub);
     this.resetSearchParameters();
   }
 
   ngOnInit(): void {
-  }
-
-  public logout(): void {
-    this.router.navigate(['/identity', 'logout']);
-    this.resetSearchParameters();
   }
 
   public mainPage(): void {
@@ -42,9 +42,9 @@ export class HeaderComponent implements OnInit {
     this.resetSearchParameters();
   }
 
-  public search(userSearch: string): void {
-    if(this.correctFormat(userSearch)){
-      this.router.navigate(['/movies', 'search', this.searchCriteria, userSearch], {
+  public search(): void {
+    if(this.correctFormat(this.userSearch)){
+      this.router.navigate(['/movies', 'search', this.searchCriteria, this.userSearch], {
         queryParams: {
           sortBy: "imdbRating",
           sortAscending: false,
@@ -65,8 +65,12 @@ export class HeaderComponent implements OnInit {
     return this.router.url.includes("/search");
   }
 
-  public isLoginOrRegisterPage(): boolean{
-    return this.router.url === '/identity/login' || this.router.url === '/identity/register';
+  public isAuthenticated(): boolean{
+    const value = this.router.url === '/identity/login' ||
+                  this.router.url === '/identity/register' ||
+                  this.router.url === '/identity/logout';
+
+    return !value;
   }
 
   public changeSearchCriteriaPlaceholderText(): void {
@@ -145,7 +149,14 @@ export class HeaderComponent implements OnInit {
   }
 
   private resetSearchParameters(): void{
-    this.searchCriteria = 'title';
+    this.userSearch = "";
+    this.searchCriteria = "title";
     this.searchCriteriaPlaceholderText = "Search for movie";
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 }

@@ -8,7 +8,6 @@ import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { TheaterHallFacadeService } from 'src/app/theater-hall/domain/application-services/theater-hall-facade.service';
 import { ITheaterHall } from 'src/app/theater-hall/domain/models/theater-hall.model';
 import { ProjectionFacadeService } from '../domain/application-services/projection-facade.service';
-import { ICreateProjectionRequest } from '../domain/models/create-projection-request.model';
 import { IFormProjection } from '../domain/models/form-projection.model';
 
 @Component({
@@ -43,12 +42,14 @@ export class ProjectionFormComponent implements OnInit, OnDestroy {
     var thSub = this.theaterHallFacadeService.getTheaterHalls()
       .subscribe(theaterHalls => {
         this.theaterHalls = theaterHalls;
+        this.theaterHalls.sort((hall1, hall2) => hall1.name.localeCompare(hall2.name));
     });
     this.activeSubs.push(thSub);
 
     var movieSub = this.moviesFacadeService.getMoviesDetails()
       .subscribe(movies => {
         this.movies = movies;
+        this.movies.sort((movie1, movie2) => movie1.title.localeCompare(movie2.title));
     });
     this.activeSubs.push(movieSub);
 
