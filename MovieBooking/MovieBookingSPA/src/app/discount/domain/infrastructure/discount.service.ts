@@ -22,7 +22,6 @@ export class DiscountService {
   }
 
   public updateDiscount(coupon : IUpdateCoupon) : Observable<boolean> {
-    console.log("evo me");
     return this.httpClient.put<boolean>(this.discountUrl, coupon);
   }
 

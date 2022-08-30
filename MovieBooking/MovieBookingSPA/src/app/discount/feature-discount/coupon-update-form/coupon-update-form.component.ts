@@ -73,43 +73,20 @@ export class CouponUpdateFormComponent implements OnInit {
         data.movieId = movieDetails.id;
   
         return this.discountService.updateDiscount(this.movie.id, data.amount)
-        })
-      )).subscribe({
-          error: (err : boolean) => {
-          if(!err)
-            window.alert('There was a problem with updating coupon, please try again!');
-          }, 
-          complete: () => {
-            window.alert("Coupon updated");
-            this.couponForm.reset();
-            this.modalReference.close();
-            window.location.reload();
-            }}
-      );
-
-    /*this.moviesFacadeService.getMovieDetails(data.movieId)
-    .subscribe(movieDetails => {
-      this.movie = movieDetails;
-      console.log(this.movie.title);
-    
-      data.movieId = movieDetails.id;
-
-      console.log(this.movie.id )
-
-    this.discountService.updateDiscount(this.movie.id, data.amount)
-    .subscribe({
-      error: (err : boolean) => {
-      if(!err)
-        window.alert('There was a problem with updating coupon, please try again!');
-    }, 
-    complete: () => {
-      window.alert("Updated coupon for movie with id: " + movieDetails.title);
-      this.couponForm.reset();
-      this.modalReference.close();
-      window.location.reload();
-      }
-    });
-  });*/
+        }))
+      ).subscribe((response) => {
+          if(!response){
+              window.alert("There was a problem with updating coupon. \nPlease check if coupon you are trying to update exists.");
+              this.couponForm.reset();
+              this.modalReference.close();
+              window.location.reload();    
+          } else {
+              window.alert("Coupon updated successfully");
+              this.couponForm.reset();
+              this.modalReference.close();
+              window.location.reload();
+          }
+      });
 } 
 
   public changeMovie(e: any) {

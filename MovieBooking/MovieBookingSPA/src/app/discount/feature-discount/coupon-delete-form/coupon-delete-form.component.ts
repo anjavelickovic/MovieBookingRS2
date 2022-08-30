@@ -60,18 +60,19 @@ export class CouponDeleteFormComponent implements OnInit {
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
 
       this.discountService.deleteDiscount(data.movieName)
-        .subscribe({
-          error: (check : boolean) => {
-          if(!check)
-            window.alert('There was a problem with deleting coupon, please try again!');
-        },
-        complete: () => {
-          window.alert("Coupon deleted successfully!");
-          this.couponForm.reset();
-          this.modalReference.close();
-          window.location.reload();
-          }
-        });
+      .subscribe((response) => {
+        if(!response){
+            window.alert("There was a problem with deleting coupon. \nPlease check if coupon you are trying to delete exists.");
+            this.couponForm.reset();
+            this.modalReference.close();
+            window.location.reload();    
+        } else {
+            window.alert("Coupon deleted successfully");
+            this.couponForm.reset();
+            this.modalReference.close();
+            window.location.reload();
+        }
+    });
 } 
 
 
