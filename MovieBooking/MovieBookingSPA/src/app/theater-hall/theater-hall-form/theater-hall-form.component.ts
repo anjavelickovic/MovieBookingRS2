@@ -1,23 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TheaterHallFacadeService } from '../domain/application-services/theater-hall-facade.service';
 import { ICreateTheaterHallRequest } from '../domain/models/create-theater-hall-request.model';
-import { catchError, from, of, switchMap } from 'rxjs';
+import { catchError, from, of, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-theater-hall-form',
   templateUrl: './theater-hall-form.component.html',
   styleUrls: ['./theater-hall-form.component.css']
 })
-export class TheaterHallFormComponent implements OnInit {
+export class TheaterHallFormComponent implements OnInit, OnDestroy {
 
   public modalReference: NgbModalRef;
   public theaterHallForm: UntypedFormGroup;
   public showFormErrors: boolean;
   public showServerError: boolean;
-  
+  private activeSubs: Subscription[] = [];
+
   
   constructor(private modalService: NgbModal,
               private formBuilder: UntypedFormBuilder,
@@ -64,7 +65,7 @@ export class TheaterHallFormComponent implements OnInit {
 
     const data: ICreateTheaterHallRequest = this.theaterHallForm.value as ICreateTheaterHallRequest;
     
-    this.theaterHallFacadeService.createTheaterHall(data.name, data.terms, data.numberOfSeats)
+    var thSub = this.theaterHallFacadeService.createTheaterHall(data.name, data.terms, data.numberOfSeats)
      .subscribe({
         error: (err) => {
           this.showServerError = true;
@@ -78,7 +79,8 @@ export class TheaterHallFormComponent implements OnInit {
           this.modalReference.close();
           window.location.reload();
         }
-      })
+      });
+      this.activeSubs.push(thSub);
   }
    
   public open(content) {
@@ -95,4 +97,9 @@ export class TheaterHallFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
 }

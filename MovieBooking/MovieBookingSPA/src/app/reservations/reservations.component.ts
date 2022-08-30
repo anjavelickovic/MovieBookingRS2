@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { ReservationFacadeService } from './domain/application-services/reservation-facade.service';
 import { IPhoneForm } from './domain/models/phone-form.model';
-import { IReservationCheckout } from './domain/models/reservation-checkout.model';
 import { IReservation } from './domain/models/reservation.model';
 
 @Component({
@@ -13,22 +12,27 @@ import { IReservation } from './domain/models/reservation.model';
   templateUrl: './reservations.component.html',
   styleUrls: ['./reservations.component.css']
 })
-export class ReservationsComponent implements OnInit {
+export class ReservationsComponent implements OnInit, OnDestroy {
 
   public reservations: { [movieiId: string]: {[projectionId: string] :  IReservation} };
   public reservationsList: IReservation[] = [];
   public modalReference: NgbModalRef;
   public checkoutForm: UntypedFormGroup;
+  public reservationsExists: boolean = false;
+  private activeSubs: Subscription[] = [];
 
   constructor(private reservationFacadeService: ReservationFacadeService,
               private modalService: NgbModal,
               private formBuilder: UntypedFormBuilder,
               private router: Router) { 
-    this.reservationFacadeService.getReservations()
+    var resSub = this.reservationFacadeService.getReservations()
       .subscribe(reservationBasket => {
         this.reservations = reservationBasket.reservations;
+        if(Object.keys(this.reservations).length > 0)
+          this.reservationsExists = true;
         console.log(this.reservations);
     });
+    this.activeSubs.push(resSub);
     
     this.checkoutForm = this.formBuilder.group({
       areaCode: ['', [Validators.required]],
@@ -55,7 +59,7 @@ export class ReservationsComponent implements OnInit {
     console.log(data);
     console.log(this.reservationsList);
 
-    this.reservationFacadeService.checkout(this.reservationsList, data.areaCode, data.number)
+    var chkSub = this.reservationFacadeService.checkout(this.reservationsList, data.areaCode, data.number)
     .subscribe({
       error: (err) => {
         console.log(err);
@@ -67,12 +71,12 @@ export class ReservationsComponent implements OnInit {
         this.router.navigate((['/administration']));
       }
     });
-
+    this.activeSubs.push(chkSub);
 
   }
 
   public deleteAll(){
-    this.reservationFacadeService.deleteReservations()
+    var resDelSub = this.reservationFacadeService.deleteReservations()
     .subscribe({
       error: (err) => {
         console.log(err);
@@ -84,6 +88,7 @@ export class ReservationsComponent implements OnInit {
         window.location.reload();
       }
     });
+    this.activeSubs.push(resDelSub);
   }
 
   public open(content) {
@@ -96,6 +101,12 @@ export class ReservationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
 }

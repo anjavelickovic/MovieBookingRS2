@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, from, of, switchMap } from 'rxjs';
+import { catchError, from, of, Subscription, switchMap } from 'rxjs';
 import { Role } from 'src/app/shared/app-state/role';
 import { AuthenticationFacadeService } from '../../domain/application-services/authentication-facade.service';
 
@@ -19,11 +19,13 @@ interface IRegisterFormData {
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
 })
-export class RegisterFormComponent implements OnInit {
+export class RegisterFormComponent implements OnInit, OnDestroy {
 
   public registerForm: UntypedFormGroup;
   public showFormErrors: boolean;
   public showServerError: boolean;
+
+  private activeSubs: Subscription[] = [];
 
   constructor(private authenticationService: AuthenticationFacadeService, 
     private formBuilder: UntypedFormBuilder,
@@ -66,7 +68,7 @@ export class RegisterFormComponent implements OnInit {
 
     const data: IRegisterFormData = this.registerForm.value as IRegisterFormData;
 
-    this.authenticationService.registerCustomer(data.firstName, data.lastName, data.username, data.password, data.email)
+    var registerSub = this.authenticationService.registerCustomer(data.firstName, data.lastName, data.username, data.password, data.email)
     .pipe(
       switchMap(
         success => {
@@ -88,7 +90,9 @@ export class RegisterFormComponent implements OnInit {
         if (success){
           this.router.navigate((['/main']));
         }
-      })
+      });
+
+      this.activeSubs.push(registerSub);
     }
 
   public get firstName(){
@@ -117,6 +121,12 @@ export class RegisterFormComponent implements OnInit {
 
   public loginForm(): void {
     this.router.navigate((['/identity', 'login']));
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
 }

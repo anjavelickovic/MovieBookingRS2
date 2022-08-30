@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 import { ReservationFacadeService } from '../domain/application-services/reservation-facade.service';
@@ -13,7 +13,7 @@ import { IReservation } from '../domain/models/reservation.model';
   templateUrl: './reservations-list.component.html',
   styleUrls: ['./reservations-list.component.css']
 })
-export class ReservationsListComponent implements OnInit {
+export class ReservationsListComponent implements OnInit, OnDestroy {
 
   public reservations: { [movieiId: string]: {[projectionId: string] :  IReservation} };
   public totalPrice: number;
@@ -23,23 +23,26 @@ export class ReservationsListComponent implements OnInit {
   public showServerErrors = false;
   public errMsg: string;
   public processing: boolean = false;
+  private activeSubs: Subscription[] = [];
 
   constructor(private reservationFacadeService: ReservationFacadeService,
              private appStateService: AppStateService,
              private modalService: NgbModal,
              private formBuilder: UntypedFormBuilder) { 
-    this.appStateService.getAppState().subscribe(
+    var appSub = this.appStateService.getAppState().subscribe(
       (appState: IAppState) => {
         this.appState = appState;
       }
     );
+    this.activeSubs.push(appSub);
 
-    this.reservationFacadeService.getReservations()
+    var resSub = this.reservationFacadeService.getReservations()
       .subscribe(reservationBasket => {
         this.reservations = reservationBasket.reservations;
         this.totalPrice = reservationBasket.totalPrice;
         console.log(this.reservations);
     });
+    this.activeSubs.push(resSub);
 
     this.reservationForm = this.formBuilder.group({
         numberOfTickets: ['', [Validators.required]]
@@ -68,7 +71,7 @@ export class ReservationsListComponent implements OnInit {
     console.log(data.numberOfTickets);
     console.log(projection)
 
-    this.reservationFacadeService.updateReservation(projection.projectionId, projection.projectionDate, 
+    var resUpdateSub = this.reservationFacadeService.updateReservation(projection.projectionId, projection.projectionDate, 
       projection.projectionTerm,projection.movieId, projection.movieTitle,
       projection.theaterHallName, projection.theaterHallId, projection.price, data.numberOfTickets)
      .subscribe({
@@ -91,12 +94,13 @@ export class ReservationsListComponent implements OnInit {
         window.location.reload();
       }
     });
+    this.activeSubs.push(resUpdateSub);
   }
 
   public deleteReservation(projection){
     const data: IReservationForm = this.reservationForm.value as IReservationForm;
 
-    this.reservationFacadeService.deleteReservation(projection.projectionId, projection.projectionDate, 
+    var resDelSub = this.reservationFacadeService.deleteReservation(projection.projectionId, projection.projectionDate, 
       projection.projectionTerm,projection.movieId, projection.movieTitle,
       projection.theaterHallName, projection.theaterHallId, projection.price, projection.numberOfTickets)
     .subscribe({
@@ -110,10 +114,15 @@ export class ReservationsListComponent implements OnInit {
         window.location.reload();
       }
     });
+    this.activeSubs.push(resDelSub);
   }
 
-  public ngOnInit(): void {
-    
-  }
+  public ngOnInit(): void {}
 
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
+  
 }

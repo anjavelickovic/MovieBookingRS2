@@ -21,6 +21,10 @@ export class DiscountService {
     return this.httpClient.get<ICoupon[]>(this.discountUrl);
   }
 
+  public getDiscount(movieTitle: string) : Observable<ICoupon>{
+    return this.httpClient.get<ICoupon>(this.discountUrl + movieTitle);
+  }
+
   public updateDiscount(coupon : IUpdateCoupon) : Observable<boolean> {
     return this.httpClient.put<boolean>(this.discountUrl, coupon);
   }

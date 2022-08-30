@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -12,7 +12,7 @@ import { ITheaterHall } from '../domain/models/theater-hall.model';
   templateUrl: './theater-hall-info.component.html',
   styleUrls: ['./theater-hall-info.component.css']
 })
-export class TheaterHallInfoComponent implements OnInit {
+export class TheaterHallInfoComponent implements OnInit, OnDestroy {
 
   public theaterHall: ITheaterHall;
   private paramMapSub: Subscription | null;
@@ -20,6 +20,7 @@ export class TheaterHallInfoComponent implements OnInit {
   public theaterHallForm: UntypedFormGroup;
   public showFormErrors: boolean;
   public showServerError: boolean;
+  private activeSubs: Subscription[] = [];
 
   constructor(private theaterHallFacadeService: TheaterHallFacadeService,
               private route: ActivatedRoute,
@@ -37,6 +38,7 @@ export class TheaterHallInfoComponent implements OnInit {
         this.showServerError = false;
         this.resetForm();
     });
+    this.activeSubs.push(this.paramMapSub);
   }
 
   public get name(){
@@ -82,7 +84,7 @@ export class TheaterHallInfoComponent implements OnInit {
 
     const data: ICreateTheaterHallRequest = this.theaterHallForm.value as ICreateTheaterHallRequest;
     
-    this.theaterHallFacadeService.updateTheaterHall(this.theaterHall.id, data.name, data.terms, data.numberOfSeats)
+    var thSub = this.theaterHallFacadeService.updateTheaterHall(this.theaterHall.id, data.name, data.terms, data.numberOfSeats)
      .subscribe({
         error: (err) => {
           this.showServerError = true;
@@ -95,11 +97,12 @@ export class TheaterHallInfoComponent implements OnInit {
           this.resetForm();
           window.location.reload();
         }
-      })
+      });
+      this.activeSubs.push(thSub);
   }
 
   public deleteTheaterHall(){
-    this.theaterHallFacadeService.deleteTheaterHall(this.theaterHall.id)
+    var thDelSub = this.theaterHallFacadeService.deleteTheaterHall(this.theaterHall.id)
     .subscribe({
       error: (err) => {
         console.log(err);
@@ -111,6 +114,7 @@ export class TheaterHallInfoComponent implements OnInit {
         this.router.navigate((['/theater-hall']));
       }
     });
+    this.activeSubs.push(thDelSub);
   }
 
   public open(content) {
@@ -121,10 +125,13 @@ export class TheaterHallInfoComponent implements OnInit {
     this.modalReference.close();
     this.resetForm();
   }
-
-  
   
   ngOnInit(): void {
   }
 
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
 }

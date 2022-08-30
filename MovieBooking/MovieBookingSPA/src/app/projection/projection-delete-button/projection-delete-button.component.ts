@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { ProjectionFacadeService } from '../domain/application-services/projection-facade.service';
 import { IDeleteForm } from '../domain/models/delete-form.model';
 import { IProjection } from '../domain/models/projection.model';
@@ -12,7 +12,7 @@ import { IProjection } from '../domain/models/projection.model';
   templateUrl: './projection-delete-button.component.html',
   styleUrls: ['./projection-delete-button.component.css']
 })
-export class ProjectionDeleteButtonComponent implements OnInit {
+export class ProjectionDeleteButtonComponent implements OnInit, OnDestroy {
 
   public modalReference: NgbModalRef;
   public deleteForm: UntypedFormGroup;
@@ -21,18 +21,20 @@ export class ProjectionDeleteButtonComponent implements OnInit {
   public paramName: string = "all";
   public errMsg: string;
   public moviesInProjections: Set<string> = new Set<string>();
-  
+  private activeSubs: Subscription[] = [];
+
   constructor(private modalService: NgbModal,
               private formBuilder: UntypedFormBuilder,
               private router: Router,
               private projectionFacadeService: ProjectionFacadeService) {
 
-    this.projectionFacadeService.getProjections()
+    var projSub = this.projectionFacadeService.getProjections()
       .subscribe(projections => {
         for(let projection of projections){
           this.moviesInProjections.add(projection.movieTitle);
         }
     });
+    this.activeSubs.push(projSub);
 
     this.showFormErrors = true;
     this.showServerError = false;
@@ -98,7 +100,7 @@ export class ProjectionDeleteButtonComponent implements OnInit {
 
     console.log(data.param);
     if(data.deleteBy == 'all'){
-      this.projectionFacadeService.deleteProjections()
+      var delProjSub = this.projectionFacadeService.deleteProjections()
       .subscribe({
           error: (err) => {
             this.showServerError = true;
@@ -113,9 +115,10 @@ export class ProjectionDeleteButtonComponent implements OnInit {
             window.location.reload();
           }
         });
+      this.activeSubs.push(delProjSub);
     }else{
       if(data.deleteBy == 'by date'){
-        this.projectionFacadeService.deleteProjectionsByDate(data.param)
+        var delProjSub = this.projectionFacadeService.deleteProjectionsByDate(data.param)
         .subscribe({
             error: (err) => {
               this.showServerError = true;
@@ -130,8 +133,9 @@ export class ProjectionDeleteButtonComponent implements OnInit {
              window.location.reload();
             }
           });
+        this.activeSubs.push(delProjSub);
         }else {
-        this.projectionFacadeService.deleteProjectionsByMovieTitle(data.param)
+        var delProjSub = this.projectionFacadeService.deleteProjectionsByMovieTitle(data.param)
         .subscribe({
             error: (err) => {
               this.showServerError = true;
@@ -146,11 +150,18 @@ export class ProjectionDeleteButtonComponent implements OnInit {
               window.location.reload();
             }
           });
+        this.activeSubs.push(delProjSub);
       }
     }
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
 }

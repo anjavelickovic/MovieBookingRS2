@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, switchMap, take, throwError } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { timeout, catchError, map, Observable, of, Subscription, switchMap, take, throwError } from 'rxjs';
 import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 import { Role } from 'src/app/shared/app-state/role';
@@ -18,17 +18,20 @@ import { UserFacadeService } from './user-facade.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationFacadeService {
+export class AuthenticationFacadeService implements OnDestroy {
   public appState: IAppState;
+  private activeSubs: Subscription[] = [];
 
   constructor(private authenticationService: AuthenticationService, private appStateService: AppStateService, 
               private jwtService: JwtService, private userService: UserFacadeService) { 
 
-    this.appStateService.getAppState().subscribe(
+    var appStateSub = this.appStateService.getAppState().subscribe(
       (appState: IAppState) => {
         this.appState = appState;
       }
     );
+
+    this.activeSubs.push(appStateSub);
 
   }
 
@@ -81,12 +84,14 @@ export class AuthenticationFacadeService {
         return request;
       }),
       switchMap((request: ILogoutRequest) => this.authenticationService.logout(request, this.appState.role)),
+      timeout(3000),
       map(() => {
         this.appStateService.clearAppState();
         return true;
       }),
       catchError((err) => {
         console.error(err);
+        this.appStateService.clearAppState();
         return of(false);
       })
     );
@@ -112,6 +117,12 @@ export class AuthenticationFacadeService {
         return of(null);
       })
     );
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
 }

@@ -111,8 +111,16 @@ namespace Movies.API.Repositories
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByDirector(string director)
         {
-            var movies = await _movieContext.Movies.Find(movie => movie.Director.ToLower().Contains(director.ToLower())).ToListAsync();
-            return _mapper.Map<IEnumerable<MovieDTO>>(movies);
+            var movieDirector = director.ToLower();
+            var movies = await _movieContext.Movies.Find(movie => true).ToListAsync();
+
+            return _mapper.Map<IEnumerable<MovieDTO>>(movies.FindAll(movie => {
+                foreach (var director in movie.Directors)
+                    if (director.ToLower().Contains(movieDirector))
+                        return true;
+                return false;
+            }
+            ));
         }
 
         public async Task<IEnumerable<MovieDTO>> GetMoviesByMainActor(string mainActor)
@@ -161,34 +169,23 @@ namespace Movies.API.Repositories
             return _mapper.Map<IEnumerable<MovieDTO>>(movies);
         }
 
-        public async Task<bool> CreateMovie(CreateMovieDTO movie)
-        {
-            try
-            {
-                await _movieContext.Movies.InsertOneAsync(_mapper.Map<Movie>(movie));
-            }
-            catch (AggregateException)
-            {
-                return false;
-            }
-            return true;
-
-        }
-
-        public async Task<bool> CreateMovieById(string id)
+        public async Task<MovieErrorCode> CreateMovieById(string id)
         {
             var movie = await _movieContext.Movies.Find(movie => (movie.Id == id)).FirstOrDefaultAsync();
             if (movie != null)
-                return false;
+                return MovieErrorCode.ALREADY_IN_DATABASE;
 
             var result = await ImdbClient.FetchJsonDataForMovie(id);
 
             if (result == null)
-                return false;
+                return MovieErrorCode.MOVIE_CREATION_ERROR;
 
+            if (await _movieContext.LastUpdatedDate.CountDocumentsAsync(date => true) == 0) {
+                await _movieContext.LastUpdatedDate.InsertOneAsync(new LastUpdate(DateTime.Now));
+            }
             await _movieContext.Movies.InsertOneAsync(result.ToObject<Movie>());
 
-            return true;
+            return MovieErrorCode.SUCCESS;
         }
 
         public async Task UpdateInformationForAllMovies() 
@@ -219,6 +216,12 @@ namespace Movies.API.Repositories
                 deleted = deleted && deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
             }
             return deleted;
+        }
+
+        public async Task<LastUpdate> GetLastUpdatedDate()
+        {
+            var movie = await _movieContext.LastUpdatedDate.Find(movie => true).FirstOrDefaultAsync();
+            return movie;
         }
     }
 }

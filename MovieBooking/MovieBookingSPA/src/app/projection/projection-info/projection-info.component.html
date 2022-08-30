@@ -11,17 +11,17 @@
 
 <!--Projection Info-->
 <div *ngIf="projection; else elseBlock" class="marg">
-    <h4>Movie: {{ projection.movieTitle }}</h4>
-    <h4>Runtime: {{projection.runtime}}</h4>
-    <h4>Date: {{projection.projectionDate}}</h4>
-    <h4>Term: {{projection.projectionTerm}}</h4>
-    <h4>Theater Hall: {{projection.theaterHallName}}</h4>
-    <h4>Number of seats: {{projection.numberOfSeats}}</h4>
-    <h4>Price: {{projection.price}}</h4>
+    <p class="font-info">Movie title: {{ projection.movieTitle }}</p>
+    <p class="font-info">Runtime: {{projection.runtime}}</p>
+    <p class="font-info">Date: {{projection.projectionDate}}</p>
+    <p class="font-info">Term: {{projection.projectionTerm}}</p>
+    <p class="font-info">Theater Hall: {{projection.theaterHallName}}</p>
+    <p class="font-info">Number of seats: {{projection.numberOfSeats}}</p>
+    <p class="font-info">Price: {{projection.price}}</p>
 </div>
 <ng-template #elseBlock>
     <div *ngIf="!projection" class="marg">
-        <h4>Loading...</h4>
+        <p class="font-info">Loading...</p>
     </div>
 </ng-template>
 
@@ -121,7 +121,7 @@
                 </div>
         
                 <div class="form-group">
-                        <span *ngIf="showServerError" class="error">Theater Hall with that date and term is taken</span>
+                        <span *ngIf="showServerError" class="error">Theater Hall with this date and term is taken</span>
                 </div>
             </form>
         </div>
