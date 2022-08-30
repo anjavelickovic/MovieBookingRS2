@@ -43,12 +43,14 @@ export class ProjectionFormComponent implements OnInit, OnDestroy {
     var thSub = this.theaterHallFacadeService.getTheaterHalls()
       .subscribe(theaterHalls => {
         this.theaterHalls = theaterHalls;
+        this.theaterHalls.sort((hall1, hall2) => hall1.name.localeCompare(hall2.name));
     });
     this.activeSubs.push(thSub);
 
     var movieSub = this.moviesFacadeService.getMoviesDetails()
       .subscribe(movies => {
         this.movies = movies;
+        this.movies.sort((movie1, movie2) => movie1.title.localeCompare(movie2.title));
     });
     this.activeSubs.push(movieSub);
 

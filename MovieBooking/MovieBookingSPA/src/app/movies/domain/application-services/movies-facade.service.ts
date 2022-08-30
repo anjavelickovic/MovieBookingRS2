@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MoviesService } from '../infrastructure/movies.service';
+import { ILastUpdate } from '../models/last-update';
 import { IMovieDetails } from '../models/movie-details';
 
 @Injectable({
@@ -64,5 +65,21 @@ export class MoviesFacadeService {
 
   public GetMoviesByImdbVotes(votes: number): Observable<Array<IMovieDetails>>{
     return this.moviesService.GetMoviesByImdbVotes(votes);
+  }
+
+  public CreateMovie(id: string): Observable<IMovieDetails>{
+    return this.moviesService.CreateMovie(id);
+  }
+
+  public DeleteMovie(id: string): Observable<void>{
+    return this.moviesService.DeleteMovie(id);
+  }
+
+  public GetLastUpdatedDate(): Observable<ILastUpdate> {
+    return this.moviesService.GetLastUpdatedDate();
+  }
+
+  public UpdateInformationForAllMovies(): Observable<void> {
+    return this.moviesService.UpdateInformationForAllMovies();
   }
 }

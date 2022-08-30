@@ -66,8 +66,6 @@ export class UserService {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
-    console.log(body);
     
     return this.httpClient.put(`${this.url}/ChangeUserPassword`, body, {headers: headers, responseType: 'text'});
   }

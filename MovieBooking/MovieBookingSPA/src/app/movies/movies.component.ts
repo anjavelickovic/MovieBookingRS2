@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, observable, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, observable, Observable, of, Subscription, switchMap, throwError } from 'rxjs';
 import { DiscountFacadeService } from '../discount/domain/application-services/discount-facade.service';
 import { ICoupon } from '../discount/domain/models/coupon';
 import { ProjectionFacadeService } from '../projection/domain/application-services/projection-facade.service';
@@ -13,6 +13,7 @@ import { ReservationFacadeService } from '../reservations/domain/application-ser
 import { IReservationForm } from '../reservations/domain/models/reservation-form.model';
 import { IAppState } from '../shared/app-state/app-state';
 import { AppStateService } from '../shared/app-state/app-state.service';
+import { Role } from '../shared/app-state/role';
 import { MoviesFacadeService } from './domain/application-services/movies-facade.service';
 import { IMovieDetails } from './domain/models/movie-details';
 
@@ -21,7 +22,7 @@ import { IMovieDetails } from './domain/models/movie-details';
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css']
 })
-export class MoviesComponent implements OnInit {
+export class MoviesComponent implements OnInit, OnDestroy {
   
   public appState: IAppState;
   public movieDetails: IMovieDetails = null;
@@ -36,6 +37,8 @@ export class MoviesComponent implements OnInit {
   public couponExists: boolean = false;
   
 
+  private activeSubs: Subscription[] = [];
+
   constructor(private movieService: MoviesFacadeService,
               private appStateService: AppStateService,
               private router: Router,
@@ -48,13 +51,15 @@ export class MoviesComponent implements OnInit {
     const path = this.router.url;
     const movieId = path.substring( path.lastIndexOf('/') + 1 );
 
-    this.appStateService.getAppState().subscribe(
+    var appStateSub = this.appStateService.getAppState().subscribe(
       (appState: IAppState) => {
         this.appState = appState;
       }
     );
 
-    this.movieService.getMovieDetails(movieId).pipe(
+    this.activeSubs.push(appStateSub);
+
+    var movieDetailsSub = this.movieService.getMovieDetails(movieId).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 404){
@@ -69,12 +74,11 @@ export class MoviesComponent implements OnInit {
       (result: boolean | IMovieDetails) => {
         if (result !== false){
           this.movieDetails = result as IMovieDetails;
-          console.log(this.movieDetails);
         }
       }
     );
 
-    this.projectionFacadeService.getMovieProjections(movieId).pipe(
+    var movieProjectionsSub = this.projectionFacadeService.getMovieProjections(movieId).pipe(
       switchMap((projections) => {
           this.projections = projections;
           return this.discountFacadeService.getDiscount(this.projections[0].movieTitle)
@@ -100,6 +104,9 @@ export class MoviesComponent implements OnInit {
               console.log("Server error")
             }
       });
+
+
+     this.activeSubs.push(movieProjectionsSub);
 
      this.projectionReserveForm = this.formBuilder.group({
       numberOfTickets: ['', [Validators.required]]
@@ -129,10 +136,8 @@ export class MoviesComponent implements OnInit {
   public onProjectionReserveFormSubmit(){
     this.processing = true;
     const data: IReservationForm = this.projectionReserveForm.value as IReservationForm;
-    console.log(data);
 
-    console.log(this.projection);
-    this.reservationFacadeService.addReservation(this.projection.id, this.projection.projectionDate, 
+    var addReservationSub = this.reservationFacadeService.addReservation(this.projection.id, this.projection.projectionDate, 
       this.projection.projectionTerm,this.projection.movieId, this.projection.movieTitle,
       this.projection.theaterHallName, this.projection.theaterHallId, this.projection.price, data.numberOfTickets)
      .subscribe({
@@ -157,10 +162,51 @@ export class MoviesComponent implements OnInit {
         window.location.reload();
       }
     });
+
+    this.activeSubs.push(addReservationSub);
   }
   
   public trailerConfiguration(){
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieDetails.trailer + "?autoplay=false&width=520");
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.movieDetails.trailer + "?autoplay=false&width=465");
   }
 
+  public isAdmin(){
+    return this.appState.hasRole(Role.Admin);
+  }
+
+  public deleteMovie(movieId: string){
+    
+    if(this.projections.length !== 0){
+      window.alert("Can't delete movies that have projections. Remove projections for this movie first!");
+      return;
+    }
+
+    var deleteMovieSub = this.movieService.DeleteMovie(movieId).pipe(
+      catchError((err: HttpErrorResponse) => {
+        console.log(err);
+        if(err.status === 404){
+          window.alert("No such movie in database");
+          this.router.navigateByUrl('/main');
+        }
+        else
+          window.alert("Internal server error");
+        return of(false);
+    })
+    ).subscribe(
+      (result) => {
+        if(result !== false){
+          window.alert("Successfully deleted movie");
+          this.router.navigateByUrl('/main');
+        }
+      }
+    );
+
+    this.activeSubs.push(deleteMovieSub);
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
 }

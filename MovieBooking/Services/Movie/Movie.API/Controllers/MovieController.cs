@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Movies.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class MovieController : ControllerBase
@@ -143,23 +144,17 @@ namespace Movies.API.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("[action]")]
-        [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
-        public async Task<ActionResult<MovieDTO>> CreateMovie([FromBody] CreateMovieDTO movie)
-        {
-            await _repository.CreateMovie(movie);
-
-            return CreatedAtRoute("GetMovie", new { id = movie.Id }, movie);
-        }
-
         [HttpPost("[action]/{id}")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status409Conflict)]
         public async Task<ActionResult<MovieDTO>> CreateMovieById(string id)
         {
             var result = await _repository.CreateMovieById(id);
 
-            if(result == false)
+            if (result == MovieErrorCode.ALREADY_IN_DATABASE)
+                return Conflict();
+            else if (result == MovieErrorCode.MOVIE_CREATION_ERROR)
                 return BadRequest();
 
             var movie = await _repository.GetMovieById(id);
@@ -192,6 +187,14 @@ namespace Movies.API.Controllers
         {
             await _repository.DeleteMovies();
             return Ok();
+        }
+
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetLastUpdatedDate()
+        {
+            var date = await _repository.GetLastUpdatedDate();
+            return Ok(date);
         }
 
     }

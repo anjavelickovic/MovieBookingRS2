@@ -6,11 +6,18 @@
     margin-right: 5px;
     padding: 5px;
   }
+
+  .movie-details {
+    width: 600px;
+  }
   
   @media screen and (max-width: 1300px) {
     .flex-container {
       display: inline;
     } 
+    .movie-details {
+      width: 465px;
+    }
   }
 
   td {
@@ -31,4 +38,8 @@ span.error {
 span.msg {
   font-size: 11px;
   color: blue;
+}
+
+i:hover {
+  cursor: pointer;
 }

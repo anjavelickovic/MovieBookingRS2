@@ -14,10 +14,12 @@ namespace Movies.API.Context
         public MovieContext(IConfiguration configuration)
         {
             var client = new MongoClient(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
-            var database = client.GetDatabase("MoviesDB");
-            Movies = database.GetCollection<Movie>("Movies");
+            var movieDatabase = client.GetDatabase("MoviesDB");
+            Movies = movieDatabase.GetCollection<Movie>("Movies");
+            LastUpdatedDate = movieDatabase.GetCollection<LastUpdate>("LastUpdatedDate");
         }
 
         public IMongoCollection<Movie> Movies { get; }
+        public IMongoCollection<LastUpdate> LastUpdatedDate { get; }
     }
 }

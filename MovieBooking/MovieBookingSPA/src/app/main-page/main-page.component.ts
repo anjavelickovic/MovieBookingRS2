@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, switchMap, Observable, of } from 'rxjs';
+import { catchError, switchMap, Observable, of, Subscription, iif } from 'rxjs';
 import { MoviesFacadeService } from '../movies/domain/application-services/movies-facade.service'
 import { IMovieDetails } from '../movies/domain/models/movie-details';
 import { ProjectionFacadeService } from '../projection/domain/application-services/projection-facade.service';
@@ -15,16 +15,19 @@ import { IProjection } from '../projection/domain/models/projection.model';
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']
 })
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, OnDestroy {
   private randomAiringMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private randomUpcomingMoviesObservable: Observable<boolean | IMovieDetails[]>;
   private projectionsObservable: Observable<boolean | IProjection[]>;
-  private NUMBER_OF_MOVIES = 6;
+  private NUMBER_OF_AIRING_MOVIES = 12;
+  private NUMBER_OF_UPCOMING_MOVIES = 6;
 
   public randomAiringMovies: Array<IMovieDetails>;
   public randomUpcomingMovies: Array<IMovieDetails>;
 
   public items: Array<number> = [1,2,3,4];
+
+  private activeSubs: Subscription[] = [];
 
   constructor(private movieService: MoviesFacadeService,
               private projectionService: ProjectionFacadeService,
@@ -38,7 +41,7 @@ export class MainPageComponent implements OnInit {
         return of(false);
     }));
 
-    this.randomUpcomingMoviesObservable = this.movieService.GetRandomUpcomingMovies(this.NUMBER_OF_MOVIES).pipe(
+    this.randomUpcomingMoviesObservable = this.movieService.GetRandomUpcomingMovies(this.NUMBER_OF_UPCOMING_MOVIES).pipe(
       catchError((err: HttpErrorResponse) => {
         console.log(err);
         if(err.status === 404)
@@ -57,7 +60,7 @@ export class MainPageComponent implements OnInit {
             return of(false);
           }
           var feasibleMovies: string[] = projections.map(projection => projection.movieId);
-          return this.movieService.GetRandomAiringMovies(this.NUMBER_OF_MOVIES, feasibleMovies)
+          return this.movieService.GetRandomAiringMovies(this.NUMBER_OF_AIRING_MOVIES, feasibleMovies)
         }
         return of(false);
       }),
@@ -71,6 +74,27 @@ export class MainPageComponent implements OnInit {
         return of(false);
       })
     );
+
+    if(sessionStorage.getItem("updated") === null){
+      var lastUpdateSub = this.movieService.GetLastUpdatedDate().pipe(
+        switchMap(result => {
+          var currentDay = new Date().getUTCDate();
+          var currentMonth = new Date().getMonth() + 1;
+          var currentYear = new Date().getFullYear();
+          var lastUpdateDay = result.day;
+          var lastUpdateMonth = result.month;
+          var lastUpdateYear = result.year;
+          var condition = (lastUpdateYear === currentYear && lastUpdateMonth === currentMonth && lastUpdateDay < currentDay)  || 
+                (lastUpdateYear === currentYear && lastUpdateMonth < currentMonth)  || 
+                lastUpdateYear < currentYear;
+          return iif(() => condition, this.movieService.UpdateInformationForAllMovies(), of(false));
+          }
+        )
+      ).subscribe(result => console.log(result));
+  
+      this.activeSubs.push(lastUpdateSub);
+      sessionStorage.setItem("updated", "");
+    }
 
     if(this.localStorageService.get(LocalStorageKeys.RandomAiringMovies) == null) {
       this.fetchRandomAiringMovies();
@@ -93,24 +117,34 @@ export class MainPageComponent implements OnInit {
   }
 
   public fetchRandomAiringMovies(): void{
-    this.randomAiringMoviesObservable.subscribe(
+    var randomAiringMoviesSub = this.randomAiringMoviesObservable.subscribe(
       (result: boolean | Array<IMovieDetails>) => {
         if (result !== false){
           this.randomAiringMovies = result as Array<IMovieDetails>;
           this.localStorageService.set(LocalStorageKeys.RandomAiringMovies, this.randomAiringMovies);
     }});
+
+    this.activeSubs.push(randomAiringMoviesSub);
   }
 
   public fetchRandomUpcomingMovies(): void{
-    this.randomUpcomingMoviesObservable.subscribe(
+    var randomUpcomingMoviesSub = this.randomUpcomingMoviesObservable.subscribe(
       (result: boolean | Array<IMovieDetails>) => {
         if (result !== false){
           this.randomUpcomingMovies = result as Array<IMovieDetails>;
           this.localStorageService.set(LocalStorageKeys.RandomUpcomingMovies, this.randomUpcomingMovies);
     }});
+
+    this.activeSubs.push(randomUpcomingMoviesSub);
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
 }

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { IAppState } from 'src/app/shared/app-state/app-state';
 import { AppStateService } from 'src/app/shared/app-state/app-state.service';
 import { Role } from 'src/app/shared/app-state/role';
@@ -9,18 +10,21 @@ import { Role } from 'src/app/shared/app-state/role';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
 
   public appState: IAppState;
 
+  private activeSubs: Subscription[] = [];
+
   constructor(private appStateService: AppStateService, private router: Router) {
 
-    this.appStateService.getAppState().subscribe(
+    var appStateSub = this.appStateService.getAppState().subscribe(
       (appState: IAppState) => {
         this.appState = appState;
       }
     );
 
+    this.activeSubs.push(appStateSub);
    }
 
   ngOnInit(): void {
@@ -60,5 +64,15 @@ export class SidebarComponent implements OnInit {
 
   public discount(): void {
     this.router.navigate(['/discount']);
+  }
+
+  public addMovie(): void{
+    this.router.navigate(['/movies', 'addmovie']);
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 }

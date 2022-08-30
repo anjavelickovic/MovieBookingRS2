@@ -62,7 +62,7 @@ namespace Movies.API.Helpers
 			{
 				jo.Add("Title", null);
 			}
-            else 
+			else 
 			{
 				jo.Add("Title", title);
 			}
@@ -114,7 +114,6 @@ namespace Movies.API.Helpers
 			}
 			else
 			{
-				Console.WriteLine(directors);
 				jo.Add(new JProperty("Directors", directors.Split(", ")));
 			}
 
