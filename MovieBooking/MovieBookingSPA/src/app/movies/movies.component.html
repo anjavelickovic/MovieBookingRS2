@@ -78,7 +78,8 @@
             <h6>Price: {{projection.price}}</h6>
             <h6>Hall: {{projection.theaterHallName}}</h6>
             <h6>Seats left: {{projection.numberOfSeats - projection.numberOfReservedSeats}}</h6>
-
+            <h6 *ngIf="couponExists">Discount: {{coupon.amount}}%</h6>
+        
             <button 
             class="btn" 
             style="background-color: darkblue; color: aliceblue; margin-right: 10px; margin-top: 10px;"
@@ -107,7 +108,7 @@
                     <div>
                         <p>Total price: {{projection.price * numberOfTickets.value}}</p>
                     </div>
-                    <span *ngIf="showServerErrors" class="error">
+                    <span *ngIf="!processing && showServerErrors" class="error">
                         {{errMsg}}
                     </span>
                     <span *ngIf="processing" class="error" class="msg">

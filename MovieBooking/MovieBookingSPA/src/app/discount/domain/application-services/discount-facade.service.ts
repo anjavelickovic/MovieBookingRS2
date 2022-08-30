@@ -28,6 +28,10 @@ export class DiscountFacadeService {
     return this.discountService.getDiscounts();
   }
 
+  public getDiscount(movieTitle: string) : Observable<ICoupon>{
+    return this.discountService.getDiscount(movieTitle);
+  }
+
   public deleteDiscount(id : string) : Observable<boolean> {
     return this.discountService.deleteDiscount(id);
   }
