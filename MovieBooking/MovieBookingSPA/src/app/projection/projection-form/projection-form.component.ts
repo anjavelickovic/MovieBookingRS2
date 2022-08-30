@@ -155,12 +155,14 @@ export class ProjectionFormComponent implements OnInit, OnDestroy {
   
    
   public open(content) {
+    this.showServerError = false;
     this.modalReference = this.modalService
                               .open(content, {ariaLabelledBy: 'modal'});
   }
 
   public close(){
     this.modalReference.close();
+    this.showServerError = false;
     this.projectionForm.reset();
   }
   

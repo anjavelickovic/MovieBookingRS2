@@ -6,7 +6,7 @@
  
         <div class="pos">
             <app-projection-form style="padding-right: 15px;"></app-projection-form>
-            <app-projection-delete-button style="padding-right: 15px;"></app-projection-delete-button>
+            <app-projection-delete-button *ngIf="projectionsExists" style="padding-right: 15px;"></app-projection-delete-button>
         </div>
     </nav>
     <hr>
