@@ -6,8 +6,8 @@
         
            <div class="pos" >
                 <app-coupon-form style="padding-right: 25px;"></app-coupon-form>
-                <app-coupon-update-form style="padding-right: 25px;"></app-coupon-update-form>
-                <app-coupon-delete-form style="padding-right: 25px;"></app-coupon-delete-form>
+                <app-coupon-update-form *ngIf="couponExists" style="padding-right: 25px;"></app-coupon-update-form>
+                <app-coupon-delete-form *ngIf="couponExists" style="padding-right: 25px;"></app-coupon-delete-form>
             </div>
     </nav>
     <hr>
