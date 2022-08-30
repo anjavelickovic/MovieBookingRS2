@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
 import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
@@ -16,7 +16,7 @@ interface ICouponFormData {
   templateUrl: './coupon-update-form.component.html',
   styleUrls: ['./coupon-update-form.component.css']
 })
-export class CouponUpdateFormComponent implements OnInit {
+export class CouponUpdateFormComponent implements OnInit, OnDestroy {
   
   public couponForm : FormGroup;
   public modalReference: NgbModalRef;
@@ -24,6 +24,8 @@ export class CouponUpdateFormComponent implements OnInit {
   public showServerError: boolean;
   public movie: IMovieDetails;
   public movies: IMovieDetails[] = [];
+  private activeSubs: Subscription[] = [];
+
 
   constructor(private modalService: NgbModal,
             private discountService : DiscountFacadeService,            
@@ -32,10 +34,12 @@ export class CouponUpdateFormComponent implements OnInit {
     this.showFormErrors = false;
     this.showServerError = false;
            
-    this.moviesFacadeService.getMoviesDetails()
+    var moviesSub = this.moviesFacadeService.getMoviesDetails()
     .subscribe(movies => {
       this.movies = movies;
     });
+
+    this.activeSubs.push(moviesSub);
 
     this.couponForm = new FormGroup({
       movieId : new FormControl("", [Validators.required]),
@@ -67,7 +71,7 @@ export class CouponUpdateFormComponent implements OnInit {
 
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
     
-    this.moviesFacadeService.getMovieDetails(data.movieId).pipe(
+    var moviesSub = this.moviesFacadeService.getMovieDetails(data.movieId).pipe(
       switchMap((movieDetails => {
         this.movie = movieDetails;      
         data.movieId = movieDetails.id;
@@ -87,6 +91,8 @@ export class CouponUpdateFormComponent implements OnInit {
               window.location.reload();
           }
       });
+
+      this.activeSubs.push(moviesSub);
 } 
 
   public changeMovie(e: any) {
@@ -105,4 +111,9 @@ export class CouponUpdateFormComponent implements OnInit {
     this.couponForm.reset();
   }
 
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
 }

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
 import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
 import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
@@ -14,7 +15,7 @@ interface ICouponFormData {
   templateUrl: './coupon-delete-form.component.html',
   styleUrls: ['./coupon-delete-form.component.css']
 })
-export class CouponDeleteFormComponent implements OnInit {
+export class CouponDeleteFormComponent implements OnInit, OnDestroy {
 
   public couponForm : FormGroup
   public modalReference: NgbModalRef;
@@ -22,6 +23,7 @@ export class CouponDeleteFormComponent implements OnInit {
   public showServerError: boolean;
   public movie: IMovieDetails;
   public movies: IMovieDetails[] = [];
+  private activeSubs: Subscription[] = [];
 
   constructor(private modalService: NgbModal,
               private discountService : DiscountFacadeService,
@@ -30,10 +32,12 @@ export class CouponDeleteFormComponent implements OnInit {
       this.showFormErrors = false;
       this.showServerError = false;
       
-    this.moviesFacadeService.getMoviesDetails()
+    var moviesSub = this.moviesFacadeService.getMoviesDetails()
       .subscribe(movies => {
         this.movies = movies;
       });       
+
+      this.activeSubs.push(moviesSub);
 
       this.couponForm = this.formBuilder.group({
         movieName: ['', [Validators.required]],
@@ -59,7 +63,7 @@ export class CouponDeleteFormComponent implements OnInit {
 
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
 
-      this.discountService.deleteDiscount(data.movieName)
+      var deleteSub = this.discountService.deleteDiscount(data.movieName)
       .subscribe((response) => {
         if(!response){
             window.alert("There was a problem with deleting coupon. \nPlease check if coupon you are trying to delete exists.");
@@ -73,7 +77,9 @@ export class CouponDeleteFormComponent implements OnInit {
             window.location.reload();
         }
     });
-} 
+
+    this.activeSubs.push(deleteSub);
+  } 
 
 
   public open(content) {
@@ -84,6 +90,12 @@ export class CouponDeleteFormComponent implements OnInit {
   public close(){
     this.modalReference.close();
     this.couponForm.reset();
+  }
+
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DiscountFacadeService } from './domain/application-services/discount-facade.service';
 
@@ -7,7 +7,7 @@ import { DiscountFacadeService } from './domain/application-services/discount-fa
   templateUrl: './discount.component.html',
   styleUrls: ['./discount.component.css']
 })
-export class DiscountComponent implements OnInit {
+export class DiscountComponent implements OnInit, OnDestroy {
   public couponExists: boolean = false;
   private activeSubs: Subscription[] = [];
 
