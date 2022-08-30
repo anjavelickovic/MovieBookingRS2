@@ -8,9 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Administration.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ReservationController : ControllerBase
@@ -32,6 +34,7 @@ namespace Administration.API.Controllers
             return Ok(reservations);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public async Task<ActionResult<int>> CheckoutReservation(CreateReservationCommand command)

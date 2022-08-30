@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Discount.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class DiscountController : ControllerBase
@@ -42,6 +44,7 @@ namespace Discount.API.Controllers
             return Ok(coupon);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(typeof(CouponDTO), StatusCodes.Status201Created)]
         public async Task<ActionResult<CouponDTO>> CreateDiscount([FromBody] CreateCouponDTO couponDTO)
@@ -51,6 +54,7 @@ namespace Discount.API.Controllers
             return CreatedAtAction("GetDiscount", new { movieName = coupon.MovieName }, coupon);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> UpdateDiscount([FromBody] UpdateCouponDTO coupon)
@@ -58,6 +62,7 @@ namespace Discount.API.Controllers
             return Ok(await _repository.UpdateDiscount(coupon));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{movieName}", Name = "DeleteDiscount")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> DeleteDiscount(string movieName)
