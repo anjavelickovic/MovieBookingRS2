@@ -11,5 +11,6 @@ namespace Movies.API.Context
     public interface IMovieContext
     {
         IMongoCollection<Movie> Movies { get; }
+        IMongoCollection<LastUpdate> LastUpdatedDate { get; }
     }
 }

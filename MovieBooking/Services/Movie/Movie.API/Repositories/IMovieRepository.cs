@@ -1,4 +1,5 @@
 ﻿using Movies.API.DTOs;
+using Movies.API.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,11 @@ namespace Movies.API.Repositories
         Task<IEnumerable<MovieDTO>> GetMoviesByLanguage(string language);
         Task<IEnumerable<MovieDTO>> GetMoviesByImdbRating(double lowerBound, double upperBound);
         Task<IEnumerable<MovieDTO>> GetMoviesByImdbVotes(int votes);
-        Task<bool> CreateMovie(CreateMovieDTO movie);
         Task<MovieErrorCode> CreateMovieById(string id);
         Task UpdateInformationForAllMovies();
         Task<bool> DeleteMovie(string id);
         Task<bool> DeleteMovies();
+        Task<LastUpdate> GetLastUpdatedDate();
     }
 
 }

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, switchMap, Observable, of, Subscription } from 'rxjs';
+import { catchError, switchMap, Observable, of, Subscription, iif } from 'rxjs';
 import { MoviesFacadeService } from '../movies/domain/application-services/movies-facade.service'
 import { IMovieDetails } from '../movies/domain/models/movie-details';
 import { ProjectionFacadeService } from '../projection/domain/application-services/projection-facade.service';
@@ -74,6 +74,27 @@ export class MainPageComponent implements OnInit, OnDestroy {
         return of(false);
       })
     );
+
+    if(sessionStorage.getItem("updated") === null){
+      var lastUpdateSub = this.movieService.GetLastUpdatedDate().pipe(
+        switchMap(result => {
+          var currentDay = new Date().getUTCDate();
+          var currentMonth = new Date().getMonth() + 1;
+          var currentYear = new Date().getFullYear();
+          var lastUpdateDay = result.day;
+          var lastUpdateMonth = result.month;
+          var lastUpdateYear = result.year;
+          var condition = (lastUpdateYear === currentYear && lastUpdateMonth === currentMonth && lastUpdateDay < currentDay)  || 
+                (lastUpdateYear === currentYear && lastUpdateMonth < currentMonth)  || 
+                lastUpdateYear < currentYear;
+          return iif(() => condition, this.movieService.UpdateInformationForAllMovies(), of(false));
+          }
+        )
+      ).subscribe(result => console.log(result));
+  
+      this.activeSubs.push(lastUpdateSub);
+      sessionStorage.setItem("updated", "");
+    }
 
     if(this.localStorageService.get(LocalStorageKeys.RandomAiringMovies) == null) {
       this.fetchRandomAiringMovies();

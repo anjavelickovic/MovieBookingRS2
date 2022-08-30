@@ -144,16 +144,6 @@ namespace Movies.API.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("[action]")]
-        [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
-        public async Task<ActionResult<MovieDTO>> CreateMovie([FromBody] CreateMovieDTO movie)
-        {
-            await _repository.CreateMovie(movie);
-
-            return CreatedAtRoute("GetMovie", new { id = movie.Id }, movie);
-        }
-
-        [Authorize(Roles = "Admin")]
         [HttpPost("[action]/{id}")]
         [ProducesResponseType(typeof(MovieDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
@@ -197,6 +187,14 @@ namespace Movies.API.Controllers
         {
             await _repository.DeleteMovies();
             return Ok();
+        }
+
+        [HttpGet("[action]")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetLastUpdatedDate()
+        {
+            var date = await _repository.GetLastUpdatedDate();
+            return Ok(date);
         }
 
     }

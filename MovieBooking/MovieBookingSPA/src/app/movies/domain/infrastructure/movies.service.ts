@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ILastUpdate } from '../models/last-update';
 import { IMovieDetails } from '../models/movie-details';
 
 @Injectable({
@@ -84,5 +85,18 @@ export class MoviesService {
 
   public DeleteMovie(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.url}/DeleteMovie/${id}`);
+  }
+
+  public GetLastUpdatedDate(): Observable<ILastUpdate> {
+    return this.httpClient.get<ILastUpdate>(`${this.url}/GetLastUpdatedDate`);
+  }
+
+  public UpdateInformationForAllMovies(): Observable<void> {
+    let body = JSON.stringify("");
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    
+    return this.httpClient.put<void>(`${this.url}/UpdateInformationForAllMovies`, body, {headers: headers});
   }
 }
