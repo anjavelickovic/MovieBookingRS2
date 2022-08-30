@@ -105,7 +105,10 @@
                         </div>
                     </form>
                     <div>
-                        <p>Total price: {{projection.price * numberOfTickets.value}}</p>
+                        <p *ngIf="couponExists; else noCoupon">Total price: {{projection.price * numberOfTickets.value * (1 - coupon.amount/100)}}</p>
+                        <ng-template #noCoupon>
+                            <p>Total price: {{projection.price * numberOfTickets.value}}</p>
+                        </ng-template>
                     </div>
                     <span *ngIf="!processing && showServerErrors" class="error">
                         {{errMsg}}
