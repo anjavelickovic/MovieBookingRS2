@@ -30,7 +30,6 @@ export class ReservationsListComponent implements OnInit, OnDestroy {
         this.show = new Array(reservations.length);
       });
       
-    this.activeSubs.push(stateSub);
 
   }
 
