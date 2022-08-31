@@ -16,6 +16,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public searchCriteriaPlaceholderText: string;
   public userSearch: string;
 
+  private integerIntervalRegex = new RegExp('^[1-9][0-9]*, *[1-9][0-9]*$');
+  private ratingIntervalRegex = new RegExp('^([1-9]([.][0-9])|10([.]0)?), ?([1-9]([.][0-9])|10([.]0)?)$');
+  private genresRegex = new RegExp('^[-a-zA-Z]+(, *[-a-zA-Z]+(, *[-a-zA-Z]+)?)?$');
+  private yearRegex = new RegExp('^[12][0-9]{3}$');
+  private votesRegex = new RegExp('^[1-9][0-9]*$');
+
   private activeSubs: Subscription[] = [];
 
   constructor(private appStateService: AppStateService, private router: Router) {
@@ -105,40 +111,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
       window.alert("String is empty");
       return false;
     }
-    
-    const integerIntervalRegex = new RegExp('^[1-9][0-9]*, *[1-9][0-9]*$');
-    const ratingIntervalRegex = new RegExp('^([1-9]([.][0-9])|10([.]0)?), ?([1-9]([.][0-9])|10([.]0)?)$');
-    const genresRegex = new RegExp('^[-a-zA-Z]+(, *[-a-zA-Z]+(, *[-a-zA-Z]+)?)?$');
-    const yearRegex = new RegExp('^[12][0-9]{3}$');
-    const votesRegex = new RegExp('^[1-9][0-9]*$');
 
     switch(this.searchCriteria){
       case "runtime":
-        var result = integerIntervalRegex.test(userSearch);
+        var result = this.integerIntervalRegex.test(userSearch);
         if(!result)
           window.alert("Wrong input format!\nCorrect format is (lower bound, upper bound), where both bounds are positive integers (minutes).\nFor instance: (120, 150) for movies with length between 120 and 150 minutes.")
         return result;
 
       case "imdbRating":
-        var result = ratingIntervalRegex.test(userSearch);
+        var result = this.ratingIntervalRegex.test(userSearch);
         if(!result)
           window.alert("Wrong input format!\nCorrect format is (lower bound, upper bound), where both bounds are positive floats smaller or equal to 10 with one digit after the decimal point.\nFor instance: (3.4, 6.2) for movies with IMDb rating between 3.4 and 6.2 (both inclusive)).")
         return result;
 
       case "genres":
-        var result = genresRegex.test(userSearch);
+        var result = this.genresRegex.test(userSearch);
         if(!result)
           window.alert("Wrong input format!\nCorrect format is (genre1, genre2, genre3), where genre1 is mandatory, and genre2 and genre3 are optional.\nFor instance: (action) for action movies or (comedy, drama) for movies with comedy and drama genres")
         return result;
 
       case "year":
-        var result = yearRegex.test(userSearch);
+        var result = this.yearRegex.test(userSearch);
         if(!result)
           window.alert("Year are number with 4 digits!");
         return result;
 
       case "imdbVotes":
-        var result = votesRegex.test(userSearch);
+        var result = this.votesRegex.test(userSearch);
         if(!result)
           window.alert("Votes are number!");
         return result;

@@ -223,5 +223,11 @@ namespace Movies.API.Repositories
             var movie = await _movieContext.LastUpdatedDate.Find(movie => true).FirstOrDefaultAsync();
             return movie;
         }
+
+        public async Task UpdateLastUpdatedDate()
+        {
+            await _movieContext.LastUpdatedDate.DeleteOneAsync(p => true);
+            await _movieContext.LastUpdatedDate.InsertOneAsync(new LastUpdate(DateTime.Now));
+        }
     }
 }

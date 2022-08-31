@@ -17,6 +17,7 @@ services:
       - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
       - OMDB_API_KEY=${OMDB_API_KEY}
       - IMDB_API_KEY=${IMDB_API_KEY}
+    restart: always
     depends_on:
       - mongodb
     ports:
@@ -27,6 +28,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    restart: always
     depends_on:
       - mongodb
     ports:
@@ -37,6 +39,7 @@ services:
     environment:
        - ASPNETCORE_ENVIRONMENT=Development
        - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    restart: always
     depends_on:
        - mongodb
     ports:
@@ -47,6 +50,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString=mongodb://mongodb:27017"
+    restart: always
     depends_on:
        - mongodb
     ports:
@@ -66,6 +70,7 @@ services:
       - "GrpcSettings:DiscountUrl=http://discount.grpc"
       - "GrpcSettings:ProjectionUrl=http://projections.grpc"
       - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    restart: always
     depends_on:
       - reservationsdb
       - rabbitmq
@@ -102,6 +107,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};"
+    restart: always
     depends_on:
       - discountdb
     ports:
@@ -112,6 +118,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};"
+    restart: always
     depends_on:
       - discountdb
     ports:
@@ -141,6 +148,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=${MSSQL_USER};Password=${MSSQL_PASSWORD};"
       - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    restart: always
     depends_on: 
       - administrationdb
       - rabbitmq
@@ -149,13 +157,13 @@ services:
 
   identitydb:
     container_name: identitydb
-    restart: always
     environment:
       - MYSQL_DATABASE=IdentityDb
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_HOST=%
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    restart: always
     ports:
       - '3306:3306'
     expose:
@@ -165,10 +173,10 @@ services:
  
   identity:
     container_name: identity
-    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings:IdentityConnectionString=server=identitydb;user=${MYSQL_USER};password=${MYSQL_PASSWORD};database=IdentityDb;
+    restart: always
     depends_on:
       - identitydb
     ports:
