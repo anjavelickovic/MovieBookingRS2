@@ -36,6 +36,9 @@ namespace Administration.Application.Features.Commands.CreateReservation
 
             _logger.LogInformation($"Reservation {newReservation.Id} is successfully created");
 
+            _logger.LogInformation("Maaaail", newReservation.Email);
+            _logger.LogInformation("Username", newReservation.BuyerUsername);
+
             await SendMail(newReservation);
 
             return newReservation.Id;
