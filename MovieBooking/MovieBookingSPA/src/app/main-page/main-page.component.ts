@@ -62,6 +62,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
         if (result !== false){
           var projections = result as Array<IProjection>;
           if(projections.length === 0){
+            this.randomAiringMovies = [];
+            this.localStorageService.clear(LocalStorageKeys.RandomAiringMovies);
             window.alert("No projections in database");
             return of(false);
           }
