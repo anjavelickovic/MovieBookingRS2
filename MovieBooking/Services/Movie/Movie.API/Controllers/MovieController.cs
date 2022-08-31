@@ -172,6 +172,15 @@ namespace Movies.API.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpPut("[action]")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateLastUpdatedDate()
+        {
+            await _repository.UpdateLastUpdatedDate();
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("[action]/{id}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteMovie(string id)
