@@ -17,3 +17,9 @@ span.error {
     margin-top: 20px; 
     margin-right: 20px;
 }
+
+@media screen and (max-width: 1050px) {
+    .button-display{
+        display: block;
+    }
+}
