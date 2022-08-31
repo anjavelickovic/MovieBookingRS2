@@ -38,16 +38,17 @@
 
             <ng-template #chekoutModal let-modal>
             <div class="modal-header">
-                <h4 class="modal-title" id="modal-basic-title">Chekout</h4>            
+                <h4 class="modal-title" id="modal-basic-title">Checkout</h4>            
                 <button type="button" class="close" aria-label="Close" (click)="close()">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to confirm reservations?
+                Are you sure you want to confirm these reservations?
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline-dark" (click)="onCheckout()">Confirm reservations</button>
+                <button class="btn btn-outline-dark" (click)="onCheckout()">Yes</button>
+                <button class="btn btn-outline-dark" (click)="close()">No</button>
             </div>
             </ng-template>
         </div>

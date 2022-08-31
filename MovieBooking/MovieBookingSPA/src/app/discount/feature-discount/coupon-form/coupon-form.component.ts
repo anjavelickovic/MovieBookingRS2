@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription, switchMap } from 'rxjs';
 import { MoviesFacadeService } from 'src/app/movies/domain/application-services/movies-facade.service';
 import { IMovieDetails } from 'src/app/movies/domain/models/movie-details';
 import { DiscountFacadeService } from '../../domain/application-services/discount-facade.service';
@@ -16,13 +17,14 @@ interface ICouponFormData {
   templateUrl: './coupon-form.component.html',
   styleUrls: ['./coupon-form.component.css']
 })
-export class CouponFormComponent implements OnInit {
+export class CouponFormComponent implements OnInit, OnDestroy {
   public couponForm : FormGroup;
   public modalReference: NgbModalRef;
   public showFormErrors: boolean;
   public showServerError: boolean;
   public movie: IMovieDetails;
   public movies: IMovieDetails[] = [];
+  private activeSubs: Subscription[] = [];
 
   constructor(private modalService: NgbModal,
             private discountService : DiscountFacadeService,
@@ -31,11 +33,14 @@ export class CouponFormComponent implements OnInit {
     this.showFormErrors = false;
     this.showServerError = false;
           
-    this.moviesFacadeService.getMoviesDetails()
+    var moviesSub = this.moviesFacadeService.getMoviesDetails()
       .subscribe(movies => {
         this.movies = movies;
         this.movies.sort((movie1, movie2) => movie1.title.localeCompare(movie2.title));
     });
+
+    this.activeSubs.push(moviesSub);
+
     
     this.couponForm = this.formBuilder.group({
       movieId: ['', [Validators.required]],
@@ -66,27 +71,27 @@ export class CouponFormComponent implements OnInit {
 
     const data : ICouponFormData = this.couponForm.value as ICouponFormData;
 
-    this.moviesFacadeService.getMovieDetails(data.movieId.split(" ")[1])
-    .subscribe(movieDetails => {
-      this.movie = movieDetails;
-      data.movieId = movieDetails.id;
-      
-        this.discountService.createDiscount(this.movie.id, movieDetails.title, data.amount)
-        .subscribe({
-          error: (coupon : ICreateCoupon) => {
-          if(coupon != null)
-            window.alert('Coupon created!');
-          else
-            window.alert('There was a problem with creating coupon!');
-          },
-          complete: () => {
-            window.alert("Created new discount for movie " + movieDetails.title);
-            this.couponForm.reset();
-            this.modalReference.close();
-            window.location.reload();
-          }
-      });
-    });
+    var movieSub = this.moviesFacadeService.getMovieDetails(data.movieId.split(" ")[1]).pipe(
+      switchMap((movieDetails) => {
+        this.movie = movieDetails;
+        data.movieId = movieDetails.id;
+        
+        return this.discountService.createDiscount(this.movie.id, movieDetails.title, data.amount);
+      })).subscribe({
+        error: (coupon : ICreateCoupon) => {
+        if(coupon != null)
+          window.alert('Coupon created!');
+        else
+          window.alert('There was a problem with creating coupon!');
+        },
+        complete: () => {
+          window.alert("Created new discount");
+          this.couponForm.reset();
+          this.modalReference.close();
+          window.location.reload();
+        }});
+
+      this.activeSubs.push(movieSub);
 }
 
 
@@ -105,6 +110,13 @@ public changeMovie(e: any) {
   public close(){
     this.modalReference.close();
     this.couponForm.reset();
+  }
+
+  
+  ngOnDestroy() {
+    this.activeSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
   
 }
