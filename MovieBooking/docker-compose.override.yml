@@ -106,7 +106,7 @@ services:
     container_name: discount.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=${DISCOUNT_USER};Password=${DISCOUNT_PASSWORD};"
+      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};"
     restart: always
     depends_on:
       - discountdb
@@ -117,7 +117,7 @@ services:
     container_name: discount.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=${DISCOUNT_USER};Password=${DISCOUNT_PASSWORD};"
+      - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};"
     restart: always
     depends_on:
       - discountdb
@@ -127,7 +127,7 @@ services:
   administrationdb:
     container_name: administrationdb
     environment:
-      - MSSQL_SA_PASSWORD=${ADMINISTRATION_PASSWORD}
+      - MSSQL_SA_PASSWORD=${MSSQL_PASSWORD}
       - ACCEPT_EULA=1
     restart: always
     ports:
@@ -146,7 +146,7 @@ services:
     container_name: administration.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=${ADMINISTRATION_USER};Password=${ADMINISTRATION_PASSWORD};"
+      - "ConnectionStrings:AdministrationConnectionString=Server=administrationdb;Database=AdministrationDb;User Id=${MSSQL_USER};Password=${MSSQL_PASSWORD};"
       - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
     restart: always
     depends_on: 
