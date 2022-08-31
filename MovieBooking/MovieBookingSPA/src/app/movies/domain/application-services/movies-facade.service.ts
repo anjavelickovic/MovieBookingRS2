@@ -82,4 +82,8 @@ export class MoviesFacadeService {
   public UpdateInformationForAllMovies(): Observable<void> {
     return this.moviesService.UpdateInformationForAllMovies();
   }
+
+  public UpdateLastUpdatedDate(): Observable<void> {
+    return this.moviesService.UpdateLastUpdatedDate();
+  }
 }
