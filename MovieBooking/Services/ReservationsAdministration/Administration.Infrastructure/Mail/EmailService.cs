@@ -26,6 +26,10 @@ namespace Administration.Infrastructure.Mail
 
         public async Task<bool> SendEmail(Email email)
         {
+
+            _logger.LogInformation("Mail", _mailSettings.Mail);
+            _logger.LogInformation("Pass", _mailSettings.Password);
+
             var message = new MimeMessage();
 
             message.Sender = MailboxAddress.Parse(_mailSettings.Mail);
@@ -35,9 +39,13 @@ namespace Administration.Infrastructure.Mail
             var builder = new BodyBuilder();
             builder.HtmlBody = email.Body;
 
+            _logger.LogInformation("Mail", _mailSettings.Mail);
+            _logger.LogInformation("Pass", _mailSettings.Password);
+
             builder.TextBody = email.Body;
             message.Body = builder.ToMessageBody();
 
+            
             using var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
             smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);

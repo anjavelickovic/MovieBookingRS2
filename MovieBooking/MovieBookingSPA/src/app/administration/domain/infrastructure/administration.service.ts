@@ -13,7 +13,6 @@ export class AdministrationService {
   constructor(private httpClient : HttpClient) { }
 
   public getReservationByUsername(username : string) : Observable<IReservations[]>{
-    console.log(username);
     return this.httpClient.get<IReservations[]>(this.administrationUrl + username);
   }
 }
