@@ -24,6 +24,7 @@ namespace Discount.API.Controllers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet()]
         [ProducesResponseType(typeof(CouponDTO), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CouponDTO>>> GetDiscounts(){
