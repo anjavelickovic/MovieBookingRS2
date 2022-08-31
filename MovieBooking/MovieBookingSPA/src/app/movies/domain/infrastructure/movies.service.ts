@@ -91,6 +91,15 @@ export class MoviesService {
     return this.httpClient.get<ILastUpdate>(`${this.url}/GetLastUpdatedDate`);
   }
 
+  public UpdateLastUpdatedDate(): Observable<void> {
+    let body = JSON.stringify("");
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    
+    return this.httpClient.put<void>(`${this.url}/UpdateLastUpdatedDate`, body, {headers: headers});
+  }
+
   public UpdateInformationForAllMovies(): Observable<void> {
     let body = JSON.stringify("");
     let headers = new HttpHeaders({

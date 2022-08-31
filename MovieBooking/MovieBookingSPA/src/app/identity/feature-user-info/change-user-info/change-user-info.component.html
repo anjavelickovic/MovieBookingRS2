@@ -1,6 +1,4 @@
-<div style="
-    margin: 1vh 2vh 2vh 2vh;
-    ">
+<div style="margin: 1vh 2vh 2vh 2vh;">
 
     <div class="tab">
         <button (click)="option('changePassword')" [ngClass]="isActive('changePassword')">Password</button>
@@ -11,7 +9,7 @@
     </div>
     
     <div id="changePassword" class="tabcontent" *ngIf="showPasswordChangeForm">
-        <h3 style="color: rgb(50, 159, 209)">Change Password</h3>
+        <h3>Change Password</h3>
         <div style=" padding-bottom: 30px;">
             <form [formGroup]="passwordChangeForm" (ngSubmit)="onPasswordChangeSubmit()" autocomplete="off">
                     
@@ -53,7 +51,7 @@
     </div>
     
     <div id="changeFirstName" class="tabcontent" *ngIf="showFirstNameChangeForm">
-        <h3 style="color: rgb(50, 159, 209)">Change First name</h3>
+        <h3>Change First name</h3>
         <div style=" padding-bottom: 30px;">
             <form [formGroup]="firstNameChangeForm" (ngSubmit)="onFirstNameChangeSubmit()" autocomplete="off">
 
@@ -86,7 +84,7 @@
     </div>
     
     <div id="changeLastName" class="tabcontent" *ngIf="showLastNameChangeForm">
-        <h3 style="color: rgb(50, 159, 209)">Change Last name</h3>
+        <h3>Change Last name</h3>
         <div style=" padding-bottom: 30px;">
             <form [formGroup]="lastNameChangeForm" (ngSubmit)="onLastNameChangeSubmit()" autocomplete="off">
 
@@ -119,7 +117,7 @@
     </div>
 
     <div id="changeUsername" class="tabcontent" *ngIf="showUsernameChangeForm">
-        <h3 style="color: rgb(50, 159, 209)">Change Username</h3>
+        <h3>Change Username</h3>
         <div style=" padding-bottom: 30px;">
             <form [formGroup]="usernameChangeForm" (ngSubmit)="onUsernameChangeSubmit()" autocomplete="off">
 
@@ -153,7 +151,7 @@
     </div>
 
     <div id="changeEmail" class="tabcontent" *ngIf="showEmailChangeForm">
-        <h3 style="color: rgb(50, 159, 209)">Change Email</h3>
+        <h3>Change Email</h3>
         <div style=" padding-bottom: 30px;">
             <form [formGroup]="emailChangeForm" (ngSubmit)="onEmailChangeSubmit()" autocomplete="off">
 

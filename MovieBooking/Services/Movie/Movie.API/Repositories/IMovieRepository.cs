@@ -27,6 +27,7 @@ namespace Movies.API.Repositories
         Task<bool> DeleteMovie(string id);
         Task<bool> DeleteMovies();
         Task<LastUpdate> GetLastUpdatedDate();
+        Task UpdateLastUpdatedDate();
     }
 
 }

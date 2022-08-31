@@ -8,6 +8,9 @@ import { ProjectionFacadeService } from '../projection/domain/application-servic
 import { LocalStorageKeys } from '../shared/local-storage/local-storage-keys';
 import { LocalStorageService } from '../shared/local-storage/local-storage.service';
 import { IProjection } from '../projection/domain/models/projection.model';
+import { AppStateService } from '../shared/app-state/app-state.service';
+import { IAppState } from '../shared/app-state/app-state';
+import { Role } from '../shared/app-state/role';
 
 
 @Component({
@@ -22,6 +25,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   private NUMBER_OF_AIRING_MOVIES = 12;
   private NUMBER_OF_UPCOMING_MOVIES = 6;
 
+  public appState: IAppState;
+
   public randomAiringMovies: Array<IMovieDetails>;
   public randomUpcomingMovies: Array<IMovieDetails>;
 
@@ -32,6 +37,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   constructor(private movieService: MoviesFacadeService,
               private projectionService: ProjectionFacadeService,
               private localStorageService: LocalStorageService,
+              private appStateService: AppStateService,
               private router: Router) {
 
     this.projectionsObservable = this.projectionService.getProjections().pipe(
@@ -56,6 +62,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
         if (result !== false){
           var projections = result as Array<IProjection>;
           if(projections.length === 0){
+            this.randomAiringMovies = [];
+            this.localStorageService.clear(LocalStorageKeys.RandomAiringMovies);
             window.alert("No projections in database");
             return of(false);
           }
@@ -75,26 +83,37 @@ export class MainPageComponent implements OnInit, OnDestroy {
       })
     );
 
-    if(sessionStorage.getItem("updated") === null){
-      var lastUpdateSub = this.movieService.GetLastUpdatedDate().pipe(
-        switchMap(result => {
-          var currentDay = new Date().getUTCDate();
-          var currentMonth = new Date().getMonth() + 1;
-          var currentYear = new Date().getFullYear();
-          var lastUpdateDay = result.day;
-          var lastUpdateMonth = result.month;
-          var lastUpdateYear = result.year;
-          var condition = (lastUpdateYear === currentYear && lastUpdateMonth === currentMonth && lastUpdateDay < currentDay)  || 
-                (lastUpdateYear === currentYear && lastUpdateMonth < currentMonth)  || 
-                lastUpdateYear < currentYear;
-          return iif(() => condition, this.movieService.UpdateInformationForAllMovies(), of(false));
-          }
-        )
-      ).subscribe(result => console.log(result));
+    var lastUpdateSub = this.appStateService.getAppState().pipe(
+      switchMap((appState: IAppState) => {
+        this.appState = appState;
+        var condition = this.appState.hasRole(Role.Admin) && sessionStorage.getItem("updated") === null;
+        return iif(() => condition, this.movieService.GetLastUpdatedDate(), of(null))
+      }),
+      switchMap(result => {
+        if(result === null)
+          return of(false);
+        sessionStorage.setItem("updated", "");
+        var currentDay = new Date().getUTCDate();
+        var currentMonth = new Date().getMonth() + 1;
+        var currentYear = new Date().getFullYear();
+        var lastUpdateDay = result.day;
+        var lastUpdateMonth = result.month;
+        var lastUpdateYear = result.year;
+        var condition = (lastUpdateYear === currentYear && lastUpdateMonth === currentMonth && lastUpdateDay < currentDay)  || 
+              (lastUpdateYear === currentYear && lastUpdateMonth < currentMonth)  || 
+              lastUpdateYear < currentYear;
+        return iif(() => condition, this.movieService.UpdateInformationForAllMovies(), of(false));
+        }
+    ),
+    switchMap(result => {
+      if(result === false)
+        return of(false);
+      console.log("now update information");
+      return this.movieService.UpdateLastUpdatedDate();
+    })
+    ).subscribe(result => console.log(result));
   
-      this.activeSubs.push(lastUpdateSub);
-      sessionStorage.setItem("updated", "");
-    }
+    this.activeSubs.push(lastUpdateSub);
 
     if(this.localStorageService.get(LocalStorageKeys.RandomAiringMovies) == null) {
       this.fetchRandomAiringMovies();
