@@ -12,6 +12,7 @@ using Reservations.API.Repositories;
 using EventBus.Messages.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Reservations.API.Controllers
 {
@@ -40,16 +41,28 @@ namespace Reservations.API.Controllers
 
         [HttpGet("[action]/{username}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<ReservationBasket>> GetReservations(string username)
         {
+            if (User.FindFirst(ClaimTypes.Name).Value != username)
+            {
+                return Forbid();
+            }
+
             var basket = await _repository.GetReservations(username);
             return Ok(basket ?? new ReservationBasket(username));
         }
 
         [HttpGet("[action]/username/{username}/movieId/{movieId}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<ReservationBasket>> GetMovieReservations(string username, string movieId)
         {
+            if (User.FindFirst(ClaimTypes.Name).Value != username)
+            {
+                return Forbid();
+            }
+
             var reservation = await _repository.GetMovieReservations(username, movieId);
             return Ok(reservation ?? new Dictionary<string, Reservation>());
         }
@@ -59,8 +72,15 @@ namespace Reservations.API.Controllers
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
+
         public async Task<ActionResult<ReservationBasket>> AddReservation(string username, [FromBody] Reservation reservation)
         {
+            if (User.FindFirst(ClaimTypes.Name).Value != username)
+            {
+                return Forbid();
+            }
+
             var changeProjection = true;
             var basket = await _repository.GetReservations(username);
             basket = basket ?? new ReservationBasket(username);
@@ -114,8 +134,14 @@ namespace Reservations.API.Controllers
         [HttpPut("{username}")]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ReservationBasket), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<ReservationBasket>> UpdateReservations(string username, [FromBody] Reservation reservation)
         {
+            if (User.FindFirst(ClaimTypes.Name).Value != username)
+            {
+                return Forbid();
+            }
+
             try
             {
                 var coupon = await _couponGrpcService.GetDiscount(reservation.MovieTitle);
@@ -151,8 +177,15 @@ namespace Reservations.API.Controllers
 
         [HttpDelete("[action]/{username}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteReservations(string username)
         {
+            if (User.FindFirst(ClaimTypes.Name).Value != username)
+            {
+                return Forbid();
+            }
+
             ReservationBasket reservationBasket = await _repository.GetReservations(username);
             foreach (var reservationDict in reservationBasket.Reservations.Values)
             {
@@ -176,8 +209,15 @@ namespace Reservations.API.Controllers
 
         [HttpDelete("[action]/username/{username}/movieId/{movieId}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteMovieReservations(string username, string movieId)
         {
+            if (User.FindFirst(ClaimTypes.Name).Value != username)
+            {
+                return Forbid();
+            }
+
             ReservationBasket reservationBasket = await _repository.GetReservations(username);
             foreach (var reservation in reservationBasket.Reservations[movieId])
             {
@@ -198,8 +238,15 @@ namespace Reservations.API.Controllers
 
         [HttpDelete("[action]/{username}")]
         [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteReservation(string username, [FromBody] Reservation reservation)
         {
+            if (User.FindFirst(ClaimTypes.Name).Value != username)
+            {
+                return Forbid();
+            }
+
             try
             {
                 var projection = await _projectionGrpcService.GetProjection(reservation.ProjectionId);
@@ -216,8 +263,15 @@ namespace Reservations.API.Controllers
         [HttpPost("[action]")]
         [ProducesResponseType(typeof(void), StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Checkout([FromBody] ReservationBasketCheckout basketCheckout)
         {
+
+            if (User.FindFirst(ClaimTypes.Name).Value != basketCheckout.BuyerUsername)
+            {
+                return Forbid();
+            }
+
             // Get existing basket
             var reservationBasket = await _repository.GetReservations(basketCheckout.BuyerUsername);
             if (reservationBasket == null)
