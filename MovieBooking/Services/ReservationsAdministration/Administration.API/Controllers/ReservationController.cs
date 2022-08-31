@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Administration.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ReservationController : ControllerBase
@@ -24,6 +23,8 @@ namespace Administration.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Customer")]
         [HttpGet("{username}")]
         [ProducesResponseType(typeof(IEnumerable<ReservationViewModel>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<ReservationViewModel>>> GetReservationByUsername(string username)
