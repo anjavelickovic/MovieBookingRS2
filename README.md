@@ -14,7 +14,7 @@ Movie Tickets Booking is a microservice application for reserving tickets for mo
 
 ## Running the application
 
-1. Create file `docker-compose.env` with the following format:
+1. Create file `docker-compose.env` with the following content:
 
 ```
 OMDB_API_KEY=your_omdb_api_key
@@ -30,7 +30,7 @@ PGADMIN_MAIL=your_pgadmin_mail
 PGADMIN_PASSWORD=your_pgadmin_password
 ```
 
-Place it in the MovieBooking directory and insert your data.
+Insert your data in it and place it in the MovieBooking directory.
 
 2. Position terminal in MovieBooking directory and run next command:
 
@@ -38,7 +38,7 @@ Place it in the MovieBooking directory and insert your data.
 docker-compose --env-file=./docker-compose.env -f docker-compose.yml -f docker-compose.override.yml up -d --build 
 ``` 
  
-3. Position terminal in MovieBookingSPA directory and run next commands:
+3. Position terminal in MovieBooking/MovieBookingSPA directory and run next commands:
 ``` 
 npm i
 ng serve
