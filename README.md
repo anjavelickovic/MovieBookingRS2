@@ -53,7 +53,7 @@ Theater Hall microservice manages theater halls. Theater hall is described by
 
 Administrators are the only ones who can create, update or delete them.
 
-It is used by projection, reservations and reservations administration microservice via id and name.
+It is used by projection, reservations and administration microservice via id and name.
 
 MongoDB is used for storing the data.
 
