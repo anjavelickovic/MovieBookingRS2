@@ -6,8 +6,8 @@ Movie Tickets Booking is a microservice application for reserving tickets for mo
 
 <ul>
   <li><a style="display: inline" href="https://dotnet.microsoft.com/en-us/download/dotnet/5.0/"><img src="https://miro.medium.com/max/800/1*_C0iRh_fgu8rc0qhQNDCDw.png" height="24" width="48" ></a></li>
-  <li><a style="display: inline" href="https://angular.io//"><img src="https://angular.io/assets/images/logos/angular/shield-large.svg" height="48" width="48" ></a></li>
-  <li><a style="display: inline" href="https://www.docker.com/"><img src="https://avatars.githubusercontent.com/u/5429470?s=280&v=4" height="48" width="48" ></a></li>
+  <li><a style="display: inline" href="https://angular.io"><img src="https://angular.io/assets/images/logos/angular/shield-large.svg" height="48" width="48" ></a></li>
+  <li><a style="display: inline" href="https://www.docker.com"><img src="https://avatars.githubusercontent.com/u/5429470?s=280&v=4" height="48" width="48" ></a></li>
 </ul>
 
 
