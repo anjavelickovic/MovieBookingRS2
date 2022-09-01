@@ -4,9 +4,13 @@ Movie Tickets Booking is a microservice application for reserving tickets for mo
 
 ## Required software
 
-* .NET 5
-* Angular 14
-* Docker
+<ul>
+  <li><a style="display: inline" href="https://dotnet.microsoft.com/en-us/download/dotnet/5.0/"><img src="https://miro.medium.com/max/800/1*_C0iRh_fgu8rc0qhQNDCDw.png" height="24" width="48" ></a></li>
+  <li><a style="display: inline" href="https://angular.io//"><img src="https://angular.io/assets/images/logos/angular/shield-large.svg" height="48" width="48" ></a></li>
+  <li><a style="display: inline" href="https://www.docker.com/"><img src="https://avatars.githubusercontent.com/u/5429470?s=280&v=4" height="48" width="48" ></a></li>
+</ul>
+
+
 
 ## Running the application
 
@@ -15,12 +19,12 @@ Movie Tickets Booking is a microservice application for reserving tickets for mo
 ```
 OMDB_API_KEY=your_omdb_api_key
 IMDB_API_KEY=your_imdb_api_key
-MYSQL_USER=your_mysql_user
+MYSQL_USER=your_mysql_username
 MYSQL_PASSWORD=your_mysql_password
 MYSQL_ROOT_PASSWORD=your_mysql_root_password
-POSTGRES_USER=your_postgres_user
+POSTGRES_USER=your_postgres_username
 POSTGRES_PASSWORD=your_postgres_password
-MSSQL_USER=your_mssql_user
+MSSQL_USER=your_mssql_username
 MSSQL_PASSWORD=your_mssql_password
 PGADMIN_MAIL=your_pgadmin_mail
 PGADMIN_PASSWORD=your_pgadmin_password
@@ -44,7 +48,23 @@ ng serve
 
 ### Identity
 
-### Movies
+<p align="justify"> Identity microservice is responsible for providing user authentication and authorization.
+
+Authentication verifies the identity of a user attempting to gain access to some resource. Users need to enter their username/email and password on login page to be successfully authenticated, and as a response they get access and refresh token. Access tokens are actually identifying user and are sent with each call to some resource and they are shorter-lived, while refresh tokens are used to request a new access token (when it expires) without forcing user authentication once again and they are longer-lived. Here, JSON Web Tokens (JWTs) are used.
+
+Authorization verifies if previously already authenticated user is permitted to execute some action. For instance, here, normal users aren't allowed to create or delete movies, while administrators are.
+
+There are two types of roles: normal users or <code>Customers</code>, and administrators or <code>Admins</code>.
+ </p>
+
+### Movie
+Movie microservice is used for data management related to movies. Movies are created using IMDb identifier for particular movie (e. g. for <i>Harry Potter and the Sorcerer's Stone</i> identifier is tt0241527), which can be obtained by finding IMDb page for desired movie and copying last part of the url. This microservice relies on two APIs for fetching movie information: 
+* <a href="https://imdb-api.com/">IMDb API</a> (for trailer)
+* <a href="https://www.omdbapi.com//">OMDb API</a> (for everything else like movie title, poster, synopsis, genres etc)
+
+For both APIs you'll need a key, which you can get by registering to said sites. Naturally, only administrators can add new movies.
+
+Users can search movies by certain criteria (by title, year, runtime, rating, genres, etc).
 
 ### Theater Hall
 
