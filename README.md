@@ -44,7 +44,36 @@ ng serve
 
 ### Movies
 
+### Theater Hall
+
+Theater Hall microservice manages theater halls. Theater hall is described by
+* name
+* terms in which the projection of the movie can be held 
+* number of seats
+
+Administrators are the only ones who can create, update or delete them.
+
+It is used by projection, reservations and reservations administration microservice via id and name.
+
+MongoDB is used for storing the data.
+
+### Projection
+
+Projection microservice manages movie projections. Movie projection is described by 
+* details about movie,
+* details about theater hall where the projection of the movie is held
+* date and term in which the projection of the movie is held 
+* number of reserved seats
+* price 
+
+Administrators are the only ones who can create, update or delete them. 
+
+It communicates with reservations microservice via gRPC to update number of reserved seats when reservations are made or deleted.
+
+MongoDB is used for storing the data.
+
 ### Discount
+
   Discount microservice stores coupons for movie ticket discounts. Only Administrators can create, update or delete coupons. 
   Using the gRPC Discount microservice sends this coupon information to Reservations microservice.
   
@@ -72,6 +101,18 @@ ng serve
         ModifiedDate DATE
        );
       ```
+### Reservations
+
+Reservations microservice manages customer reservation of tickets for movie projections. Movie reservation is described by 
+* details about movie projection
+* number of ticket that customer wants to reserve
+
+Both, users and admins can add, update, delete and confirm reservations on their account.
+
+It communicates with projection microservice (as mentioned in Projection) and with discount microservice via gRPC to update price of the resrvation based on discount amount.
+Also, it communicates with administration microservice via RabbitMQ when customer confirms reservations (described in administration).
+
+Redis cache is used for storing the data.
 
 
 ### Administration
@@ -80,6 +121,9 @@ ng serve
 
  Database that is used for this microservice is MSSQL.
  
-  
-
+ 
 ## Authors
+
+* [Nemanja Živanović](https://github.com/NemanjaZivanovic)
+* [Anja Veličković](https://github.com/anjavelickovic)
+* [Milica Simić](https://github.com/milicas19) 
