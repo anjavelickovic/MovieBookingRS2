@@ -6,3 +6,10 @@ span.msg {
   font-size: 11px;
   color: blue;
 }
+
+@media screen and (max-width: 550px) {
+  .price {
+    display: none;
+  }
+  
+}

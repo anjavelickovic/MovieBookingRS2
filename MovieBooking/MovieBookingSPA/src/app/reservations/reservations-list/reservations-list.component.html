@@ -5,10 +5,9 @@
         <th scope="col">Date</th>
         <th scope="col">Term</th>
         <th scope="col">Theater Hall</th>
-        <th scope="col">Price</th>
+        <th class="price" scope="col">Price</th>
         <th scope="col">Number of tickets</th>
-        <th scope="col">Update</th>
-        <th scope="col">Delete</th>
+        <th scope="col"></th>
         </tr>
     </thead>
     <tbody *ngFor="let reservationsByMovie of reservations | keyvalue">
@@ -17,12 +16,12 @@
         <td>{{reservationByProjection.value.projectionDate}}</td>
         <td>{{reservationByProjection.value.projectionTerm}}</td>
         <td>{{reservationByProjection.value.theaterHallName}}</td>
-        <td>{{reservationByProjection.value.price}}</td>
+        <td class="price">{{reservationByProjection.value.price}}</td>
         <td>{{reservationByProjection.value.numberOfTickets}}</td>
-        <td>
+        <td rowspan="2">
             <button
                 class="btn" 
-                style="background-color: blue; color: aliceblue"
+                style="background-color: blue; color: aliceblue; margin-right: 10px; margin-bottom: 5px;"
                 (click)="open(reserveModal)" >
                 Update
             </button>
@@ -59,12 +58,10 @@
                     <button class="btn btn-outline-dark" (click)="onProjectionReserveFormSubmit(reservationByProjection.value)">Update</button>
                 </div>
             </ng-template>
-        </td>
-        <td>
-            <!--Delete button--> 
-            <button
+             <!--Delete button--> 
+             <button
                 class="btn" 
-                style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px;"
+                style="background-color: rgba(161, 0, 0, 0.862); color: aliceblue; margin-right: 10px; margin-bottom: 5px;"
                 (click)="open(deleteModal)">
                 Delete
             </button>
