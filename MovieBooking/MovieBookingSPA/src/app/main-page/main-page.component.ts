@@ -108,7 +108,6 @@ export class MainPageComponent implements OnInit, OnDestroy {
     switchMap(result => {
       if(result === false)
         return of(false);
-      console.log("now update information");
       return this.movieService.UpdateLastUpdatedDate();
     })
     ).subscribe(result => console.log(result));

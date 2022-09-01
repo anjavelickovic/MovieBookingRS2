@@ -12,7 +12,7 @@
 <!--Theater Hall Info-->
 <div *ngIf="theaterHall; else elseBlock" class="marg">
     <p class="font-info">Name: {{ theaterHall.name }}</p>
-    <p class="font-info">Number of seats: {{ theaterHall.numberOfSeats }}</p>
+    <p class="font-info">Number of Seats: {{ theaterHall.numberOfSeats }}</p>
     <p class="font-info">Available terms:</p>
     <div *ngFor="let term of theaterHall.terms" class="font-info" style="margin-left: 10px">
        - {{term}}

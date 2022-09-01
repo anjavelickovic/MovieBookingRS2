@@ -1,7 +1,22 @@
 <div *ngIf="movieDetails !== null; else elseBlock">
 
-    <h2 style="margin-top: 20px; margin-bottom: 20px;">{{ movieDetails.title }} <i *ngIf="isAdmin()" class="fa fa-times" aria-hidden="true" title="Remove movie" style="color: crimson" (click)="deleteMovie(movieDetails.id)"></i></h2>
+    <h2 style="margin-top: 20px; margin-bottom: 20px;">{{ movieDetails.title }} <i *ngIf="isAdmin()" class="fa fa-times" aria-hidden="true" title="Remove movie" style="color: crimson" (click)="open(deleteModal, null)"></i></h2>
 
+    <ng-template #deleteModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Confirm action</h4>            
+            <button type="button" class="close" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete {{ movieDetails.title }}?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-dark" (click)="deleteMovie(movieDetails.id)">Yes</button>
+            <button class="btn btn-outline-dark" (click)="close()">No</button>
+        </div>
+    </ng-template>
 
     <div class="content">
 

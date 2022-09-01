@@ -194,6 +194,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
   }
 
   public deleteMovie(movieId: string){
+
+    this.close();
     
     if(this.projections.length !== 0){
       window.alert("Can't delete movies that have projections. Remove projections for this movie first!");
