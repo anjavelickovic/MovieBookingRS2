@@ -98,7 +98,7 @@ namespace Reservations.API.Controllers
 
             if (!changeProjection)
             {
-                return BadRequest("You can not reserve more seats for same projection. Go into reservations and updated it.") ;
+                return BadRequest("Reserving same projection twice") ;
             }
 
                 try
@@ -118,8 +118,8 @@ namespace Reservations.API.Controllers
                     var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, reservation.NumberOfTickets);
                     if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
                     {
-                        _logger.LogInformation("There is no enough seats for this projection");
-                        return NotFound("There is no enough seats for this projection");
+                        _logger.LogInformation("There are not enough seats for this projection");
+                        return NotFound("There are not enough seats for this projection");
                     }
                 
             }
@@ -163,8 +163,8 @@ namespace Reservations.API.Controllers
                 var sucessfullyUpdatedNumberOfReservedSeats = await _projectionGrpcService.UpdateProjection(projection.Id, numberOfSeats);
                 if (!sucessfullyUpdatedNumberOfReservedSeats.Updated)
                 {
-                    _logger.LogInformation("There is no enough seats");
-                    return BadRequest();
+                    _logger.LogInformation("There are not enough seats");
+                    return BadRequest("There are not enough seats");
                 }
             }
             catch (RpcException e)
