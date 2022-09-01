@@ -127,11 +127,11 @@ MongoDB is used for storing the data.
 
 Reservations microservice manages customer reservation of tickets for movie projections. Movie reservation is described by 
 * details about movie projection
-* number of ticket that customer wants to reserve
+* number of tickets that customer wants to reserve
 
 Both, users and admins can add, update, delete and confirm reservations on their account.
 
-It communicates with projection microservice (as mentioned in Projection) and with discount microservice via gRPC to update price of the resrvation based on discount amount.
+It communicates with projection microservice (as mentioned in Projection) and with discount microservice via gRPC to update price of the reservation based on discount amount.
 Also, it communicates with administration microservice via RabbitMQ when customer confirms reservations (described in administration).
 
 Redis cache is used for storing the data.
