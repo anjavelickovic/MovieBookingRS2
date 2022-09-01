@@ -97,22 +97,22 @@ MongoDB is used for storing the data.
 ### Discount
 
   Discount microservice stores coupons for movie ticket discounts. Only Administrators can create, update or delete coupons. 
-  Using the gRPC Discount microservice sends this coupon information to Reservations microservice.
+  Using the gRPC communication Discount microservice sends this coupon information to Reservations microservice.
   
   The database used for this microservice is *PostgreSQL*.
 
   To create the database follow the instructions:
    1. Login to pgadmin at https://localhost:5050/
    2. Add a new Server with the following characteristics:
-    - General:
-      - Name: DiscountServer
-    - Connection:
-      - Host name/address: discountdb
-      - Port: 5432 
-      - Maintenance database: postgres 
-      - Username: your_postgres_user 
-      - Password: your_postgres_password
-   3. Query tool
+      - General:
+        - Name: DiscountServer
+      - Connection:
+        - Host name/address: discountdb
+        - Port: 5432 
+        - Maintenance database: postgres 
+        - Username: your_postgres_user 
+        - Password: your_postgres_password
+   3. Tools > Query tool
       ```
       CREATE TABLE Coupon (
         ID SERIAL PRIMARY KEY NOT NULL,
@@ -140,8 +140,8 @@ Redis cache is used for storing the data.
 ### Administration
  Administration microservice permanently saves previous reservation data.
  This service communicates with Reservations microservice when User officialy confirm that he has finished online ticket booking.
-
- Database that is used for this microservice is MSSQL.
+  
+ Database that is used for this microservice is *MSSQL*.
  
  
 ## Authors
