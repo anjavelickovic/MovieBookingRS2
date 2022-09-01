@@ -76,12 +76,10 @@ export class ReservationsListComponent implements OnInit, OnDestroy {
       projection.theaterHallName, projection.theaterHallId, projection.price, data.numberOfTickets)
      .subscribe({
       error: (err) => {
+        this.errMsg = "Server error"
         this.showServerErrors = true;
         this.processing = false;
         console.log(err);
-        if(err.status == 400){
-          this.errMsg = "You can not reserve more seats for same projection. Go into reservations and updated it."
-        }
         return of(false);
       },
       complete: () => {
