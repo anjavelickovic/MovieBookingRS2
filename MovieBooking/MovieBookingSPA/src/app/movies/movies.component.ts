@@ -173,7 +173,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.processing = false;
-        window.alert("Projection for " + this.projection.movieTitle + " reserved");
+        window.alert("Tickets for " + this.projection.movieTitle + " reserved.\n" + "Go into Resrvations to confirm your reservation!");
         this.projectionReserveForm.reset();
         this.modalReference.close();
         this.showServerErrors = false;
