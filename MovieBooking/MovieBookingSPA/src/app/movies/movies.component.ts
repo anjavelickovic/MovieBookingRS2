@@ -165,7 +165,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
         this.showServerErrors = true;
         console.log(err);
         if(err.status == 400){
-          this.errMsg = "You can't reserve more seats for the projection for which you already reserved seats." + "\n" + "Go into reservations and update it."
+          this.errMsg = "You can't reserve more seats for the projection for which you already reserved seats." + "\n" + "You will need to go into Reservations and update it."
         }else{
           this.errMsg = "There are not enough seats for this projection"
         }
@@ -173,7 +173,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.processing = false;
-        window.alert("Tickets for " + this.projection.movieTitle + " reserved.\n" + "Go into Resrvations to confirm your reservation!");
+        window.alert("Tickets for " + this.projection.movieTitle + " reserved.\n" + "You will need to go into Reservations to confirm your reservation!");
         this.projectionReserveForm.reset();
         this.modalReference.close();
         this.showServerErrors = false;
