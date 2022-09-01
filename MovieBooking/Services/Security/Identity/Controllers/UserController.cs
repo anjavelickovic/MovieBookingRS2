@@ -61,7 +61,7 @@ namespace Identity.Controllers
             return Ok(_mapper.Map<IEnumerable<UserDetailsDTO>>(users));
         }
 
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpPut("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ChangeFirstName([FromBody] ChangeFirstNameDTO request)
@@ -76,7 +76,7 @@ namespace Identity.Controllers
             return await _userRepository.ChangeFirstName(user, request.NewFirstName);
         }
 
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpPut("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ChangeLastName([FromBody] ChangeLastNameDTO request)
@@ -91,7 +91,7 @@ namespace Identity.Controllers
             return await _userRepository.ChangeLastName(user, request.NewLastName);
         }
 
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpPut("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ChangeUserName([FromBody] ChangeUserNameDTO request)
@@ -106,7 +106,7 @@ namespace Identity.Controllers
             return await _userRepository.ChangeUserName(user, request.NewUserName);
         }
 
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpPut("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ChangeUserEmail([FromBody] ChangeUserEmailDTO request)
@@ -121,7 +121,7 @@ namespace Identity.Controllers
             return await _userRepository.ChangeUserEmail(user, request.NewEmail);
         }
 
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Admin,Customer")]
         [HttpPut("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> ChangeUserPassword([FromBody] ChangeUserPasswordDTO request)
